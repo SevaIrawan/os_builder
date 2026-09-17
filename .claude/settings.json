@@ -26,5 +26,25 @@
         ]
       }
     ]
+  },
+  "permissions": {
+    "ask": [
+      "Bash(git push *)",
+      "Bash(git commit *)",
+      "mcp__Atlassian_Rovo__createConfluencePage",
+      "mcp__Atlassian_Rovo__updateConfluencePage",
+      "mcp__Atlassian_Rovo__createConfluenceFooterComment",
+      "mcp__Atlassian_Rovo__createConfluenceInlineComment",
+      "mcp__Atlassian_Rovo__createJiraIssue",
+      "mcp__Atlassian_Rovo__editJiraIssue",
+      "mcp__Atlassian_Rovo__transitionJiraIssue",
+      "mcp__Atlassian_Rovo__addCommentToJiraIssue",
+      "mcp__n8n__create_workflow_from_code",
+      "mcp__n8n__update_workflow",
+      "mcp__n8n__publish_workflow",
+      "mcp__n8n__unpublish_workflow",
+      "mcp__n8n__execute_workflow",
+      "mcp__n8n__archive_workflow"
+    ]
   }
 }
