@@ -10,6 +10,8 @@
 
 ## 〇、新 Session／新设备接入前：环境就绪检查
 
+**每次开始 BO 建设相关工作前，先调用 skill `nosm-sync-check`**（见 `.claude/skills/nosm-sync-check/SKILL.md`），确认本文件与 `docs/04-anchor-navigation.md` 仍与 Confluence 来源页一致，并重新验证 Atlassian／n8n 连接器仍然存活。不一致时按该 skill 的「部署漂移」流程处理，不得凭旧副本继续执行。
+
 来源：07.06 §三「环境就绪（新开发者首次接入）」。每次在新 device/session 开始工作前，先确认以下五项：
 
 1. 已申请 Atlassian API／MCP 连接器权限。
