@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "S=\"$(git rev-parse --show-toplevel 2>/dev/null)/.claude/hooks/nosm-session-start.sh\"; [ -f \"$S\" ] && bash \"$S\" || true",
+            "timeout": 10,
+            "statusMessage": "NOSM: pointer"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write|NotebookEdit|mcp__Atlassian_Rovo.*|mcp__n8n__.*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "S=\"$(git rev-parse --show-toplevel 2>/dev/null)/.claude/hooks/nosm-gate.sh\"; [ -f \"$S\" ] && bash \"$S\" || true",
+            "timeout": 10,
+            "statusMessage": "NOSM gate"
+          }
+        ]
+      }
+    ]
+  },
+  "permissions": {
+    "ask": [
+      "Bash(git push *)",
+      "Bash(git commit *)",
+      "mcp__Atlassian_Rovo__createConfluencePage",
+      "mcp__Atlassian_Rovo__updateConfluencePage",
+      "mcp__Atlassian_Rovo__createConfluenceFooterComment",
+      "mcp__Atlassian_Rovo__createConfluenceInlineComment",
+      "mcp__Atlassian_Rovo__createJiraIssue",
+      "mcp__Atlassian_Rovo__editJiraIssue",
+      "mcp__Atlassian_Rovo__transitionJiraIssue",
+      "mcp__Atlassian_Rovo__addCommentToJiraIssue",
+      "mcp__n8n__create_workflow_from_code",
+      "mcp__n8n__update_workflow",
+      "mcp__n8n__publish_workflow",
+      "mcp__n8n__unpublish_workflow",
+      "mcp__n8n__execute_workflow",
+      "mcp__n8n__archive_workflow"
+    ]
+  }
+}
