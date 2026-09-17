@@ -8,9 +8,10 @@ IN=$(cat)
 TOOL=$(printf '%s' "$IN" | jq -r '.tool_name // ""')
 SID=$(printf '%s' "$IN" | jq -r '.session_id // "unknown"')
 FP=$(printf '%s' "$IN" | jq -r '.tool_input.file_path // ""')
+ROOT=$(git rev-parse --show-toplevel 2>/dev/null || echo .)
 
 # sudah diverifikasi di session ini -> lolos
-[ -f "$HOME/.claude/nosm-sync-verified/$SID" ] && exit 0
+[ -f "$ROOT/.claude/.nosm-session/verified-$SID" ] && exit 0
 
 case "$TOOL" in
   Edit|Write|NotebookEdit)

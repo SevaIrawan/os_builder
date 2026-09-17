@@ -65,7 +65,8 @@ This skill exists so that rule is actually executed, not just written down.
    Gerbang `PreToolUse` (`.claude/hooks/nosm-gate.sh`) membaca penanda ini. Tanpa penanda,
    tulisan ke `CLAUDE.md`, `docs/04-anchor-navigation.md`, `.claude/skills/**`, dan tool
    tulis Confluence/Jira/n8n **ditolak**, bukan sekadar diingatkan. Session id dicatat oleh
-   hook `SessionStart` ke `$HOME/.claude/nosm-current-session`.
+   hook `SessionStart` ke `.claude/.nosm-session/current` (di dalam repo, karena penulisan
+   ke luar direktori kerja ditolak classifier izin — ini ditemukan lewat uji session baru).
 
 ## Non-goals
 
