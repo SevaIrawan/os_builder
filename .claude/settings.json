@@ -6,9 +6,22 @@
         "hooks": [
           {
             "type": "command",
-            "command": "printf '%s' '{\"hookSpecificOutput\": {\"hookEventName\": \"SessionStart\", \"additionalContext\": \"Sebelum pekerjaan BO 建设／流程建设 apa pun di repo ini: jalankan skill `nosm-sync-check`, lalu skill `bo-build`. Aturannya ada di sana, bukan di pesan ini.\"}}'",
+            "command": "S=\"$(git rev-parse --show-toplevel 2>/dev/null)/.claude/hooks/nosm-session-start.sh\"; [ -f \"$S\" ] && bash \"$S\" || true",
             "timeout": 10,
-            "statusMessage": "Injecting NOSM build discipline"
+            "statusMessage": "NOSM: pointer"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write|NotebookEdit|mcp__Atlassian_Rovo.*|mcp__n8n__.*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "S=\"$(git rev-parse --show-toplevel 2>/dev/null)/.claude/hooks/nosm-gate.sh\"; [ -f \"$S\" ] && bash \"$S\" || true",
+            "timeout": 10,
+            "statusMessage": "NOSM gate"
           }
         ]
       }

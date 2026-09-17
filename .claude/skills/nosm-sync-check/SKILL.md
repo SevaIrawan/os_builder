@@ -53,6 +53,20 @@ This skill exists so that rule is actually executed, not just written down.
    - **Source page unreachable**: stop and report — do not fall back to the local
      copy as if it were verified current.
 
+6. **Tandai session ini sebagai terverifikasi** — hanya setelah langkah 1–5 benar-benar
+   selesai (in sync, atau drift ditemukan dan sudah dikoreksi). Jangan ditulis kalau
+   konektor gagal atau halaman sumber tidak terbuka:
+
+   ```bash
+   mkdir -p "$HOME/.claude/nosm-sync-verified" \
+     && touch "$HOME/.claude/nosm-sync-verified/$(cat "$HOME/.claude/nosm-current-session")"
+   ```
+
+   Gerbang `PreToolUse` (`.claude/hooks/nosm-gate.sh`) membaca penanda ini. Tanpa penanda,
+   tulisan ke `CLAUDE.md`, `docs/04-anchor-navigation.md`, `.claude/skills/**`, dan tool
+   tulis Confluence/Jira/n8n **ditolak**, bukan sekadar diingatkan. Session id dicatat oleh
+   hook `SessionStart` ke `$HOME/.claude/nosm-current-session`.
+
 ## Non-goals
 
 - This skill does not re-derive or reinterpret the BO-building rules themselves —
