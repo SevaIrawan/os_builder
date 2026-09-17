@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "printf '%s' '{\"hookSpecificOutput\": {\"hookEventName\": \"SessionStart\", \"additionalContext\": \"NOSM／BO 建设纪律（由本仓库 .claude/settings.json 的 SessionStart hook 注入；依据：CLAUDE.md §〇 与 07.06｜建设指南「流程建设 Skill（正式原文）」）\\n\\n1. 本仓库 CLAUDE.md 是 Confluence 07.06 §八 的**受控部署副本，不是规范源**。开始任何 BO 建设／流程建设相关工作前，先执行 skill `nosm-sync-check` 验证副本未漂移。连接器不通或来源页打不开即停止，不得退回本地副本当作已验证。\\n\\n2. 随后执行 skill `bo-build`，按其中列出的顺序**用工具实际打开**并读当下版本：07｜指南（1704362028）→ 07.06｜建设指南（1730347066）→ 07.06.1｜开发规则与避坑指南（1712226375）→ 04｜流程建设与执行治理总纲（1676804100）导航表命中的子页。\\n\\n3. 不得凭记忆、旧对话或本地快照回答标准问题。docs/04-anchor-navigation.md 只是快照索引，不能代替打开来源页。\\n\\n以上两个 skill 未执行前，不要开始配置、写入、登记，也不要给出标准判断。与 NOSM／BO 无关的工作不受本条约束。\"}}'",
+            "timeout": 10,
+            "statusMessage": "Injecting NOSM build discipline"
+          }
+        ]
+      }
+    ]
+  }
+}
