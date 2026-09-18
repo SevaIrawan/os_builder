@@ -23,6 +23,13 @@ This skill exists so that rule is actually executed, not just written down.
 
 ## Steps
 
+0. **Read the working agreement first**: `docs/working-agreement.md` — the seven
+   operating rules the user set for how we work together (ask before guessing;
+   answer only what was asked; claims must cite a page actually opened; report only
+   deviations; no writes without permission). It is not a Confluence copy, so it is
+   not subject to the drift rule — but it governs how the rest of this skill and all
+   BO work is carried out. Read it before the connector checks, not after.
+
 1. **Confirm connectors are live** (mirrors CLAUDE.md §〇):
    - Atlassian Rovo: call `getAccessibleAtlassianResources` (or read any NOSM page) —
      must resolve the `nexmax` site.
