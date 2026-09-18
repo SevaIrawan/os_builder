@@ -30,12 +30,23 @@ This skill exists so that rule is actually executed, not just written down.
    not subject to the drift rule — but it governs how the rest of this skill and all
    BO work is carried out. Read it before the connector checks, not after.
 
-1. **Confirm connectors are live** (mirrors CLAUDE.md §〇):
-   - Atlassian Rovo: call `getAccessibleAtlassianResources` (or read any NOSM page) —
-     must resolve the `nexmax` site.
-   - n8n: call `search_workflows` (or equivalent list call) — must return a workflow list.
+1. **Confirm connectors are live** (mirrors CLAUDE.md §〇). The bar is a successful
+   *read*, not a successful handshake:
+   - **Atlassian Rovo**: `getConfluencePage` must actually return the body of a NOSM
+     page. Use `pageId=1730347066` (07.06) — the page step 2 needs anyway, so this
+     costs nothing extra. Resolving the site is **not** sufficient evidence.
+   - **n8n**: `search_workflows` with **no** `query` — must return a non-empty
+     workflow list. A filtered query that legitimately matches nothing looks
+     identical to a dead connector, so do not probe with one.
    - If either fails, stop here and report the connector failure. Do not proceed to
      content comparison with unverifiable source access.
+
+   **Known false pass (observed 2026-09-18)**: `getAccessibleAtlassianResources`
+   returned the `nexmax` site normally while `scopes` was an empty array, and every
+   `getConfluencePage` call then failed with `403 "The app is not installed on this
+   instance"`. The old handshake-only check passed in that state. If the resources
+   call is used at all, treat an empty `scopes` array as a failure — but the page
+   read above is the authoritative probe.
 
 2. **Re-fetch the skill source**: `getConfluencePage` for `cloudId=nexmax.atlassian.net`,
    `pageId=1730347066`, `contentFormat=markdown`. Extract §八「流程建设 Skill（正式原文）」
