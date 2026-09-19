@@ -14,13 +14,13 @@
 
 来源：07.06 §三「环境就绪（新开发者首次接入）」。每次在新 device/session 开始工作前，先确认以下五项：
 
-1. 已申请 Atlassian API／MCP 连接器权限。
-2. 已在 Claude 中启用 Atlassian Rovo 连接器 — 验证方式：能否成功读取任意 NOSM 页面。
-3. 已申请 n8n 环境访问与 MCP 接入。
-4. 已验证 n8n MCP 连通 — 验证方式：能否列出现有 workflow 清单。
-5. 已通读 [04｜流程建设与执行治理总纲](https://nexmax.atlassian.net/wiki/spaces/NOSM/pages/1676804100) 及其导航表（本仓库 `docs/04-anchor-navigation.md` 提供快速索引，但索引不能代替实际打开子页）。
+1. 已申请 Atlassian API／MCP 连接器权限 —— 🔲 具体申请渠道与审批人，待 Alden 补充。
+2. 已在 Claude 中启用 Atlassian Rovo 连接器（Project 或 Claude Code 环境）—— 验证方式：能否成功读取任意 NOSM 页面（如 07.06 来源页本身）。
+3. 已申请 n8n 环境访问与 MCP 接入 —— 环境划分按 04.6 §3.2（现阶段单实例、隔离靠运行纪律）；具体申请渠道 🔲 仍待补。
+4. 已验证 n8n MCP 连通 —— 验证方式：能否列出现有 workflow 清单。
+5. 已通读 [04｜流程建设与执行治理总纲](https://nexmax.atlassian.net/wiki/spaces/NOSM/pages/1676804100) 及其导航表，建立「标准住哪」的心智地图，不需要通读全部子页细节（本仓库 `docs/04-anchor-navigation.md` 提供快速索引，但索引不能代替实际打开子页）。
 
-**验收标准**：以上五项全部完成，且能独立完成一次「打开 04.7 查某个请求类型归属哪个 Project」的操作，即视为环境就绪。
+**验收标准**：以上五项全部完成，且能独立完成一次「打开 04.7 查某个请求类型归属哪个 Project」的操作，即视为环境就绪，可以进入 07.06 §三 下方的标准动作流程。
 
 ---
 
