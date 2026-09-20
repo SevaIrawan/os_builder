@@ -1,10 +1,15 @@
 # Draft · OSD-116 comment to Felix — S-05 Spec questions
 
-**Status**: FINAL, approved by the repo owner, **NOT SENT**. Three send attempts on
-2026-09-20 (~22:5x–23:1x WIB) all timed out; the Atlassian connector was degraded that
-evening (repeated 60s timeouts on both read and write, one `502 Bad gateway`, and one
-`You don't have permission to connect from this IP address`). The card was checked after
-each attempt and stayed empty — **nothing landed, no duplicate risk**.
+**Status**: **SENT** as OSD-116 comment `c50250` on 2026-09-21 06:26 WIB, read back and
+confirmed (total 153; all three mentions rendered as real mentions). Text as sent is
+identical to the body below.
+
+History: three send attempts on the evening of 2026-09-20 all timed out while the
+Atlassian connector was degraded (repeated 60s timeouts on read and write, one
+`502 Bad gateway`, one `You don't have permission to connect from this IP address`, and
+`The app is not installed on this instance` on the Backend Operations connector). The
+card was checked after each attempt and again before sending on 21 Sep — nothing had
+landed, so there was no duplicate.
 
 **Send to**: Jira issue `OSD-116`, as a new comment (not a reply).
 **Account**: the repo owner's personal Atlassian connector. The Backend Operations
