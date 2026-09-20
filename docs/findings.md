@@ -165,7 +165,10 @@ routes the second toward the 04.8 registration that c50244 places on Kayden's si
 ## F-004 · 2026-09-20 · 04.3 §六 has no row covering the built `Cancel as Duplicate` exit
 
 **Status**: recorded here only. **Not reported to anyone, not added to the 建造单, not
-acted on.** No instruction has been given on this one.
+acted on.** No instruction has been given on this one. **Re-verified 2026-09-20 against the live
+page (04.3 v33)**: the 转态权限表 row for a master-ticket cancel by service account is
+scoped to the post-待子单完成 abort path, and the 待审批 cancel row is reporter-only — so
+the built `Cancel as Duplicate` exit is still uncovered. Finding unchanged.
 
 **Found while**: the same verification pass as F-002.
 
@@ -193,6 +196,60 @@ acted on.** No instruction has been given on this one.
 **Why recorded rather than acted on**: determining whether this is a 标准缺口 (04.3's
 own gap), a 业务歧义, or already settled somewhere not yet read is not this repo's call,
 and no instruction has been given. Recorded so it can be re-checked.
+
+---
+
+## F-005 · 2026-09-20 · 04.3 §六 does not cover the executor c50244 mandates for N28
+
+**Status**: recorded on the 建造单 (v33) on the repo owner's explicit instruction, as an
+open item for the 04.3 Owner. Not reported to anyone else. The row it sits on stays
+「待办」; nothing was configured.
+
+**Found while**: drafting the 建造单 update that consumes Kayden's two rulings in
+OSD-116 c50244, at the repo owner's request.
+
+**Pages / objects actually opened and read (all on 2026-09-20)**:
+
+| pageId / id | Page / object | version as read |
+| --- | --- | --- |
+| OSD-116 c50244 | Kayden's ruling, 2026-09-20 13:31 +07 | — |
+| OSD-116 c50228 | Kent's escalation (defines 方向 1／方向 2) | — |
+| 1676771343 | 04.3｜状态词汇表与 Workflow 配置规范 (§五, §六, page-foot 维护说明) | v33 |
+| 1676804100 | 04｜流程建设与执行治理总纲 (§六 子页地图) | v25 |
+| 1678573617 | 04.5 (§6.1 基线失效) | v79 |
+| 1676738564 | 04.1 (§一 Registry row) | v46 |
+| 1690140756 | 04.8 (§三 entity row, §五 Lifecycle Stage) | v20 |
+| 1676640265 | 04.0 (§二 档案卡) | v26 |
+| 1704362028 | 07｜指南 (§二, §三) | v28 |
+| 2096463922 | 纪律与绩效改进处置｜建造单 | v32 → v33 |
+
+**Facts recorded**:
+
+1. c50244 rules that N28 takes 方向 2: the abort stays manual, with the executor widened
+   from a single Project Owner to the **HR Ops & Data role group**. (The 方向 1／方向 2
+   labels are defined in c50228, not in the ruling itself.)
+2. 04.3 §六 转态权限表, row「**主单**转入「已取消」（执行中止）」, reads:
+   「**仅服务账号与该主单所在 Project 的 Owner**」. An HR role group is **not** among them.
+3. The same section opens with「**不设限制的转态视为配置未完成**」.
+4. Configuring N28 as ruled therefore creates a transition permission the table does not
+   cover. Whether 04.3 should carry such a row, or the ruling should be reconciled with
+   it, is not this side's call.
+5. 04.3's Owner is **Kayden Lee** — stated identically in 04.3's own page-foot 维护说明
+   and in 04 §六 子页地图. That 维护说明's「更新触发条件」explicitly lists
+   「转态权限执法点、撤回规则…变更时更新本页」.
+6. **Related to F-004**: both are gaps in the same table (04.3 §六 转态权限表) — F-004 is
+   the missing row for the already-built service-account cancel from 待审批; this one is
+   the missing row for the mandated HR-role-group abort.
+
+**What was written to the 建造单 (v33, four additions, originals kept)**: the Registry
+blocker row (ruling recorded, still blocked, dependency reassigned, plus the read-path
+constraint and the 04.8 §三 status-column fact); the N28 blocker row (this finding, plus
+the 抢跑 constraint routed to Alden, and the note that 04.5 §6.1 基线失效 is not triggered
+because the Spec page is not edited); the §2 transition table row 11; and the §8 guard row.
+
+**Correction carried from F-003**: the earlier draft of the Registry row claimed
+`纪律处分记录状态` should be registered at 04.8 §五. That was wrong and was removed before
+writing — 04.8 §三 already registers it. See F-003's status correction.
 
 ---
 
