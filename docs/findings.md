@@ -1,70 +1,71 @@
-# Catatan Temuan (Findings Log)
+# Findings Log
 
-> **Sifat**：catatan internal repo. **Bukan dokumen resmi, bukan standar, tidak punya
-> kewenangan apa pun.** Isinya tidak boleh dipakai sebagai dasar konfigurasi atau
-> keputusan; dasar kerja tetap halaman Confluence yang berlaku saat itu.
+> **Nature**: internal repo notes. **Not an official document, not a standard, carries no
+> authority.** Nothing here may be used as a basis for configuration or decisions; the
+> working basis remains whatever the Confluence pages say at the time of use.
 >
-> **Aturan pencatatan**：
-> 1. Temuan **dicatat di sini saja**. Tidak mengedit halaman Confluence, tidak mengirim
->    ke Slack／Jira／siapa pun, tanpa perintah eksplisit pemilik repo.
-> 2. Catatan ini **tidak menentukan** temuan itu urusan siapa, harus naik ke mana, atau
->    perlu ditindak atau tidak. Itu di luar wewenang repo ini.
-> 3. Setiap temuan wajib menyebut halaman yang **benar-benar dibuka** (pageId +
->    lastModified saat dibaca), supaya bisa dicek ulang kapan pun.
-> 4. Append-only. Entri lama tidak dihapus atau ditulis ulang; kalau keadaan berubah,
->    tambah baris di kolom Status.
+> **Recording rules**:
+> 1. Observations are **recorded here only**. No edits to Confluence pages, no messages
+>    to Slack／Jira／anyone, without an explicit instruction from the repo owner.
+> 2. These notes **do not determine** whose concern an observation is, where it should
+>    be escalated, or whether it should be acted on at all. That is outside this repo's
+>    authority.
+> 3. Every entry must name the pages **actually opened and read** (pageId +
+>    lastModified as seen), so anything recorded can be re-checked later.
+> 4. Append-only. Existing entries are not deleted or rewritten; if the situation
+>    changes, add a line to the Status field.
 
 ---
 
-## F-001 · 2026-09-20 · 04.11 tidak terdaftar di peta subpage halaman 04
+## F-001 · 2026-09-20 · 04.11 is not listed in page 04's subpage map
 
-**Status**：dicatat. Belum dilaporkan ke siapa pun. Belum ditindak.
+**Status**: recorded. Not reported to anyone. Not acted on.
 
-**Ditemukan saat**：menjalankan skill `nosm-sync-check` (verifikasi salinan lokal lawan
-sumber Confluence). Temuan ini **di luar lingkup skill tersebut** — skill-nya hanya
-membandingkan salinan lokal dengan sumbernya, bukan memeriksa kecocokan antar halaman
-sumber. Tercatat di sini sebagai arsip, bukan sebagai hasil kerja skill.
+**Found while**: running the `nosm-sync-check` skill (verifying the local copies against
+their Confluence sources). This observation is **outside that skill's scope** — the skill
+only compares the local copy against its source, it does not check consistency between
+source pages. Filed here as a record, not as an output of that skill.
 
-**Halaman yang benar-benar dibuka dan dibaca**：
+**Pages actually opened and read**:
 
-| pageId | Halaman | lastModified saat dibaca |
+| pageId | Page | lastModified as read |
 | --- | --- | --- |
 | 1676804100 | 04｜流程建设与执行治理总纲 | Sep 05, 2026 |
 | 1730347066 | 07.06｜建设指南 | Sep 15, 2026 |
 | 1764524046 | 04.11｜Slack Channel 登记表 | Aug 24, 2026 |
 | 1704362028 | 07｜指南 | Sep 14, 2026 |
 
-**Fakta yang tercatat**：
+**Facts recorded**:
 
-1. 07.06 §三 langkah 3 menyuruh mencocokkan Channel ID ke
+1. 07.06 §三 step 3 instructs that notification Channel IDs be checked against
    「04.11｜Slack Channel 登记表（pageId 1764524046，按 Channel ID 查对，频道名仅辅助）」.
-2. 07.06 §三 归口表 menyebut 04.11 sekali lagi, pada baris
+2. The 归口表 in 07.06 §三 names 04.11 again, in the row
    「登记表某一行错了（04.7／04.8／04.9／04.11）」.
-3. Halaman 04 §六「04 子页地图」berakhir di baris 04.10 — **tidak ada baris 04.11**.
-   Halaman 04 §五「登记集」juga tidak memuat baris pemicu untuk mapping
-   「领域→Slack Channel」.
-4. Halaman 04 §九 berbunyi：「子页新增、废弃、改名、权威边界改变或跨页结构重排时，
-   必须同步核对本页路由与全部指针」。04.11 menurut halamannya sendiri dibuat 2026-08;
-   sampai versi 04 yang dibaca (Sep 05, 2026) belum terlihat di tabel routing.
-5. Halaman 04.11 mencatat sendiri：「本页为 2026-08 新设，与旧编号 04.11（今 04.10｜
-   Jira 共享配置登记表与变更治理）无关」— nomor 04.11 pernah dipakai halaman lain.
+3. Page 04 §六「04 子页地图」ends at the 04.10 row — **there is no 04.11 row**. Page 04
+   §五「登记集」likewise has no trigger row for the「领域→Slack Channel」mapping.
+4. Page 04 §九 states:「子页新增、废弃、改名、权威边界改变或跨页结构重排时，必须同步
+   核对本页路由与全部指针」. Per its own text 04.11 was created in 2026-08; as of the
+   version of 04 that was read (Sep 05, 2026) it does not appear in the routing tables.
+5. Page 04.11 notes of itself:「本页为 2026-08 新设，与旧编号 04.11（今 04.10｜Jira
+   共享配置登记表与变更治理）无关」— the number 04.11 was previously used by a
+   different page.
 
-**Kenapa dicatat, bukan ditindak**：
+**Why recorded rather than acted on**:
 
-- Baris 04.11 **tidak ditambahkan** ke `docs/04-anchor-navigation.md`. File itu cermin
-  tabel halaman 04; menambah baris yang tidak ada di sumber sama dengan mengarang
-  standar, dan itu dilarang eksplisit di `CLAUDE.md` §一.
-- Halaman Confluence tidak disentuh sama sekali — hanya dibaca.
-- Tidak ada yang dikirim ke Slack, Jira, atau pihak mana pun.
+- No 04.11 row was added to `docs/04-anchor-navigation.md`. That file mirrors page 04's
+  tables; adding a row the source does not have would amount to inventing a standard,
+  which `CLAUDE.md` §一 forbids outright.
+- No Confluence page was touched — all four were read only.
+- Nothing was sent to Slack, Jira, or any other party.
 
-**Catatan keadaan saat dicatat**：tidak ada pekerjaan pembangunan yang sedang berjalan,
-jadi tidak ada yang terhambat oleh temuan ini.
+**Circumstances at time of recording**: no build work was in progress, so nothing was
+blocked by this.
 
 ---
 
-## Riwayat sync-check
+## Sync-check history
 
-| Tanggal | Sumber yang dibandingkan | Hasil |
+| Date | Compared | Result |
 | --- | --- | --- |
-| 2026-09-20 | 07.06 §八 (1730347066, Sep 15 2026) vs `CLAUDE.md` §一 | Sama persis, tidak ada perubahan |
-| 2026-09-20 | 04 §一/§五/§六 (1676804100, Sep 05 2026) vs `docs/04-anchor-navigation.md` | 3 frasa hilang saat penyalinan, dikembalikan sesuai sumber (commit `a15c1b3`) |
+| 2026-09-20 | 07.06 §八 (1730347066, Sep 15 2026) vs `CLAUDE.md` §一 | Identical; no change needed |
+| 2026-09-20 | 04 §一/§五/§六 (1676804100, Sep 05 2026) vs `docs/04-anchor-navigation.md` | 3 phrases dropped during an earlier copy; restored to match source (commit `a15c1b3`) |
