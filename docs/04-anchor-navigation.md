@@ -3,7 +3,7 @@
 > **性质**：指路牌／快速索引，不是规则本体。
 > **来源**：Confluence [04｜流程建设与执行治理总纲](https://nexmax.atlassian.net/wiki/spaces/NOSM/pages/1676804100)（page id `1676804100`，space `NOSM`）。
 > **权威使用原则（来自来源页）**：任何人或 AI 不得只读本索引就执行对象级判断。命中某个 04.x 子页后，必须实际打开并读取其当前版本；Jira 是进度事实，Confluence 当前权威页是规则事实。
-> **上次同步日期**：2026-09-17（对照来源页 lastModified: Sep 05, 2026）。与来源页不一致时，以 Confluence 当前版本为准，本文件视为过期。
+> **上次同步日期**：2026-09-20（对照来源页 lastModified: Sep 05, 2026）。与来源页不一致时，以 Confluence 当前版本为准，本文件视为过期。
 
 ---
 
@@ -12,7 +12,7 @@
 | 当前动作 | 现阶段主要执行人 | 先读取 |
 | --- | --- | --- |
 | 盘点、切分与流程设计 | 部门 HOD／流程 Owner＋协助 AI | 04 第二、三节＋04.5＋07.01／07.02 |
-| 三个审计 Gate 与对齐 | 切分审计／验收审计：Kayden 或 Alden（OR）；结构审计：Kayden＋Alden 双签（AND）；对齐：流程 Owner 及相关 HOD | 04 第二节 Gate＋Spec／建造单＋对应 Jira 证据 |
+| 三个审计 Gate 与对齐 | 切分审计／验收审计：Kayden 或 Alden（OR）；结构审计：Kayden＋Alden 双签（AND）；对齐：流程 Owner 及相关 HOD／管理层 | 04 第二节 Gate＋Spec／建造单＋对应 Jira 证据 |
 | 平台建设 | Alden／BO 建设者＋协助 AI | 04 第二、四、五节＋04.5／04.6／07.04 |
 | 验收与上线 | 验收裁决：Kayden 或 Alden；上线：流程 Owner＋BO 建造 Owner | 04 第二、三、五节＋Spec＋建造单＋测试证据 |
 
@@ -26,8 +26,8 @@
 | [04.1｜Project 类型与开设判定](https://nexmax.atlassian.net/wiki/spaces/NOSM/pages/1676738564) | Project 判定、命名、Key 与实例登记 | Kayden | 生效 |
 | [04.2｜单据体系](https://nexmax.atlassian.net/wiki/spaces/NOSM/pages/1676607500) | 主单、子单、维护单等 Issue Type 的语义、触发与阻塞 | Kayden | 生效 |
 | [04.3｜状态词汇表与 Workflow 配置规范](https://nexmax.atlassian.net/wiki/spaces/NOSM/pages/1676771343) | 状态语义、流程形状与 Workflow 逻辑标准 | Kayden | 生效 |
-| [04.4｜自动化配置模式库](https://nexmax.atlassian.net/wiki/spaces/NOSM/pages/1677066244) | 跨部门／跨系统自动化模式与命名 | Alden | 生效（持续扩充） |
-| [04.4.1｜模式九：Slack 审批卡回调](https://nexmax.atlassian.net/wiki/spaces/NOSM/pages/1729888419) | Slack 审批卡回调模式的配置与验收规则 | Alden | 候选模式／待并入 04.4 |
+| [04.4｜自动化配置模式库](https://nexmax.atlassian.net/wiki/spaces/NOSM/pages/1677066244) | 跨部门／跨系统自动化模式与命名 | Alden | 生效（模式持续扩充） |
+| [04.4.1｜模式九：Slack 审批卡回调（共享地基）](https://nexmax.atlassian.net/wiki/spaces/NOSM/pages/1729888419) | Slack 审批卡回调模式的配置与验收规则（候选新增章节，待 Alden 核收并入 04.4 正文） | Alden | 候选模式／待并入 04.4 |
 | [04.5｜流程 Spec 与建造单规范](https://nexmax.atlassian.net/wiki/spaces/NOSM/pages/1678573617) | 双文档架构、Schema、交接与验收 | Kayden | 生效 |
 | [04.5.1｜流程 Spec 模板](https://nexmax.atlassian.net/wiki/spaces/NOSM/pages/1685979182) | Spec 可复制模板与填写示例 | Kayden | 生效 |
 | [04.5.2｜建造单模板](https://nexmax.atlassian.net/wiki/spaces/NOSM/pages/1729626775) | 建造单九区模板与字段结构 | Alden | 生效 |
