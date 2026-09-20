@@ -112,6 +112,19 @@ in place, per the page's own 体例 (「上句原文保留不删」).
 instruction. Kayden was deliberately not tagged — routing left to Kent, as he has been
 routing throughout.
 
+**Status correction, 2026-09-20 (same day)**: this entry is **wrong on one of the two
+rows**, and so is the comment sent from it. 04.8 was **never opened** before writing
+either — it is absent from the "pages actually opened and read" table below, which is the
+tell. Opened afterwards (v20, 2026-09-15): **04.8 §三 already registers the entity
+「纪律处分记录（Warning Record）」 with its status column defined —
+「Active → Expired/Reset；Active → 已解除」 — naming S-05 N13／N26／N27 as the trigger
+source.** So `纪律处分记录状态` is the archive card's status column, already registered as
+SSOT, not a Jira custom field; 04.8 §五 is explicitly for fields *other than* the status
+column and is **not** its home. Consequences: (a) c50237 was **right** to leave it out of
+a Jira-field list; (b) the genuine omission is **one** row, `联合评审结果`, not two;
+(c) point 2 of c50249 is wrong and needs retracting. Title, facts 4 and 5 and the closing
+paragraph of this entry are wrong accordingly. Kept unrewritten per rule 4.
+
 **Found while**: the same verification pass as F-002.
 
 **Pages / objects actually opened and read**:
