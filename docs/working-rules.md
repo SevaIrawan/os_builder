@@ -43,11 +43,15 @@ Recorded because this is a large project and sessions do not carry memory.
 - Every factual claim reported cites where it came from: pageId and the version or
   lastModified as read, Jira comment id, n8n workflow id, or the API call that returned it.
 
-## Known gap in this session's reading (kept so it is not silently forgotten)
+## Reading-coverage record for OSD-116 (closed 2026-09-20)
 
-OSD-116 has 151 comments. All human comments were read verbatim. Of the Bot_SSC machine
-audit reports, rounds 1–6, 9 and 10 (including their 裁决准备包) were read in full;
-round 7 was read in part, and rounds 8 and 11–16 were read only as header plus the
-`机器退回项` section. Those rounds' `待人工裁决` tables were not read line by line. They
-repeat items already ruled on — a point Kayden makes himself in c49471 — but they were
-not read in full, and no conclusion here rests on them.
+OSD-116 has 151 comments. All were read in full.
+
+- All human comments (Kayden, Alden, Kent, Felix_HR, Zq, Yuki Liew_HR, Bambang): read
+  verbatim.
+- All Bot_SSC machine audit reports and 裁决准备包: read in full. Rounds 1-6, 9 and 10
+  were read first; rounds 7, 8 and 11-16 (comments c49270, c49271, c49318, c49320,
+  c49321, c49340, c49345, c49350, c49351, c49399, c49400, c49411, c49412, c49461,
+  c49462, c49473, c49474) were read in full afterwards, on the owner's instruction.
+
+No part of OSD-116 is now unread.
