@@ -18,6 +18,13 @@ Alden suruh bereskan di 04.4 §十一 dengan c50273 ⑤ 「标准页只放结果
 atau di #nos-bo. Sebelum itu, kerjanya hanya: pantau keempat sumber, tambah butir baru ke daftar ini.
 **Tidak ada tulisan ke Confluence, Jira, atau Slack tanpa perintah eksplisit.**
 
+## Status per baris 页首附表
+
+Daftar 待办 / 阻塞中 yang kau susun di 建造单 sekarang punya cermin ber-status di
+**`docs/buildsheet-blocker-status.md`** — 33 baris, tiap baris diuji terhadap **解除判据 baris itu sendiri**.
+Hasil: **1 baris benar-benar tutup hari ini (baris 12)**, 9 baris bergerak tanpa 判据-nya terpenuhi,
+23 baris tidak bergerak. Tally: 阻塞中 tetap 5, 待办 24 → 23, 已解封 4 → 5.
+
 ## Siapa yang kita tunggu (status terverifikasi 2026-09-21 ~18:45 WIB)
 
 🔴 **Alden belum berkomentar di OSD-116 sejak 2026-09-10.** Diverifikasi: namanya tidak muncul di 60 comment
