@@ -284,3 +284,97 @@ seluruh narasi tiga ronde koreksi versionId dihapus dari sel itu atas perintah A
 2. **04.4.3 v6 (halaman kontrak 身份件) masih tertulis 「在建·影子·inactive」** dan belum bergerak sama sekali.
    Owner: Alden. (04.4.3 bagian 「维护说明」 mensyaratkan pembaruan saat status件 berubah.)
    Keduanya = satu fakta dengan tiga落点 yang tidak sinkron — persis jenis masalah yang 04.5 §五 larang.
+
+---
+
+# SWEEP KEDUA 2026-09-21 ~18:30 WIB (11:30Z) — semua sumber, bukan hanya Confluence
+
+Dipicu instruksi: perbarui yang sudah dikerjakan, cek doc yang basi, dan cek juga comment + #nos-bo.
+
+## A. Confluence — TIDAK ada versi baru sejak sapuan pertama
+
+CQL `space = NOSM AND type = page AND lastmodified >= "2026-09-21 10:00"` → 18 halaman,
+tidak satu pun melampaui versi yang sudah kita catat jam 11:00Z.
+Diverifikasi satu per satu lewat `listConfluenceContentVersions`:
+- **04.9 tetap v106** (10:42:56Z) — tidak naik.
+- **建造单 2096463922 tetap v33** (2026-09-20 14:55:49Z, pesan versi: konsumsi Kayden c50244 empat tambahan).
+- 04.4.4 v4 / 04.4 v33 / 04.9.1 v19 / 07.06.1 v34 / 04.7 v46 / 04.8 v21 — semua tetap.
+- 04.11 **tidak muncul** di sapuan mana pun ⇒ masih v2 (2026-08-24) ⇒ 判据② baris 6 建造单 (04.11 登记, Alden) **masih terbuka**.
+Sisa halaman yang bergerak milik alur lain (招聘 Spec, 新人90天 Spec, Grade 建造单, 离职 建造单,
+OS 开发流 建造单, 04.9.3, 04.9.5, xLoop×3, AMS) — bukan sumber S-05.
+
+## B. OSD-116 — total 163 comment; **tidak ada yang lebih baru dari c50290**
+
+Diverifikasi via `listJiraIssueComments` orderBy `-created`: halaman pertama (10 terbaru) =
+c50290 · c50283 · c50279 · c50263 · c50262 · c50261 · c50259 · c50257 · c50256 · c50255.
+Jadi c50290 masih yang terakhir; tidak ada balasan Alden atas c50279 maupun atas c50256.
+
+### c50290 Kent 2026-09-21 17:18 +07 — 【审批结论 → Bambang, cc Alden；一问 → Felix】 (dibaca penuh)
+
+**Putusan pokok**: 「S-05 执行卡/子单字段 ×13（你 c50283 的三格申请）——Schema Owner 审批：
+**13 项全部准予按「新共享对象」登记**」.
+
+Dasar anti-duplikat yang dia sebut (dia baca 04.10 v19 §三 总表 per item): 「§三 number 字段全是离职结算金额、
+无计数器；无任何 date 字段；唯一 textarea cf18054 是取消原因门禁、语义与角色均不同；「通过/不通过」虽与
+cf18152 Grade Assessment Result 同字面，但 18152 明注「绑本流程、不通用化、结果词分叉不共享」，不可复用」.
+→ Keempat alasan itu **sama persis** dengan kolom ketiga yang kita tulis di c50283 baris 1/2/3.
+
+**Tiga putusan tipe**:
+1. Warning 生效信息 → 「**只登「Warning Effective Date」(date) 一个字段**」. 「有效/重置规则」不另设字段
+   ——「发 D-6/D-11 时由卡从主单读（Warning 等级＋纪律记录有效期）当场 derive 出【Validity/Reset Rule】文案，
+   避免与主单有效期本体形成两份漂移（SSOT）」. Bergantung pada sisi Alden (「纪律记录有效期」「Warning 等级/结果」,
+   sudah kita rutekan ke master di c50237), dan **「卡需跨单读」** — ini kewajiban build baru di sisi kita.
+2. PIP 延长周期 → 「**option（15/30/60/90 天）**，非自由 number（匹配 D-8 文案＋能撑 C-10 Check-in 频率规则）」.
+   Dikunci setelah Felix menjawab.
+3. 「其余按你所拟。」 Dua batasan build: 「Check-in 记录需跨 7 个部门 Team Project 的 context（非 HR-only）」;
+   「判定依据类型两个值须与离职流「辞退原因」(Felix c50045) 逐字对齐」.
+
+**Entri & pembagian peran** (menjawab pertanyaan yang kita ajukan soal Task):
+「本批走 c48074 允许的「comment @Schema Owner 轻量入口」。经我裁定本批**例外不转开 Task**（留痕于此）；
+登记本体落 04.10 §三总表，按 §2「先登记后启用」于字段建成＋API 回读后补入带证据的登记行。」
+「13 个 Jira 字段的创建、挂屏与 04.10 登记＝Schema Owner 侧（我方…）；你（Bambang）负责 S-05 流程建设、
+消费这些字段——与 Grade（BO-2 / cf18152-153，Sinyee 建流程）同一分工。」
+→ Jadi pembuatan field **bukan** pekerjaan kita. Kita menunggu field jadi, lalu API 回读 dan konsumsi.
+
+**Satu pertanyaan masih menggantung ke Felix**: 「PIP「延长周期」是否就 15/30/60/90 四档、无「视情况」超出的可能？
+（Spec C-10 仅对这 4 档定义 Check-in 频率，超出会留规则空档）」 — belum dijawab.
+
+## C. Slack #nos-bo — **tidak ada pesan top-level baru**, tapi SATU THREAD bergerak hari ini
+
+Pesan top-level terakhir tetap 2026-09-19 18:36 Kayden (sudah kita baca).
+Yang baru: thread di bawah pesan Kent 2026-09-18 11:06「三流程复盘报告」(ts 1789704362.435989),
+sekarang **5 balasan, terakhir 2026-09-21 13:59:29 +07**. Dibaca penuh.
+
+### C.1 Kayden 2026-09-19 17:04 — INI PUTUSAN, dan dua butirnya menyentuh S-05
+
+**① 验收关 vs 工程审关 = dua gerbang berbeda** (menjawab syarat (b) Kent):
+「是两道关，管两件不同的事。验收关（N13、N14）管「建出来的东西对不对冻结的 Spec」；工程审关（切 active）
+管「开关拨不拨」，是 Alden 的运维动作，04.6 还要求开之前先在 04.9 登记完。所以不绑死「合一」。
+我说的合一只是判据合一：审东西的标准只有一份，全住 07.07；能编码的进 N13 机器查，不能编码的留 N14 人看…
+切 active 仍是 Alden 的动作，但他拨开关时只核 04.9 登记和守护配置，不再另审一套标准。」
+🔴 **「还有一点现在 Spec 没写：切 active 放在 N14 通过之后、N15 上线之前。这个顺序我会写进 OS 开发流 Spec。」**
+→ Relevan langsung untuk rencana 上线 S-05 dan 区六 建造单. **Belum masuk OS 开发流 Spec v39** — jadi ini
+belum jadi aturan tertulis, baru niat Kayden. Jangan dipakai sebagai dasar sebelum Spec-nya naik versi.
+
+**② 权责矩阵**: 「归口表指针同时指 04.10 第二节（算不算共享）和 07.06.1（BO 能不能自建 inactive 件）。
+04.10 第二节的判定标准由你（Kent）起草，平台地界 Alden 点头，落页由我这边的执行者做。」
+
+**③ 改动分级落点**: 「原则一句话进「收拢」那一节…具体的停机规则改 **07.04 第 10.1 节**…改成
+「判据改动才重钉基线，非判据改动只记录不停机，并写明谁判定改动性质」。机器怎么识别写进**建造单的暗号表**，
+**04.12 同步加一行**。」
+→ Kalau ini jadi, 暗号表 建造单 kita (8 marker `nos-s05-*`) akan ikut kena. Masih draft.
+
+**④ 上产时限**: 「代批条款落页是 9 月 10 日的 04.6 **第 12 版**，9 月 6 日是 Alden 在线程里口头确认的日子，
+我记错了。」 — koreksi tanggal, tidak mengubah isi 04.6 v20 §3.4 yang kita catat.
+
+### C.2 Kent 2026-09-21 13:41 dan 13:59 — DUA DRAF, belum disetujui
+
+- 13:41 — 权责判定标准 (复盘④ / B-013) draf untuk **04.10 §二**. Canvas `F0C32N7MYR1`.
+  「请 Kayden 批 + 安排落页；请 Alden 点头「平台地界」那半。我这边只出草稿、不直改 04.10」.
+- 13:59 — 改动分级三层文案 draf. Canvas `F0C2TLMGST1`.
+  「核心机制＝**拆两个版本号**（页面版本号 vs 判据基线号；小改不停机、大改才停）」.
+  Dua hal minta konfirmasi: ① §10.1 itu aturan *baru*; ② 收拢节 (层1) digarap bersama Alden.
+
+**Status keduanya: draf menunggu keputusan Kayden/Alden.** Bukan aturan. Tidak ada yang bisa kita kerjakan
+dari sini sekarang; dicatat sebagai pantauan karena keduanya menyentuh halaman yang kita pakai
+(04.10 §二 dan 暗号表/04.12).

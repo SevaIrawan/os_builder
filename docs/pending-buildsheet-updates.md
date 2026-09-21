@@ -1,7 +1,8 @@
 # 建造单 (2096463922) — daftar pembaruan tertunda, untuk satu kali update (v33 → v34)
 
 > Catatan kerja builder (Bambang). Belum ditulis ke Confluence. Setiap butir memakai kebiasaan halaman: 原文保留不删, tambah catatan bertanggal.
-> Disusun 2026-09-21. Sumber tiap butir disebut di baris masing-masing.
+> Disusun 2026-09-21; diperbarui 2026-09-21 ~18:30 WIB setelah sapuan penuh (Confluence + OSD-116 + #nos-bo).
+> Sumber tiap butir disebut di baris masing-masing. 建造单 masih **v33** (2026-09-20 14:55Z) — belum ada satu pun butir di bawah yang ditulis ke Confluence.
 
 | # | Lokasi di 建造单 | Yang salah / berubah | Teks yang diusulkan (tambahan bertanggal) | Sumber |
 | --- | --- | --- | --- | --- |
@@ -17,9 +18,16 @@
 | 10 | 区六 平台件表 — baris 身份件 (Submission Identity Verifier) | Tercatat 在建·影子·inactive. Sejak 2026-09-21 07:52Z sudah **active·已发布**: 04.9 v106 menambah baris index-nya, 04.9.1 v19 menulis versionId＝activeVersionId `616bbd91-5cd7-4c10-bcc4-ae9052592253`, 5 节点, nama sudah dibuang sufiks 「DO NOT ACTIVATE · shadow」. | 「【2026-09-21 补】本件已发布：04.9 v106 索引行新增、04.9.1 v19 状态改 **active·已发布**（versionId＝activeVersionId 616bbd91-5cd7-4c10-bcc4-ae9052592253，5 节点）。04.9.1 v19 并记真实链四例：真上级 identityOk；非上级按业务拒、不告警；**档案查不到**与**档案重复**两种均 fail-closed 且 mustAlert。⚠️ 04.4 §十一 该行与 04.4.3 v6 契约页**仍写「在建·影子·inactive」**，与 04.9／04.9.1 不一致，归 Alden（见 findings F-006）。」 | 04.9 v103→v106 diff; 04.9.1 v17→v19 diff |
 | 11 | 区六 平台件表 — baris 协作 Thread (Collaboration Thread) | Tercatat 在建 (tidak dipakai S-05). Sejak 2026-09-21 statusnya 可用 (Alden NSE-1143 c50273), 04.4 §十一 sudah diubah, halaman kontrak 04.4.4 naik v1 → v4. Tetap inactive dan 零真跑. | 「【2026-09-21 补】04.4 §十一 该行状态已改「可用」（Alden NSE-1143 c50273 验收），契约页 04.4.4 现行 v4。仍 inactive、至今零真跑，S-05 不消费本件，本行仅同步状态。」 | 04.4 v31→v33 diff; 04.4.4 v4 正文 |
 | 12 | 页首附表 baris 5 (两个 Request Type 双语名称) — pelengkap butir 4 di atas | Butir 4 menyebut 「04.7 v45」. 04.7 sudah **v46** (2026-09-21 06:56Z). Perlu dipastikan agar catatan tidak menyebut versi kedaluwarsa. Isi tidak berubah: diff v45→v46 hanya menyentuh baris RT-HR-RECRUITMENT-SUBMIT dan menambah RT-HR-RECRUITMENT-OFFERWITHDRAW; **kedua baris S-05 tidak berubah satu huruf pun**, keduanya tetap 「候选」. | 「（写 v34 时把butir 4 的「04.7 v45」改为「04.7 v46（2026-09-21 实读）」；结论不变：两行 S-05 逐字未动，仍 候选，名称一致未成立。）」 | 04.7 v45→v46 diff |
+| 13 | 页首附表 baris 3 (模式九扩展, 阻塞中) · 区一 N07 行 · 区六 | **c50279 sudah terkirim** ke Alden (2026-09-21 15:17). Belum ada balasan Alden sampai 18:30 WIB (diverifikasi: OSD-116 total 163 comment, terbaru tetap c50290). Baris-baris yang dirujuk c50279 belum diberi catatan 「已发出」. | 「【2026-09-21 补】模式九扩展项已按 Kent c50227 ② 汇总为一份请求发出：OSD-116 **c50279**（→ Alden，cc Kent），含六块本体＋四项 add-on（(a) N03 分派钩子 flow 值 `disciplinary-n03`；(b) 原地转换幂等——本侧自建，另请在共享卡表「被哪些 workflow 引用」列补 S-05；(c) 身份件走向；(d) edit 屏前置）＋Data Table 说明。**截至 2026-09-21 18:30 WIB 未获回复，本行仍 阻塞中。**」 | OSD-116 c50279; 评论清单回读 2026-09-21 18:30 WIB |
+| 14 | 区一 各子单字段行 · 区六 · 页首附表（字段类阻塞行） | **Kent c50290 已批准全部 13 个字段**，并给三处类型裁定、两条建设约束、一处入口裁定与角色分工。建造单尚未登记这一结论。 | 「【2026-09-21 补·依 OSD-116 c50290】Schema Owner Kent 审批结论：**13 项全部准予按「新共享对象」登记**（其已逐项现读 04.10 v19 §三 总表反重复）。三处类型裁定：①「Warning 生效信息」**只登 Warning Effective Date（date）一个字段**，「有效/重置规则」不另设字段——「发 D-6/D-11 时由卡从主单读（Warning 等级＋纪律记录有效期）当场 derive 出【Validity/Reset Rule】文案」，🔴 **本侧因此多一项建设要求：卡需跨单读**；②「PIP 延长周期」定为 **option（15/30/60/90 天）**，非 number，**待 Felix 确认「就 4 档」后锁定**；③其余按本侧所拟。两条建设约束：**Check-in 记录需跨 7 个部门 Team Project 的 context（非 HR-only）**；**判定依据类型两值须与离职流「辞退原因」(Felix c50045) 逐字对齐**。入口裁定：本批走 c48074 轻量入口，**经 Kent 裁定例外不转开 Task**，登记本体落 04.10 §三 总表、按 §2 先登记后启用、于字段建成＋API 回读后补入带证据的登记行。角色分工：**13 个字段的创建、挂屏与 04.10 登记归 Schema Owner 侧（Kent），本侧只负责流程建设与消费**（同 Grade / cf18152-153 分工）。」 | OSD-116 c50290 |
+| 15 | 页首附表（新增一行「上线次序：切 active 的位置」） · 区九 | Kayden 在 #nos-bo 2026-09-19 17:04 裁定：验收关（N13/N14）与工程审关（切 active）是两道关；并说 「切 active 放在 N14 通过之后、N15 上线之前。这个顺序我会写进 OS 开发流 Spec。」 **OS 开发流 Spec 现行仍 v39，尚未写入**，所以这是已裁未落页。 | 新增待办/阻塞行 —— 事项：「S-05 各 n8n 件切 active 的次序；Kayden 已裁「N14 通过之后、N15 上线之前」，且明确工程审关与验收关是两道关、Alden 拨开关时只核 04.9 登记与守护配置」｜依赖谁：Kayden（落 OS 开发流 Spec）｜解除判据：OS 开发流 Spec 出现该次序条款（现行 v39 无）｜不做的后果：上线批次次序无成文依据，可能与平台侧预期不符｜状态：待办。**来源为 Slack 裁定，非标准页；按 07 §二「Confluence 当前权威页是规则事实」，落页前不得当成已生效规则。** | #nos-bo thread 1789704362.435989 回复 3（Kayden 2026-09-19 17:04）；OS 开发流 Spec v39 |
+| 16 | （仅作观察登记，暂不改任何行） | 两份会影响本建造单的草稿已出但**未获批**：① Kent 2026-09-21 13:41 的 **04.10 §二 权责判定标准**草稿（Canvas F0C32N7MYR1）；② Kent 2026-09-21 13:59 的 **改动分级三层文案**草稿（Canvas F0C2TLMGST1），核心机制「拆两个版本号（页面版本号 vs 判据基线号；小改不停机、大改才停）」，Kayden 裁定其停机规则落 **07.04 §10.1**、机器识别方式写进**建造单的暗号表**、**04.12 同步加一行**。 | 暂不写入建造单。待 Kayden 批、Alden 点头并实际落页后，再按落页版本消费。若②落地，本页 **暗号接口契约表**（8 个 `nos-s05-*`）需同步。 | #nos-bo thread 1789704362.435989 回复 3／4／5 |
 
-## Terkait, sudah terkirim
-- 2026-09-21 OSD-116 c50279: Pattern-9 consolidated request → Alden, cc Kent (butir 3/25/29/30/32 页首附表 dirujuk di sana; baris-baris itu belum diberi catatan 「已发出」 — bisa ditambahkan saat update v34 bila diinginkan).
+## Terkait, sudah terkirim (status per 2026-09-21 18:30 WIB, diverifikasi dari daftar comment live)
+- **c50279** (15:17) Pattern-9 consolidated request → Alden, cc Kent. **Belum dibalas.** → butir 13.
+- **c50283** (15:59) 04.10 three-cell request → Kent, cc Alden. **Sudah dibalas: c50290, disetujui penuh.** → butir 14.
+- **c50263** (12:30) Correction → Kayden, cc Kent/Alden (N28 抢跑约束 ditarik). → sudah tercermin di butir 6.
+- Comment terbaru di OSD-116 tetap **c50290**; total comment 163. Tidak ada balasan Alden atas c50279 maupun atas Kent c50256.
 
 ## Belum masuk daftar (menunggu keputusan pemilik lain)
 - 04.7 dua baris nama Request Type: milik Felix/Alden, bukan 建造单.

@@ -4,9 +4,18 @@
 > yang pernah kita konsumsi. Kolom "Versi tercatat" adalah versi yang jadi dasar catatan/draft kita;
 > kalau live lebih tinggi, catatan kita berdiri di atas versi basi sampai diff-nya dibaca.
 >
-> **Terakhir disapu**: 2026-09-21 ~11:00Z (18:00 WIB), metode: CQL seluruh space NOSM
+> **Terakhir disapu**: 2026-09-21 ~11:30Z (18:30 WIB), metode: CQL seluruh space NOSM
 > `space = NOSM AND type = page AND lastmodified >= "<tanggal sapuan sebelumnya>"`, lalu
 > `listConfluenceContentVersions` + `diffConfluenceContentVersions` untuk tiap halaman yang bergerak.
+>
+> Sapuan 11:30Z: **tidak ada versi baru** dibanding sapuan 11:00Z. Diverifikasi per halaman, bukan
+> disimpulkan dari daftar CQL saja — 04.9 tetap v106, 建造单 tetap v33. 04.11 tidak pernah muncul di
+> sapuan mana pun sejak 2026-09-20, jadi masih v2 dan 判据② baris 6 建造单 masih terbuka.
+>
+> Sumber non-Confluence yang ikut disapu (tidak punya nomor versi, jadi dicatat dengan penanda terakhir):
+> **OSD-116** — 163 comment, terbaru **c50290** (Kent, 2026-09-21 17:18 +07).
+> **#nos-bo (C0BRSTNNY4A)** — pesan top-level terbaru 2026-09-19 18:36 (Kayden); balasan thread terbaru
+> **2026-09-21 13:59:29 +07** di thread `1789704362.435989` (Kent 三流程复盘报告).
 
 | Halaman | pageId | Versi tercatat | Owner |
 | --- | --- | --- | --- |
