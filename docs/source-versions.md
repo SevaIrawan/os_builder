@@ -12,10 +12,24 @@
 > disimpulkan dari daftar CQL saja — 04.9 tetap v106, 建造单 tetap v33. 04.11 tidak pernah muncul di
 > sapuan mana pun sejak 2026-09-20, jadi masih v2 dan 判据② baris 6 建造单 masih terbuka.
 >
-> Sumber non-Confluence yang ikut disapu (tidak punya nomor versi, jadi dicatat dengan penanda terakhir):
-> **OSD-116** — 163 comment, terbaru **c50290** (Kent, 2026-09-21 17:18 +07).
-> **#nos-bo (C0BRSTNNY4A)** — pesan top-level terbaru 2026-09-19 18:36 (Kayden); balasan thread terbaru
-> **2026-09-21 13:59:29 +07** di thread `1789704362.435989` (Kent 三流程复盘报告).
+> **Sapuan 2026-09-22 06:21 WIB (2026-09-21 23:21Z)** — awal sesi, seluruh langkah skill dijalankan.
+> CQL seluruh space sejak 2026-09-21 11:30Z mengembalikan **36 halaman**, **tidak satu pun ada di ledger ini**.
+> Sepuluh halaman ledger diverifikasi satu per satu lewat `listConfluenceContentVersions`, bukan disimpulkan
+> dari timestamp: 07.06 **v30** · 04 **v25** · 07.06.1 **v34** · 04.7 **v46** · 04.9 **v106** · 04.9.1 **v19** ·
+> 04.4 **v33** · 04.4.4 **v4** · Spec S-05 **v62** · 建造单 **v33**. Semua sama dengan yang tercatat.
+> Yang bergerak milik alur lain: kluster E02／PF-03 (Carlson), xLoop 校验包, 招聘执行 Spec (bergerak lagi
+> 2026-09-21 23:31 WIB), 新人90天 Spec, Grade／离职／OS 开发流 建造单, 04.9.3, 04.9.5.
+> Dua salinan terkendali dibandingkan dengan skrip pada sapuan ini: **identik, tidak ada 部署漂移**
+> — CLAUDE.md 19 bullet + 开发入口的冻结要求; anchor §一 5 baris／4 kolom, §五 7 baris／4 kolom,
+> §六 16 baris／4 kolom.
+>
+> Sumber non-Confluence yang ikut disapu (tidak punya nomor versi, jadi dicatat dengan penanda terakhir).
+> Nilai di bawah **dicek ulang pada sapuan 2026-09-22 06:21 WIB dan tidak berubah**:
+> **OSD-116** — 163 comment, terbaru **c50290** (Kent, 2026-09-21 17:18 +07). Alden masih belum
+> berkomentar sejak 2026-09-10.
+> **#nos-bo (C0BRSTNNY4A)** — 15 pesan top-level, terbaru 2026-09-19 18:36 (Kayden). Seluruh jumlah
+> balasan thread dan timestamp balasan terakhirnya sama dengan pembacaan sebelumnya; aktivitas terbaru
+> tetap **2026-09-21 13:59:29 +07** di thread `1789704362.435989`.
 
 | Halaman | pageId | Versi tercatat | Owner |
 | --- | --- | --- | --- |
