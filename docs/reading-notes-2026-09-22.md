@@ -6,20 +6,16 @@
 
 Diminta dicek khusus. Dibaca penuh: field, changelog (7 entri), deskripsi, komentar, dan daftar transisi.
 
-### 1. Ada, tapi hanya terlihat oleh satu akun
+### 1. Dibaca lewat akun Backend Operations
 
-| Konektor | Akun | Hasil |
-|---|---|---|
-| `Atlassian_MCP` | `712020:0ec04d28…` **Bambang** (pribadi) | `Issue "SSCSD-411" not found` |
-| `Atlassian_Rovo` | `712020:a93fd17c…` **Backend Operations** (`boteam001@nexmaxorg.com`) | terbaca penuh |
+Pembagian akses ini sudah diketahui sejak lama dan memang begitu rancangannya, **bukan temuan**:
+akun pribadi tidak punya akses ke SSCSD, akun Backend Operations tidak punya akses ke OSD.
+Sudah tercatat di `docs/action-list.md` D-11 (「akun pribadi tidak melihat SSCSD; akun layanan melihatnya」)
+dan di `docs/drafts/2026-09-20-…` (「The Backend Operations account cannot see project OSD」).
 
-Dicek lebih jauh: `listJiraStatuses` untuk project SSCSD dengan akun pribadi →
-`Project "SSCSD" not found, or you do not have permission to browse it`. Jadi akun pribadi **tidak punya
-browse sama sekali** di SSCSD.
-
-🔴 **Artinya "not found" di sini adalah artefak izin, bukan bukti ketiadaan.** Kalau aku cuma pakai akun
-pribadi, kesimpulannya akan jadi "tiket sudah dihapus" — salah. Ini kelas kesalahan yang sama dengan
-findings F-002 (404 WFH) dan persis yang 07.06.1 **E16** peringatkan.
+Dicatat di sini hanya sebagai keterangan cara baca: SSCSD-411 dibaca lewat **`Atlassian_Rovo`**
+(= `712020:a93fd17c…`, Backend Operations, `boteam001@nexmaxorg.com`), bukan lewat akun pribadi
+(`Atlassian_MCP` = `712020:0ec04d28…`). Kedua id akun dipastikan lewat `atlassianUserInfo`.
 
 ### 2. Keadaan sekarang
 
@@ -119,6 +115,9 @@ OSD** — puluhan tiket bergerak tiap hari. Yang relevan untuk kita: **NSE-1143*
 Sapuan JQL pada **akun Backend Operations** (`updated >= -10d`, dengan probe pembanding `key = SSCSD-411`
 lebih dulu supaya nol-hasil tidak salah dibaca): 13 tiket, semuanya TEST — SSCSD-411, GPM-1…GPM-11, HR-1.
 **Tidak ada yang bergerak sejak 2026-09-18.**
+
+Jadi dua akun itu harus disapu dua-duanya bukan karena ada yang aneh, tapi karena memang masing-masing
+melihat sebagian: OSD/NSE lewat akun pribadi, SSCSD/GPM/HR lewat akun Backend Operations.
 
 ### 2. NSE-1143 c50291 — Sinyee → Alden, 2026-09-21 18:01:35
 

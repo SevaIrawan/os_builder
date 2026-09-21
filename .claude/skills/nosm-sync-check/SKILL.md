@@ -81,8 +81,10 @@ so both of those rules are actually executed, not just written down.
    #nos-bo reported "nothing moved", while **NSE-1143 c50291** had been posted the evening before —
    newer than the newest OSD-116 comment, and it contradicted a conclusion written minutes earlier.
    - Run `searchJiraIssuesUsingJql` with `updated >= -Nd ORDER BY updated DESC` **on both connectors**.
-     They are different accounts and see different projects: the personal account sees OSD, NSE, WT,
-     MLKB; the Backend Operations account sees SSCSD, GPM, HR. Neither one alone is the whole picture.
+     They are different accounts and see different projects by design — the personal account sees OSD,
+     NSE, WT, MLKB; the Backend Operations account sees SSCSD, GPM, HR. This split is long-standing and
+     expected, not a defect: sweep both because each covers half, and do not report either one's
+     "not found" as a finding.
    - **Run a control probe first**, per 07.06.1 E16: query one issue known to exist for that identity
      (`key = SSCSD-411` for Backend Operations, `key = OSD-116` for the personal account). Only once the
      probe returns may an empty result be read as "nothing changed". A JQL that returns zero because the
