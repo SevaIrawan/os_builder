@@ -1,6 +1,6 @@
 ---
 name: nosm-sync-check
-description: Use at the start of any BO-building / process-building session in this repo, before reading a Spec, touching a Route, or making any 04.x-governed decision — verifies the repo's CLAUDE.md and docs/04-anchor-navigation.md are still in sync with the live NOSM Confluence source pages (07.06 §8 and 04), per the source's own "deployment drift" rule. Also re-verifies the Atlassian and n8n connectors are live.
+description: Verify the repo's controlled copies (CLAUDE.md, docs/04-anchor-navigation.md) still match their Confluence sources, and sweep every recorded source page for version drift before any NOSM/BO decision is made.
 ---
 
 # NOSM Sync Check
@@ -12,13 +12,17 @@ pages can change independently of this repo. The source page's own rule is:
 if the copy and the source disagree, **stop and report "deployment drift"** — never
 silently work off a stale copy.
 
-This skill exists so that rule is actually executed, not just written down.
+Beyond those two files, **every other page we have ever quoted can also move**, and a
+quote taken from a session cache is not evidence about the live page. This skill exists
+so both of those rules are actually executed, not just written down.
 
 ## When to run this
 
 - First action in a new session/device where BO-building work in this repo is about to start.
 - Before relying on CLAUDE.md's skill text or the 04.x navigation map to make any
   real decision (Spec review, Route registration, n8n workflow build, audit gate).
+- **Before sending anything outward** (a Jira comment, a Confluence edit, a Slack message)
+  that quotes a Confluence page — run at least step 6 for the pages being quoted.
 - Not needed for unrelated chit-chat or work that never touches NOSM/BO rules.
 
 ## Steps
@@ -33,7 +37,7 @@ This skill exists so that rule is actually executed, not just written down.
 2. **Re-fetch the skill source**: `getConfluencePage` for `cloudId=nexmax.atlassian.net`,
    `pageId=1730347066`, `contentFormat=markdown`. Extract §八「流程建设 Skill（正式原文）」
    — the preamble paragraph, the bullet list under `流程建设 skill｜适用者：BO 建设团队`,
-   and the `开发入口的冻结要求` subsection.
+   and the `开发入口的冻结要求` subsection. Save it to a scratchpad file.
 
 3. **Diff against `CLAUDE.md`** §一 in this repo. Ignore purely cosmetic differences
    (markdown link formatting, heading levels). Any actual wording/rule change counts
@@ -43,15 +47,55 @@ This skill exists so that rule is actually executed, not just written down.
    Compare its 一/五/六 tables (action routing, SSOT registration targets, 04.x subpage
    map — including each row's Owner and 当前状态) against `docs/04-anchor-navigation.md`.
 
-5. **Report outcome**:
-   - **In sync**: say so briefly; update the "上次同步日期" line in both files to today
-     only if you actually re-verified (don't bump the date on a skipped check).
+5. **Compare mechanically, not by eye.** Steps 3 and 4 are done with a script, never by
+   reading the two texts side by side:
+   - Extract the bullets / table rows from both sides, strip markdown links to their text,
+     strip `**`, backticks, backslashes and all whitespace, then compare the lists for
+     **exact equality**.
+   - **Compare the header rows too, and assert the column count matches.** A dropped
+     column is invisible when you only compare the columns the local copy happens to have
+     — this is exactly how the missing 「责任边界」 and 「放行条件」 columns survived an
+     earlier "in sync" report (2026-09-21).
+   - Assert the row count matches on both sides before comparing content; a missing row
+     is drift, not a formatting difference.
+   - Report the script's verdict, not an impression.
+
+6. **Source version sweep.** The two files above are not the only thing that goes stale.
+   - Read `docs/source-versions.md` — the ledger of every Confluence page we consume,
+     with the version each of our notes and drafts is standing on.
+   - Run one CQL query over the **whole space**, not just the page ids on file:
+     `space = NOSM AND type = page AND lastmodified >= "<date of the previous sweep>"
+     order by lastmodified desc`. Sweeping the whole space is what catches pages that were
+     created after the ledger was written (e.g. 04.4.4).
+   - For each returned page that appears in the ledger, get its current version with
+     `listConfluenceContentVersions`, and where it moved, read
+     `diffConfluenceContentVersions` from the recorded version to the current one.
+     **The version message is a hint, not the change** — read the diff. (A version message
+     naming 「SUBMIT 行」 once meant a completely different row than the one assumed.)
+   - Update `docs/source-versions.md` and record the substantive deltas in the reading
+     notes. A version number alone is not an update; what changed is.
+
+7. **Report outcome — say exactly what was checked.**
+   - Report steps 2–5 and step 6 as **two separate results**. Never let "the two controlled
+     copies match" be phrased as "all documents are up to date": the copy check covers two
+     files, and says nothing about the other ~30 source pages.
+   - **In sync**: say which files were compared against which page versions; update the
+     「上次同步日期」 line in both files only if the comparison actually ran (don't bump the
+     date on a skipped check).
    - **Drift found**: do not silently patch and move on. Quote the specific delta,
      update `CLAUDE.md` / `docs/04-anchor-navigation.md` to match the current source
      verbatim (per the source's own "受控部署副本" rule — copy, don't paraphrase),
      commit and push the correction, and tell the user what changed and why.
    - **Source page unreachable**: stop and report — do not fall back to the local
      copy as if it were verified current.
+
+## Quoting discipline (why step 6 exists)
+
+A quote is only evidence about the page version it was taken from. Verifying a draft's
+quotes against session-cached files proves the draft matches the cache, not the page.
+Before a quote leaves this repo, re-read the quoted page live and confirm the sentence is
+still there — a sentence deleted upstream 24 minutes before a comment was sent has already
+cost us once (OSD-116 c50279, quoting 04.9.1 v17 after the page had moved to v19).
 
 ## Non-goals
 
@@ -61,3 +105,7 @@ This skill exists so that rule is actually executed, not just written down.
 - This skill does not open every 04.x subpage on every run — the navigation map is a
   routing index by design (see 04 首页 "权威使用原则"); actual object-level decisions
   still require opening the specific subpage the task hits, live, at that time.
+  Step 6 checks *whether* a page moved; it does not replace reading the page when the
+  task actually depends on it.
+- This skill never writes to Confluence, Jira or Slack. It only reads sources and
+  updates files in this repo.

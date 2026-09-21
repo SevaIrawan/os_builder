@@ -3,18 +3,21 @@
 > **性质**：指路牌／快速索引，不是规则本体。
 > **来源**：Confluence [04｜流程建设与执行治理总纲](https://nexmax.atlassian.net/wiki/spaces/NOSM/pages/1676804100)（page id `1676804100`，space `NOSM`）。
 > **权威使用原则（来自来源页）**：任何人或 AI 不得只读本索引就执行对象级判断。命中某个 04.x 子页后，必须实际打开并读取其当前版本；Jira 是进度事实，Confluence 当前权威页是规则事实。
-> **上次同步日期**：2026-09-21（对照来源页 lastModified: Sep 05, 2026，v25）。与来源页不一致时，以 Confluence 当前版本为准，本文件视为过期。
+> **上次同步日期**：2026-09-21（对照来源页 lastModified: Sep 05, 2026，**v25**，逐行机械比对）。与来源页不一致时，以 Confluence 当前版本为准，本文件视为过期。
+> **2026-09-21 漂移修复**：本文件此前漏抄来源页第一节第四列「责任边界」、第五节第四列「放行条件」与其小引，以及第六节边界铁律末句「Owner／状态发生变化时更新本表；对象级细节仍只改对应子页。」三处，本次按来源页原文补回。第六节子页地图 16 行经机械比对与来源页逐字一致。
 
 ---
 
 ## 一、按「当前动作」找该先读什么
 
-| 当前动作 | 现阶段主要执行人 | 先读取 |
-| --- | --- | --- |
-| 盘点、切分与流程设计 | 部门 HOD／流程 Owner＋协助 AI | 04 第二、三节＋04.5＋07.01／07.02 |
-| 三个审计 Gate 与对齐 | 切分审计／验收审计：Kayden 或 Alden（OR）；结构审计：Kayden＋Alden 双签（AND）；对齐：流程 Owner 及相关 HOD／管理层 | 04 第二节 Gate＋Spec／建造单＋对应 Jira 证据 |
-| 平台建设 | Alden／BO 建设者＋协助 AI | 04 第二、四、五节＋04.5／04.6／07.04 |
-| 验收与上线 | 验收裁决：Kayden 或 Alden；上线：流程 Owner＋BO 建造 Owner | 04 第二、三、五节＋Spec＋建造单＋测试证据 |
+> 逐字复制自来源页第一节表（四列）。「第二、三节」等章节号指的是**来源页 04 首页**的章节。
+
+| 当前动作 | 现阶段主要执行人 | 先读取 | 责任边界 |
+| --- | --- | --- | --- |
+| 盘点、切分与流程设计 | 部门 HOD／流程 Owner＋协助 AI | 第二、三节＋04.5＋07.01／07.02 | Owner 决定业务语义；AI 只翻译、检查和提问，不代替裁决。 |
+| 三个审计 Gate 与对齐 | 审计：切分审计与验收审计由 Kayden 或 Alden 任一人（OR）裁决，结构审计为业务签（Kayden）＋技术签（Alden）双签（AND）；对齐：流程 Owner及相关 HOD／管理层 | 第二节 Gate＋Spec／建造单＋对应 Jira 证据 | n8n 只做机械审计与不通过自动退回；裁决人按上列裁决模式以自己的 AI 辅助复核，明确裁决后由该 AI 留言、更新权威文档、执行获授权转态并回读。对齐负责白话签收与冻结，不替代审计。 |
+| 平台建设 | Alden／BO 建设者＋协助 AI | 第二、四、五节＋04.5／04.6／07.04 | 按冻结 Spec 建造并维护建造单；不得擅改业务语义。 |
+| 验收与上线 | 验收裁决：Kayden 或 Alden；上线：流程 Owner＋BO 建造 Owner | 第二、三、五节＋Spec＋建造单＋测试证据 | 验收先由 n8n 机械审计，不通过自动退回开发；机器通过后由 Kayden 或 Alden 单人裁决。业务验收与工程证据必须分开。 |
 
 ---
 
@@ -38,20 +41,24 @@
 | [04.9｜n8n Workflow SSOT](https://nexmax.atlassian.net/wiki/spaces/NOSM/pages/1693089805) | workflow 身份、Owner、消费关系与证据 | Alden | 生效 |
 | [04.10｜Jira 共享配置治理](https://nexmax.atlassian.net/wiki/spaces/NOSM/pages/1738735636) | 共享对象实例、变更权限、影响与证据 | Kent | 生效 v1 |
 
-**边界铁律**：04.0 管词义；04.1–04.6 管判定与配置方法；04.7–04.9、04.10 管对应实例；04 首页管跨页顺序、Owner、当前状态和停止条件。任何页面不得复制另一个 SSOT 的值。
+**边界铁律：**04.0 管词义；04.1–04.6 管判定与配置方法；04.7–04.9、04.10 管对应实例；本页（＝来源页 04 首页）管跨页顺序、Owner、当前状态和停止条件。任何页面不得复制另一个 SSOT 的值。Owner／状态发生变化时更新本表；对象级细节仍只改对应子页。
 
 ---
 
-## 三、登记集：新事件必须写入哪个 SSOT
+## 三、登记集：何时必须写入哪个 SSOT
 
-| 触发对象／事件 | 权威落点 | 触发时点 |
-| --- | --- | --- |
-| 新流程／执行术语 | [04.0｜词汇表](https://nexmax.atlassian.net/wiki/spaces/NOSM/pages/1676640265) | 第一次进入 Spec 或规则页前 |
-| 新开或登记 Project | [04.1｜Project 类型与开设判定](https://nexmax.atlassian.net/wiki/spaces/NOSM/pages/1676738564) | Project 创建／消费前 |
-| 具体 Request Type／Route | [04.7｜Router SSOT](https://nexmax.atlassian.net/wiki/spaces/NOSM/pages/1691254793) | 设计可校验时先登记 Candidate；上线时再转正式 |
-| 持续存在的实体／档案 | [04.8｜Registry SSOT](https://nexmax.atlassian.net/wiki/spaces/NOSM/pages/1690140756) | 设计确定实体边界后，最迟上线前 |
-| 创建或修改 n8n workflow | [04.9｜n8n Workflow 登记表](https://nexmax.atlassian.net/wiki/spaces/NOSM/pages/1693089805) | 建成当场、启用之前 |
-| 创建、复用或修改 Jira 共享对象 | [04.10｜Jira 共享配置登记表](https://nexmax.atlassian.net/wiki/spaces/NOSM/pages/1738735636) | 配置建成当场、任何流程启用之前 |
+> 逐字复制自来源页第五节（含小引与第四列「放行条件」）。
+
+登记用于定位真实对象，不重复描述流程。每个事实只在专项 SSOT 存值，Spec／建造单只保留链接与本流程消费关系。
+
+| 触发对象／事件 | 权威落点 | 触发时点 | 放行条件 |
+| --- | --- | --- | --- |
+| 新流程／执行术语 | [04.0｜词汇表](https://nexmax.atlassian.net/wiki/spaces/NOSM/pages/1676640265) | 第一次进入 Spec 或规则页前 | 已有则引用；无定义先裁决再登记，AI 不自造 |
+| 新开或登记 Project | [04.1｜Project 类型与开设判定](https://nexmax.atlassian.net/wiki/spaces/NOSM/pages/1676738564) | Project 创建／消费前 | 类型、命名、Key、Owner 与证据完整 |
+| 具体 Request Type／Route | [04.7｜Router SSOT](https://nexmax.atlassian.net/wiki/spaces/NOSM/pages/1691254793) | 设计可校验时先登记 Candidate；上线时再转正式 | 同一 Spec 链接、Route ID、业务与实际配置校准证据齐全 |
+| 持续存在的实体／档案 | [04.8｜Registry SSOT](https://nexmax.atlassian.net/wiki/spaces/NOSM/pages/1690140756) | 设计确定实体边界后，最迟上线前 | 实体 Owner、Project、状态列与来源规则可读取 |
+| 创建或修改 n8n workflow | [04.9｜n8n Workflow 登记表](https://nexmax.atlassian.net/wiki/spaces/NOSM/pages/1693089805) | 建成当场、启用之前 | ID、Owner、对应 Spec／节点或辅助职责、测试证据完整 |
+| 创建、复用或修改 Jira 共享对象 | [04.10｜Jira 共享配置登记表](https://nexmax.atlassian.net/wiki/spaces/NOSM/pages/1738735636) | 配置建成当场、任何流程启用之前 | 实际 ID、Owner、范围、使用方与回读／实测证据完整；先登记后启用 |
 
 ---
 
