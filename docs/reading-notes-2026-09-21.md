@@ -9,7 +9,7 @@
 - §三 归口表: 标准页写错/矛盾/缺规则 → 页尾 Owner; 两页矛盾且 Owner 不同 → Kayden; venue #nos-bo C0BRSTNNY4A, six-field format; 3 工作日. 改进提案 → #nos-bo 三段(现状/建议/影响面). 分流: 标准缺口 (修复对象=标准页/登记表) vs 业务歧义 (修复对象=该流程 Spec, 按阶段指南退回).
 - 授权总表指针: 不用请示三类与红线 07.06.1 六-2; 测试白名单 04.5.3 §二; 平台件回应时限/缺位代理 04.6 §3.6/§3.4.
 
-## 07.06.1 v33 (2026-09-18)
+## 07.06.1 v34 (2026-09-21 07:11Z) — was v33 (2026-09-18); v33→v34 delta di bagian VERSION SWEEP di bawah
 - §三 主题速查 (relevant to S-05 build): 第一次建一条流程 → §四全节+通读§五; 改共享对象 → A7,A6,六-2; Thread 绑定 → C7,C6,A2,A3; 聚合/催办 → C8,C1,D3; 测试件/测试单/清理 → D7,C3,六-2; n8n↔Jira → A2,A3,A4,A8,B1,B3,B5,D2,D8,E11,E16; 发通知 → C1–C6; 上线 → D1,D3,D5,§四7–9; 拿返回值下结论 → E1–E16; 先查找再守护 → E9,E7,D3.
 - §四 固定次序: 先读→先分流→先查登记表→先建再登记最后启用→create screen(A6)→dry后run(D1)→回读→bounce(D8)→三合一.
 - 六-2 不可逆动作先确认 (确认对象=正在使用 AI 的开发者本人): 删除任何对象; 修改现有共享资源(平台件/共享 Field/Scheme); 批量写>20; 向真实员工手工触发通知/邮件 + 改动后首次真发; workflow 切 active (须平台 Owner 批, 04.6 §3.6 第4步). 不下放写权线: Spec 语义/跨流程衔接措辞. 不用请示: inactive n8n 件新建/修改; 登记处按六-4 自判.
@@ -110,15 +110,15 @@
 - §9.14 still says 「平台实建未上线」 (contradiction with 04.4.1 v5 已并入生产 2026-08-21 — 建造单 row 25).
 - user-DM 解析: cf17995 → cf18051 Work Email → users.lookupByEmail.
 
-## 04.4.4 v1 (2026-09-19) 协作 Thread — not used by S-05. inactive, 未验收, 零真跑.
+## 04.4.4 v4 (2026-09-21 09:50Z) 协作 Thread — not used by S-05. inactive, 零真跑. STATUS BERUBAH: 已验收 (Alden NSE-1143 c50273, 2026-09-21); 04.4 §十一 状态 sudah diubah 「可用」 oleh 建设者. (was: v1 2026-09-19, 未验收)
 
 ## 04.5.1 v19 (2026-09-05) Spec 模板 — E 表「已改道｜本流程不使用｜理由」 example; 页尾「对应建造单：设计期填“待建设期建立”；仅在 Spec 已冻结并进入开发后由 BO 建立并回填实链」.
 
 ## 04.8 v20→v21 diff (2026-09-21 03:59Z, Kent): only 员工 row — 入职侧转态来源 = S-02 (Kayden c50248). Nothing on S-05. 纪律处分记录 row unchanged.
 ## 建造单 2096463922: still v33 (2026-09-20 14:55Z). v33 msg: 消费 Kayden c50244 两项裁决 (附表 Registry 行; 附表 N28 行; 区二 转换表 id 11 允许执行者; 第八区 守护登记). v32: WFH 规章行 订正「本侧无读取权限」.
 ## 04.12 v5 (2026-09-18) Owner Kent: 7 核心 marker 本体 (OSD-CUT-DECISION/SPECS-JSON/CUT-SPAWN/FREEZE/PRECEDENT/EXEMPT/RETURN) 必含字段; OSD-FREEZE fields specPageId/frozenPageVersion/frozenBy/frozenAt; label osd-cut-{n}/osd-batch-{n}; 业务流运行时 marker (nos-…) 不在本页 (建造单 暗号接口契约表 lives in S-05 建造单 line 101).
-## 04.4.3 v6 (2026-09-14) 身份件: 在建·影子·inactive v0Ta9NW64VJiVQqd; 消费者 离职 N3 / Grade N3 (仅通道二); identityOk = sigValid && isDirectReport && clicker==token slackUserId; 调用方 identityOk:false → 阻止 + chat.postMessage 私信回告; mustAlert → 告警 nos-ops.
-## 04.9.1 v17 (2026-09-19): Notify active (被调用: 请假 9/离职 7/Grade 7/调薪 3/改进 1 — no S-05); Slack Approval active v31 50 节点 (分派钩子 known: offboard-n2/grade-n2/align-n10 — no disciplinary-n03); Error Handler active; Policy Engine active; Collaboration Thread inactive; B6 active·已发布 (被调用 no S-05); 身份件 inactive 在建 (「模式九批次已上线而本件未随批发布，是否漏带待 Alden 确认」).
+## 04.4.3 v6 (2026-09-14, TIDAK berubah) 身份件: halaman masih tulis 在建·影子·inactive v0Ta9NW64VJiVQqd — **SUDAH STALE** terhadap 04.9 v106 / 04.9.1 v19 (active·已发布 sejak 2026-09-21 07:52Z). Owner halaman: Alden; 消费者 离职 N3 / Grade N3 (仅通道二); identityOk = sigValid && isDirectReport && clicker==token slackUserId; 调用方 identityOk:false → 阻止 + chat.postMessage 私信回告; mustAlert → 告警 nos-ops.
+## 04.9.1 v19 (2026-09-21 07:52Z) — was v17 (2026-09-19): Notify active (被调用: 请假 9/离职 7/Grade 7/调薪 3/改进 1 — no S-05); Slack Approval active v31 50 节点 (分派钩子 known: offboard-n2/grade-n2/align-n10 — no disciplinary-n03); Error Handler active; Policy Engine active; Collaboration Thread inactive; B6 active·已发布 (被调用 no S-05); 身份件 **v19: active·已发布** (versionId＝activeVersionId `616bbd91-5cd7-4c10-bcc4-ae9052592253`, 5 节点, 件名已去「DO NOT ACTIVATE · shadow」后缀; 真实链四例已验: 真上级 identityOk / 非上级按业务拒·不告警 / 档案查不到与档案重复两种均 fail-closed 且 mustAlert). v17 的 「模式九批次已上线而本件未随批发布，是否漏带待 Alden 确认」 **sudah dihapus di v19** — kalimat itu sudah tidak berlaku.
 ## HR｜盘点与切分 v38 (2026-09-08) 已裁决 Kayden 2026-08-23 auditedVersion 29 (c48783 approvedPageVersion 33 — page metadata says auditedVersion 29; later versions 34/35 N5 修正留痕 c49113/c49116). §三 S-05 row: 链中; 人为入口; 覆盖 P-09/P-10/P-11; Project 已登记 SSCSD 主单 + HR 子单; D-04 决议; 2026-08-31 N5 修正 S-19→S-05 入边 measure 『S-19 绩效评估周期结束，评估结论为不达标』. §五 S-05 High, 前置 无, 同批 纪律绩效改进批 (S-06 Low/S-07 High/S-15 High). D-04 references 《Nexmax WFH工作规章制度（正式版）》 pageId 1679032336 (建造单 row 16: 本侧无读取权限).
 ## OSD-116 new comments (total now 155):
 - c50255 Kent 2026-09-21 11:07 +0700 【Unblock + Route → Bambang】: Registry Option C (read-port service-account only); N28 Direction 2 (permission to HR Ops & Data role group + guard workflow DM); 联合评审结果 (N25) → BO side, register as new; PROCESS ASK: submit N25 + sub-ticket fields via 04.10 Task three-cell request (register-before-build §5); FYI 04.8 v21 S-02.
@@ -176,3 +176,111 @@
 - 2026-09-04 12:04 主脑(代 Kayden) 归口表通告 (07 §三).
 - Older: bot join/test/离职提交 SSCSD-313 (Geri 2026-08-28), member joins 2026-08-21.
 - No message in #nos-bo mentions S-05 建造/Registry/N28 directly except Kent 09-19 RT 命名 提议 and Kayden reply. No 标准缺口回报 for S-05 has been posted by BO (consistent with my draft A not sent).
+
+---
+
+# VERSION SWEEP 2026-09-21 ~18:00 WIB (11:00Z) — "update semua ke versi terbaru"
+
+Metode: CQL `space = NOSM AND type = page AND lastmodified >= "2026-09-20 00:00"` atas SELURUH space NOSM
+(bukan hanya daftar id yang sudah kita punya), lalu `listConfluenceContentVersions` + `diffConfluenceContentVersions`
+per halaman yang bergerak. Jadi hasil ini menutup juga halaman yang belum pernah kita catat.
+
+CQL mengembalikan **18 halaman** yang bergerak sejak 2026-09-20. **7 di antaranya ada di daftar sumber kita.**
+11 sisanya milik alur lain (招聘执行 Spec, 新人90天 Spec, Grade 建造单, 员工离职 建造单, OS 开发流 建造单,
+04.9.3, 04.9.5, xLoop×2, AMS 归档) — bukan sumber S-05.
+
+## A. Tabel versi (tercatat di notes → live sekarang)
+
+| Halaman | Di notes | Live | Keterangan |
+|---|---|---|---|
+| 07.06.1 | v33 | **v34** (07:11Z) | msg: 「E16 探针订正；E6 订正；新增 C9」 |
+| 04.9 | v103 | **v106** (10:42Z) | v104/v105 msg: 索引表新增身份件一行 → 身份件行状态改 active·已发布 |
+| 04.4.4 | v1 | **v4** (09:50Z) | 已验收 Alden c50273 |
+| 04.4 | v31 | **v33** (≈10:00Z) | hanya baris 协作 Thread → 可用 |
+| 04.9.1 | v17 | **v19** (07:52Z) | 身份件 → active·已发布 |
+| 04.7 | v45 | **v46** (06:56Z) | **tidak menyentuh baris S-05** (lihat koreksi di bawah) |
+| 04.8 | v20 | **v21** (03:59Z) | sudah dicatat sebelumnya; tidak ada perubahan baru |
+
+Tidak berubah (dikonfirmasi tidak muncul di hasil CQL): 07 v28 · 07.06 v30 · 04 v25 · 04.0 v26 · 04.1 v46 ·
+04.2 v40 · 04.3 v33 · 04.4.1 v13 · 04.4.2 v12 · 04.4.3 v6 · 04.5 v79 · 04.5.1 v19 · 04.5.2 v11 · 04.5.3 v13 ·
+04.6 v20 · 04.10 v19 · 04.11 v2 · 04.12 v5 · 07.03 v58 · 07.04 v27 · 07.05 v5 · Notify 契约 v13 ·
+OS 开发流 Spec v39 · HR 盘点与切分 v38 · Spec S-05 v62 · 建造单 v33 (2026-09-20 21:55 WIB).
+
+## B. KOREKSI atas laporan saya sebelumnya
+
+Saya sebelumnya bilang perubahan 04.7 v46 「menyentuh baris RT-HR-DISCIPLINARY-SUBMIT milik S-05,
+blocker 建造单 row 5」. **Itu salah.** Pesan versi v46 menyebut 「SUBMIT 行」 yang dimaksud adalah
+**RT-HR-RECRUITMENT-SUBMIT** (S-01 招聘执行), bukan RT-HR-DISCIPLINARY-SUBMIT.
+Bukti: diff v45→v46 = 2 tambahan / 1 hapusan, seluruhnya di baris RECRUITMENT
+(Replacement 比对 收窄 jadi hanya Position; C-12/C-16/C-18/C-21/C-22/C-23 SLA direvisi)
+plus satu baris baru **RT-HR-RECRUITMENT-OFFERWITHDRAW** (N47/N49).
+Kedua baris S-05 (RT-HR-DISCIPLINARY-SUBMIT dan RT-HR-DISCIPLINARY-EVENT) muncul di diff hanya
+sebagai baris konteks — **tidak berubah satu huruf pun**. Status keduanya tetap 「候选」.
+
+## C. Isi perubahan yang relevan untuk S-05
+
+### C.1 07.06.1 v34 — tiga perubahan, ketiganya kena kita
+
+**(1) C9 BARU｜Slack 三秒窗口：响应动作之前不要排 Code 节点** — juga masuk ke 主题速查表 baris
+「发通知、发邮件、发 Slack」 yang sekarang jadi C1–C6、**C9**.
+Isi verbatim inti: 「Slack 给的开窗令牌只活 3 秒，而一次执行里**第一个** Code 节点要多花约 2 秒；
+响应动作之前排了 Code 节点，这两秒就落在用户的等待里，表单根本弹不出来。」
+Cara hindar: 「有硬性回应时限的路径（Slack 开表单、slash 回应）上，响应动作之前**不放任何 Code 节点**
+——验签用 Set 加原生 Crypto 节点，响应载荷用 Set 拼；慢活与全部 Code 节点挪到响应之后，
+成品用 views.update 之类的二次动作补上。**只换掉验签那一段不够**：紧跟的下一个 Code 节点会接任「第一个」，
+那两秒原样搬家。」 验收: startTime 响应节点 − 触发节点 dalam orde ratusan ms, dan 回包 ok=true.
+→ **Relevansi S-05**: N03 入口一 adalah Slack 表单 (04.7 baris RT-HR-DISCIPLINARY-SUBMIT: 「载体为Slack表单」),
+lewat 分派钩子 `disciplinary-n03` di Slack Approval. Jadi C9 mengikat desain N03 sebelum dibangun.
+
+**(2) E6 DIBALIK TOTAL.** v33: 「test_workflow 的 dry-run 会 pin 掉 HTTP 请求」 (dry-run tidak kirim request nyata).
+v34: 「**test\_workflow 不会替你 pin 掉带凭据的节点，它会真发**」 — 「工具说明写着触发节点、带凭据的节点与
+HTTP Request 节点会被自动 pin，本实例实测不是——只有你显式传了 pinData 的那些节点被 pin，其余照常真读真写。
+拿它当「安全干测」，会真建单、真发消息。」
+Cara hindar: nonaktifkan eksplisit node yang menulis/mengirim, atau beri pinData eksplisit; kalau bisa ada
+efek samping eksternal → perlakukan sebagai 「改动后的首次真发」 (04.5.3), 受控时段. 验收: baca balik objek
+target + cek `pinData` eksekusi (kosong = tidak ada node yang diisolasi).
+
+**(3) E16 DIKOREKSI.** Sekarang eksplisit **melarang** pakai `/rest/api/3/mypermissions` (BROWSE_PROJECTS)
+sebagai pengganti probe: 「项目级权限回 true 时，单据级 issue security 仍可能把每一张单都挡掉，
+JQL 照样恒回空集，而探针会报「看得见」。」 Probe harus query **satu tiket yang diketahui ada**.
+Tambahan baru: 「探针查的那张已知存在的单是**承重对象**——被删或改了 key，闸会每天报错，
+须在建造单登记它的用途。」
+→ E16 ada di daftar 07.06.1 命中条目 建造单 kita (A2/A3/A6/A4/A8/C1/E11/E16/E9/D3/D7) ⇒ wajib masuk batch v34.
+
+### C.2 04.9 v106 / 04.9.1 v19 — 身份件 sudah hidup
+
+- Baris index baru di 04.9: **NOS | Platform | Submission Identity Verifier — active·已发布**,
+  versionId＝activeVersionId `616bbd91-5cd7-4c10-bcc4-ae9052592253`, 5 节点, Owner 平台, 建设者 Geri,
+  被调用 离职 N3 / Grade N3.
+- 04.9.1 v19 status block: 「真实链四例已验：真上级 identityOk；非上级按业务拒、不告警；
+  档案查不到与档案重复两种均 fail-closed 且 mustAlert」.
+  → Ini **mengonfirmasi** koreksi kita atas draft Alden butir (c): non-direct-report = penolakan bisnis,
+  bukan `ok:false`+mustAlert. Tapi ada kasus **keempat yang belum kita catat**: 「档案重复」 juga
+  fail-closed + mustAlert.
+- Catatan di 04.9.1 v17 「节点「Call B6 isDirectReport」注记仍写「B6 未发布」，已过时」 sudah **dihapus** di v19.
+- 04.9 v106 juga mencatat Grade N3 (bc84c43a) dan Grade N7/N8/N10 (33a1aad5) sudah memasang
+  **probe E16**; pada 2026-09-21 `alwaysOutputData` Fetch NTP Name Map dibalik false→true karena
+  「探针关掉的是「NTP 看不见」，关不掉「看得见但那条查询回零条」」 — pola yang sama akan kita butuhkan.
+- 04.9 v106 mencatat Grade N2 sudah dirombak mengikuti C9 hari ini (slash leg: Set + Crypto native,
+  Code node pertama dipindah ke belakang 响应; exec 15938 = 112ms, 15939 = 13ms), dan
+  🔴 「UI 存盘再次剥掉两个 webhook 的 `options.rawBody: true`」 (kambuhan E12) — perlu 逐项点名回读.
+- Slack Approval di index 04.9 sudah v31·50 节点 (sebelumnya v30·47) — sesuai catatan kita.
+  **分派钩子 yang terdaftar tetap tiga**: offboard-n2 / grade-n2 / align-n10. `disciplinary-n03` **belum ada**
+  (ini yang diminta di c50279 add-on (a); masih menunggu jawaban Alden).
+
+### C.3 04.4 v33 / 04.4.4 v4 — 协作 Thread naik jadi 可用
+
+Baris 04.4 §十一 「NOS | Platform | Collaboration Thread」 diubah jadi **可用** (Alden c50273, 2026-09-21);
+seluruh narasi tiga ronde koreksi versionId dihapus dari sel itu atas perintah Alden c50273 ⑤
+「标准页只放结果」. Tetap `inactive` karena belum ada pemanggil dan channel belum ditetapkan Spec.
+04.4.4 naik v1→v4 (halaman kontrak; 已验收, ditambah bagian 「开串腿的标题元素拆分」 per Alden c50273 ④).
+**Tidak dipakai S-05.**
+
+## D. Temuan baru dari sweep ini (belum dilaporkan ke siapa pun)
+
+1. **04.4 §十一 baris 身份件 masih tertulis 「在建（影子·shadow，随模式九批次上生产）」** padahal
+   04.9 v105 (07:52Z) dan 04.9.1 v19 sudah menyatakan active·已发布. 04.4 sendiri diperbarui ≈10:00Z,
+   yaitu **sesudah** itu, jadi bukan sekadar urutan waktu. Owner halaman 04.4: Alden.
+2. **04.4.3 v6 (halaman kontrak 身份件) masih tertulis 「在建·影子·inactive」** dan belum bergerak sama sekali.
+   Owner: Alden. (04.4.3 bagian 「维护说明」 mensyaratkan pembaruan saat status件 berubah.)
+   Keduanya = satu fakta dengan tiga落点 yang tidak sinkron — persis jenis masalah yang 04.5 §五 larang.

@@ -253,6 +253,42 @@ writing — 04.8 §三 already registers it. See F-003's status correction.
 
 ---
 
+## F-006 — 身份件 (Submission Identity Verifier) status is recorded three ways and two of them are stale
+
+**Found**: 2026-09-21, during the full NOSM version sweep. **Not reported to anyone yet.**
+
+**The fact** (live, 2026-09-21): the platform piece `v0Ta9NW64VJiVQqd` is published.
+- `04.9｜n8n Workflow 登记表` **v106** (index row added at v104, status set at v105, 07:52:55Z,
+  version message 「身份件行状态改 active·已发布 616bbd91」): row reads
+  「active·已发布（versionId＝activeVersionId 616bbd91）。5 节点」.
+- `04.9.1｜详情：平台` **v19** (07:52:45Z): status block rewritten to
+  「active·已发布（versionId＝activeVersionId `616bbd91-5cd7-4c10-bcc4-ae9052592253`）。5 节点；
+  件名已去「DO NOT ACTIVATE · shadow」后缀」.
+
+**The two stale copies**:
+1. `04.4｜自动化配置模式库` §十一 shared-component index — the 身份件 row still reads
+   「在建（影子·shadow，随模式九批次上生产）」. This is not just a lag: 04.4 was itself
+   edited to **v33** at roughly 10:00Z, about two hours *after* 04.9 v105, and that edit
+   (the 协作 Thread row) left the 身份件 row untouched. Verified from the v31→v33 diff,
+   where the 身份件 row appears as an unchanged context line.
+2. `04.4.3｜身份件 · 调用契约` **v6** (2026-09-14) — has not moved at all; still
+   「在建·影子·inactive」. Its own 维护说明 lists a status change of the piece as an
+   update trigger.
+
+**Why it matters**: 04.5 §五 puts one fact in one place. Here one fact (是否已发布) sits in
+four places, two current and two stale. A builder who routes via 04.4 §十一 — which is what
+the CLAUDE.md skill text tells us to do for shared components — reads the wrong answer and
+would conclude the piece cannot be called. It also affects our own OSD-116 c50279, which
+quoted the 04.9.1 **v17** sentence 「模式九批次已上线而本件未随批发布，是否漏带待 Alden 确认」;
+that sentence was deleted in v19 and the comment was sent after the deletion.
+
+**Owner**: Alden (page owner of both 04.4 and 04.4.3).
+
+**Not acted on.** No edit, no comment, no report sent. Recorded here and queued as item 10
+in `docs/pending-buildsheet-updates.md` for our own 建造单 v34.
+
+---
+
 ## Sync-check history
 
 | Date | Compared | Result |
