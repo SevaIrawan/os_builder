@@ -26,6 +26,29 @@ Recorded because this is a large project and sessions do not carry memory.
    No guessing, no extrapolating from a partial read. If part of a source was not read in
    full, say so explicitly and name which part, rather than reporting as if it had been.
 
+## Standing instruction from the repo owner (2026-09-21) — drafting comments
+
+**Never accuse, blame, or report a person.** This binds every draft written here for sending to a
+Jira comment, a Confluence comment, Slack, or anywhere else. Mutual blame is not permitted.
+
+What it forbids in a draft:
+
+- Naming a person as the cause of a gap, an error, a delay, or a missing row.
+- Wording that reads as fault even without the word — "X never did", "X failed to", "X's mistake",
+  "this was missed by X", "X is late".
+- Carrying one person's error to a third party. If something is wrong, it is stated as a fact about
+  the object, not reported about the person who produced it.
+- Framing our own correction as someone else's failing.
+
+What it still allows, because it is attribution of a statement and not of blame:
+
+- Citing who ruled or answered what, with the comment id — "Kent c50255 ruled Option C",
+  "Felix c50261 gave both names". That is the evidence trail every rule in `CLAUDE.md` §1 requires.
+- Naming the Owner of a page or an object when the question is who decides, not who is at fault.
+
+How to write it instead: state the fact, cite the source, say what is needed and from whom, and stop.
+The object is wrong or missing — that is the sentence. Who produced it is not part of it.
+
 ## What these mean in practice here
 
 - A finding is reported **to the repo owner and stops there.** Deciding whose concern it

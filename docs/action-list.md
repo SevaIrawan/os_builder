@@ -76,7 +76,6 @@ Terhalang keputusan Bambang. Tidak ada orang luar yang perlu ditunggu.
 
 | ID | Yang perlu diputus | Pilihannya | Dampak |
 |---|---|---|---|
-| C-06 | Aturan "tidak menuduh orang" ditulis ke `docs/working-agreement.md` atau tidak | ya / tidak | Sudah kucari di 04 dan 07 — tidak ada padanannya. Jadi ini memang aturan baru, dan itu keputusan kau, bukan aku. ⚠️ `docs/working-agreement.md` ada di branch `claude/new-session-3nlq6e`, **belum ada di branch ini** |
 | C-07 | Kapan 16 butir daftar v34 ditulis ke 建造单 | sekarang / tunggu balasan | **Sudah kau putuskan 2026-09-21**: tampung di repo, satu kali tulis, pemicunya balasan terbaru dari Felix/Alden/Kayden/Kent. Dicatat di `docs/pending-buildsheet-updates.md`. Baris ini disimpan sebagai catatan putusan, bukan pertanyaan terbuka |
 
 **Yang tutup hari ini**: C-01 → D-12 · C-04 → D-16 · C-05 → D-17 · C-02 dan C-03 → gugur (D-18).
@@ -131,4 +130,4 @@ Tidak ada draft yang dikirim tanpa perintah Bambang.
 |---|---|
 | 2026-09-20 | File dibuat atas perintah Bambang. Isi awal: 5 baris SEGERA, 6 baris MENUNGGU ORANG, 6 baris MENUNGGU KAU, 10 baris SELESAI, 1 draft |
 | 2026-09-20 | A-04 ditulis ulang setelah sumbernya dibaca penuh — dipersempit ke bagian yang tidak terhalang. Ditambah B-07 s/d B-11 (penghalang A-04, semua bersumber) dan D-11. Alarm mulai kerja dipasang untuk 2026-09-21 09:00 UTC+8 (`trig_017MQtQVE6vS9x43b6kBJudi`). Sekarang: 5 SEGERA, 11 MENUNGGU ORANG, 6 MENUNGGU KAU, 11 SELESAI, 1 draft |
-| 2026-09-21 | Diperbarui setelah sapuan penuh Confluence + OSD-116 + #nos-bo. **Keluar dari SEGERA**: A-01, A-02, A-05 (selesai). **Masuk SEGERA**: A-06, A-07 (dua-duanya dari Kent c50255). **Tutup**: B-01, B-04, C-01, C-04, C-05; C-02 dan C-03 gugur. **Baru di MENUNGGU ORANG**: B-12 (04.11, Alden), B-13 (empat tingkat PIP, Felix), B-14 (13 field, Kent), B-15 (pengecualian 04.3 §六, Kayden). **Baru di MENUNGGU KAU**: C-07 (sudah diputus: tampung). Sekarang: **4 SEGERA · 13 MENUNGGU ORANG · 2 MENUNGGU KAU · 21 SELESAI · 1 draft (gugur)** |
+| 2026-09-21 | Diperbarui setelah sapuan penuh Confluence + OSD-116 + #nos-bo. **Keluar dari SEGERA**: A-01, A-02, A-05 (selesai). **Masuk SEGERA**: A-06, A-07 (dua-duanya dari Kent c50255). **Tutup**: B-01, B-04, C-01, C-04, C-05; C-02 dan C-03 gugur. **Baru di MENUNGGU ORANG**: B-12 (04.11, Alden), B-13 (empat tingkat PIP, Felix), B-14 (13 field, Kent), B-15 (pengecualian 04.3 §六, Kayden). **Baru di MENUNGGU KAU**: C-07 (sudah diputus: tampung). **C-06 dipindah keluar**: 「jangan menuduh／menyalahkan／mengadu orang」 bukan hal yang perlu diputus — itu aturan yang mengikat setiap draft, dan sudah ditulis di `docs/working-rules.md`. Sekarang: **4 SEGERA · 13 MENUNGGU ORANG · 1 MENUNGGU KAU · 21 SELESAI · 1 draft (gugur)** |
