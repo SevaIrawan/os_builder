@@ -1,0 +1,19 @@
+# 建造单 (2096463922) — daftar pembaruan tertunda, untuk satu kali update (v33 → v34)
+
+> Catatan kerja builder (Bambang). Belum ditulis ke Confluence. Setiap butir memakai kebiasaan halaman: 原文保留不删, tambah catatan bertanggal.
+> Disusun 2026-09-21. Sumber tiap butir disebut di baris masing-masing.
+
+| # | Lokasi di 建造单 | Yang salah / berubah | Teks yang diusulkan (tambahan bertanggal) | Sumber |
+| --- | --- | --- | --- | --- |
+| 1 | 页首附表 baris 19 (N28 案件失效中止的执行人), paragraf 「【2026-09-20 补·04.3 §六 原文的后半句本行此前未录…】」 | Keterangan 「本行此前未录」 tidak benar. Kutipan utuh §六 ada di baris ini sejak v8 (2026-09-18) sampai v27; terpotong di v28 (2026-09-19, ±1 jam setelah c50233); dikembalikan di v31. | 「【2026-09-21 订正｜上句原文保留不删】「本行此前未录」不实：本行自 v8（2026-09-18）至 v27 均载有该句完整原文（含「不得再走本条中止路径」），v28（2026-09-19，c50233 之后约一小时）改写本行时被截至「互斥」，v31 补回。另见 OSD-116 c50263 对 c50233 的更正。」 | Riwayat versi 建造单 (diff v7→v8, v27→v28; pesan versi v31); OSD-116 c50263 |
+| 2 | 页首附表 baris 6 (七个部门 Collab 频道), kolom 事项 / 解除判据 | 判据 ① dan ③ sudah terpenuhi. 2026-09-21 dibaca via Slack API (read-only, ids_only, include_bots): SSCOS-Bot U0BCPFHGURE ada di ketujuh channel (C0AQ50LC2UE, C0AQ725CVFU, C0AQ3K4T28M, C0AQ0KR5691, C0AQKUBM0PK, C0AQ3L4QZ4M, C0APRJFRFT9) dan di sscos-hr (C0BHL8AE68G). Felix c50261 butir 3 menyatakan bot sudah ditambahkan. 判据 ② (04.11 登记, Alden) masih terbuka. Status tetap 待办. | 「【2026-09-21 补】判据①③已成立：建造侧 2026-09-21 以本人账号只读回读成员名单，@sscos-bot（U0BCPFHGURE）已在七个频道与 sscos-hr 名单内（Felix c50261 第 3 点）。余判据②（04.11 登记）待 Alden。」 | Slack member read 2026-09-21; OSD-116 c50261 |
+| 3 | 页首附表 baris 12 (Inz9／Marketing 两个 Collab 频道是否仍使用) | Felix c50261 butir 4: kedua channel tetap dipakai terpisah, tidak digabung ke collab-hr-crm (alasan: kepala kedua departemen tidak ada di collab-hr-crm; hindari kepadatan). Bagian bisnis selesai; pendaftaran 04.11 tetap Alden. | 「【2026-09-21 补】Felix c50261 第 4 点：两频道继续分别使用，不并入 collab-hr-crm。业务口径已定；04.11 登记仍待 Alden。」 Status: 待办 → boleh dipertimbangkan 已解封 untuk bagian bisnis (keputusan builder saat update). | OSD-116 c50261 |
+| 4 | 页首附表 baris 5 (两个 Request Type 双语名称未确认) | Felix c50261 butir 1 memberi nama: SUBMIT 「提交纪律处置申请 · Submit Disciplinary Case」; EVENT 「纪律与绩效事件触发 · Disciplinary & Performance Event Trigger」. 解除判据 belum terpenuhi: 04.7 v45 baris SUBMIT masih 「提交纪律与绩效改进处置申请」 (nama Mandarin berbeda), baris EVENT belum ada nama; 04.7 §四 名称一致 mensyaratkan Spec/04.7/platform sama. Status tetap 阻塞中 sampai 04.7 diselaraskan. | 「【2026-09-21 补】Felix c50261 第 1 点已给出双语名（见左）。04.7 v45 两行尚未回填且 SUBMIT 中文名与 04.7 现行不同，名称一致（04.7 §四）未成立，本行仍阻塞。」 | OSD-116 c50261; 04.7 v45 |
+| 5 | 页首附表 baris 18 (形状 C 是否须配「已改道」出口), kolom 依赖谁 | Tertulis 「Alden（04.3 Owner）＋Felix（Spec）」. Owner 04.3 adalah Kayden Lee (04.3 维护说明; 04 v25 §六). Baris 19 sudah benar menulis Kayden. | 「【2026-09-21 订正｜原文保留不删】04.3 Owner＝Kayden Lee（04.3 页尾维护说明），非 Alden。」 | 04.3 v33 维护说明; 04 v25 |
+| 6 | 页首附表 baris 19 (N28), bagian 「抢跑约束待 Alden 背书」 | Setelah c50263, permintaan "before, or atomically with" ditarik dari sisi builder. Pertanyaan yang tersisa: apakah N28 perlu pengecualian terhadap 04.3 §六 互斥 (Owner 04.3 = Kayden). Kent c50256 ke Alden masih terbuka. | 「【2026-09-21 补】建造侧已于 OSD-116 c50263 撤回「先转主单已取消、再取消子单」的抢跑约束；余下问题为 N28 是否需对 04.3 §六 互斥条设例外，归 04.3 Owner。」 | OSD-116 c50263 |
+| 7 | 已实读的规范源 (页首) | Tambah bacaan 2026-09-21: OSD-116 c50255–c50263; #nos-bo (26 pesan + 8 thread); 04.0 v26 §三 riwayat; 04.3 v33 §六 riwayat v31; 建造单 riwayat versi v3–v33. | 「2026-09-21 增读：OSD-116 c50255～c50263；#nos-bo 全部消息与线程；04.0 v26／04.3 v33 版本历史；本页 v3～v33 版本差异。」 | notes/reading.md |
+
+## Belum masuk daftar (menunggu keputusan pemilik lain)
+- 04.7 dua baris nama Request Type: milik Felix/Alden, bukan 建造单.
+- Spec v62: putusan Felix c50261 butir 2 (a)(b)(c) harus ditulis Felix sendiri (04.5 §五).
+- 引用区「对应建造单」backfill dan status 建设中: tindakan BO di Spec, terpisah dari update 建造单 ini.
