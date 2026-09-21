@@ -12,6 +12,10 @@
 | 5 | 页首附表 baris 18 (形状 C 是否须配「已改道」出口), kolom 依赖谁 | Tertulis 「Alden（04.3 Owner）＋Felix（Spec）」. Owner 04.3 adalah Kayden Lee (04.3 维护说明; 04 v25 §六). Baris 19 sudah benar menulis Kayden. | 「【2026-09-21 订正｜原文保留不删】04.3 Owner＝Kayden Lee（04.3 页尾维护说明），非 Alden。」 | 04.3 v33 维护说明; 04 v25 |
 | 6 | 页首附表 baris 19 (N28), bagian 「抢跑约束待 Alden 背书」 | Setelah c50263, permintaan "before, or atomically with" ditarik dari sisi builder. Pertanyaan yang tersisa: apakah N28 perlu pengecualian terhadap 04.3 §六 互斥 (Owner 04.3 = Kayden). Kent c50256 ke Alden masih terbuka. | 「【2026-09-21 补】建造侧已于 OSD-116 c50263 撤回「先转主单已取消、再取消子单」的抢跑约束；余下问题为 N28 是否需对 04.3 §六 互斥条设例外，归 04.3 Owner。」 | OSD-116 c50263 |
 | 7 | 已实读的规范源 (页首) | Tambah bacaan 2026-09-21: OSD-116 c50255–c50263; #nos-bo (26 pesan + 8 thread); 04.0 v26 §三 riwayat; 04.3 v33 §六 riwayat v31; 建造单 riwayat versi v3–v33. | 「2026-09-21 增读：OSD-116 c50255～c50263；#nos-bo 全部消息与线程；04.0 v26／04.3 v33 版本历史；本页 v3～v33 版本差异。」 | notes/reading.md |
+| 8 | 页首附表 baris 30 (四条原地转换使模式九重复裁决主锁失效), kolom 事项 kalimat terakhir | Tertulis 「副锁（marker 回扫）与轮次防过期在 Notify §9.4 与 04.4.1 两页均登记「未实现」」. Sumber tidak menyamakan keduanya: 04.4.1 v13 「已登记的未实现项」 menulis 幂等标记回扫 = 「未实现」 tetapi 轮次防过期 = 「🔲 待定，勿当已生效」; Notify 契约 v13 版本表 menulis 「§9.4 副锁幂等标记只写不扫…；§9.4 轮次防过期 🔲 待定」. Dampak praktis sama (keduanya tidak melindungi hari ini), tapi kata harus ikut sumber. | 「【2026-09-21 订正｜原文保留不删】「均登记「未实现」」不准确：04.4.1 v13 与 Notify 契约 v13 均记 幂等标记回扫＝未实现、轮次防过期＝「🔲 待定，勿当已生效」（未定，非未实现）。OSD-116 c50279 (b) 已按此口径写。」 | 04.4.1 v13 「已登记的未实现项」; Notify 契约 v13 版本表 v5 行与 §9.4; OSD-116 c50279 |
+
+## Terkait, sudah terkirim
+- 2026-09-21 OSD-116 c50279: Pattern-9 consolidated request → Alden, cc Kent (butir 3/25/29/30/32 页首附表 dirujuk di sana; baris-baris itu belum diberi catatan 「已发出」 — bisa ditambahkan saat update v34 bila diinginkan).
 
 ## Belum masuk daftar (menunggu keputusan pemilik lain)
 - 04.7 dua baris nama Request Type: milik Felix/Alden, bukan 建造单.
