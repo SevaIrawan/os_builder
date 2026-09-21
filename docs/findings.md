@@ -21,6 +21,18 @@
 
 **Status**: recorded. Not reported to anyone. Not acted on.
 
+**Status update, 2026-09-21**: **still open, and wider than recorded.** Page 04 (1676804100)
+was opened live today at **v25** (unchanged since 2026-09-05) and its §六 table read in full.
+It has 15 rows: 04.0 · 04.1 · 04.2 · 04.3 · 04.4 · **04.4.1** · 04.5 · 04.5.1 · 04.5.2 ·
+04.5.3 · 04.6 · 04.7 · 04.8 · 04.9 · 04.10. Absent: **04.11, 04.12, 04.4.2, 04.4.3 and
+04.4.4** — five subpages, not one. 04.4.1 being present makes the omission of 04.4.2/3/4
+a within-family inconsistency rather than a policy of listing only top-level pages.
+04.4.4 was created 2026-09-19 and is at v4 today, so the newest of them post-dates 04 v25.
+Page 04's own §九 says verbatim: 「子页新增、废弃、改名、权威边界改变或跨页结构重排时，
+必须同步核对本页路由与全部指针。一般正文更新无需复制到本页。」 — so a newly created subpage is
+exactly the trigger that rule names. Owner of page 04: Kayden Lee. **Still not reported to
+anyone; no instruction given.**
+
 **Found while**: running the `nosm-sync-check` skill (verifying the local copies against
 their Confluence sources). This observation is **outside that skill's scope** — the skill
 only compares the local copy against its source, it does not check consistency between
@@ -125,6 +137,27 @@ a Jira-field list; (b) the genuine omission is **one** row, `联合评审结果`
 (c) point 2 of c50249 is wrong and needs retracting. Title, facts 4 and 5 and the closing
 paragraph of this entry are wrong accordingly. Kept unrewritten per rule 4.
 
+**Status update, 2026-09-21 — this finding is now CLOSED on both rows.**
+
+*Row 1, the genuine omission* `联合评审结果` **(N25) — carried through to approval.**
+Kent answered in **c50255**: 「联合评审结果 (N25) → your side (BO). It's a task-card field;
+per 04.2 a 任务卡 is an execution card, and per 04.10 §1 execution-card / sub-ticket fields
+are the Schema-Owner side — Task vs Sub-ticket doesn't change that… Checked 04.10 v19:
+no existing 评审 field → not a duplicate → register as new.」 We then filed it as row 8 of
+the 04.10 three-cell request (**c50283**), and Kent approved it with the other twelve in
+**c50290**: 「13 项全部准予按「新共享对象」登记」. So the row this finding found missing is now
+an approved, registered-pending field.
+
+*Row 2, the wrong point about* `纪律处分记录状态` **— already corrected in the comment itself,
+no retraction outstanding.** The 2026-09-20 status correction above said 「point 2 of c50249
+is wrong and needs retracting」. Re-read live today: **c50249's current body already carries
+the corrected text** — 「The other unlisted row is correctly excluded — 纪律处分记录状态 (N13).
+It is not a Jira field. It is the archive card's status column, and 04.8 §三 already registers
+it…」 The comment's `updated` timestamp (2026-09-20 21:39:28 +07) is later than its `created`
+(20:56:08 +07), i.e. it was edited after sending and the fix went in then. **Nothing is owed
+to Kent on this row.** Kent's c50255 independently lands on the same reading
+(「Disciplinary-record store → Option C … the 04.1 / 04.8 rows get formalized by Kayden's side」).
+
 **Found while**: the same verification pass as F-002.
 
 **Pages / objects actually opened and read**:
@@ -204,6 +237,18 @@ and no instruction has been given. Recorded so it can be re-checked.
 **Status**: recorded on the 建造单 (v33) on the repo owner's explicit instruction, as an
 open item for the 04.3 Owner. Not reported to anyone else. The row it sits on stays
 「待办」; nothing was configured.
+
+**Status update, 2026-09-21 — routed, now waiting on Kayden.** Two things moved today.
+(a) We sent **c50263**, withdrawing from our side the 「before, or atomically with」 ordering
+constraint that had been raised to Alden in Kent's c50256, because 04.3 §六 already decides
+that case verbatim; and we stated that 「Whether N28 (Spec: 对外 status→已取消 during 处理中)
+needs an exception to §六 is a question for the 04.3 Owner, not a Mode-5 change for Alden.」
+So the open question now sits with **Kayden** (04.3 Owner), not Alden. No reply as of
+2026-09-21 18:45 WIB. (b) Kent acknowledged Kayden's ruling in **c50257**: 「N28＝方向 2——
+转态权限配 HR Ops & Data 角色组＋守护件；方向 1 记为上线后第二版」, and 「Bambang 的 Mode-5
+抢跑约束我已转 Alden」 — that routing is the one we then withdrew in c50263.
+04.3 re-checked live today: **still v33**, §六 unchanged. Finding itself unchanged; only its
+addressee and its status changed.
 
 **Found while**: drafting the 建造单 update that consumes Kayden's two rulings in
 OSD-116 c50244, at the repo owner's request.
@@ -287,6 +332,11 @@ that sentence was deleted in v19 and the comment was sent after the deletion.
 **Not acted on.** No edit, no comment, no report sent. Recorded here and queued as item 10
 in `docs/pending-buildsheet-updates.md` for our own 建造单 v34.
 
+**Status update, 2026-09-21 18:45 WIB — re-checked, still open.** Both stale copies are
+unchanged: **04.4 still v33** and **04.4.3 still v6**; neither appeared in the second
+version sweep. The two current copies are also unchanged (04.9 v106, 04.9.1 v19), so the
+disagreement stands exactly as recorded. Still not reported to anyone.
+
 ---
 
 ## Sync-check history
@@ -295,3 +345,8 @@ in `docs/pending-buildsheet-updates.md` for our own 建造单 v34.
 | --- | --- | --- |
 | 2026-09-20 | 07.06 §八 (1730347066, Sep 15 2026) vs `CLAUDE.md` §一 | Identical; no change needed |
 | 2026-09-20 | 04 §一/§五/§六 (1676804100, Sep 05 2026) vs `docs/04-anchor-navigation.md` | 3 phrases dropped during an earlier copy; restored to match source (commit `a15c1b3`) |
+| 2026-09-21 ~04:00Z | Both copies, per the then-current skill | Reported **"in sync"** — and that report was **incomplete twice over**: the comparison was done by eye and so was blind to a dropped column, and the skill covered only the two local files, so it said nothing about the ~30 other source pages. Both defects are fixed in the skill (commit `ebd09b0`). Kept here because the log must show the miss, not only the fix. |
+| 2026-09-21 ~11:00Z | Version sweep of every recorded source page, whole-space CQL | **7 pages had moved**: 07.06.1 v33→v34 · 04.9 v103→v106 · 04.9.1 v17→v19 · 04.7 v45→v46 · 04.4 v31→v33 · 04.4.4 v1→v4 · 04.8 v20→v21. Diffs read; substance in `docs/reading-notes-2026-09-21.md` (commit `dd592bf`). |
+| 2026-09-21 ~11:20Z | 07.06 §八 (1730347066, **v30**) vs `CLAUDE.md` §一, by script | **Identical** — 19 bullets and the whole 开发入口的冻结要求 subsection match after normalisation. No drift. |
+| 2026-09-21 ~11:20Z | 04 §一/§五/§六 (1676804100, **v25**) vs `docs/04-anchor-navigation.md`, by script | **Drift found and fixed** (commit `ebd09b0`): §一 was missing its 4th column 责任边界 entirely; §五 was missing its 4th column 放行条件 and the section's lead sentence; §六 边界铁律 was missing its closing sentence. All restored verbatim; the three tables now compare row-for-row identical (5 / 7 / 16 rows). |
+| 2026-09-21 ~11:30Z | Second version sweep + OSD-116 + #nos-bo | **No Confluence page moved** past the 11:00Z versions (verified per page, not inferred from the CQL list). OSD-116: 163 comments, newest still c50290. #nos-bo: no new top-level message; one thread moved (latest reply 2026-09-21 13:59 +07). (commit `5e5c58f`) |
