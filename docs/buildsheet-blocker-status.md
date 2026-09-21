@@ -58,7 +58,7 @@ Kayden Lee. Sudah masuk daftar v34 sebagai butir 5.
 
 ## Hubungan dengan daftar v34
 
-File ini adalah pandangan status; teks yang akan ditulis ke Confluence ada di
-`docs/pending-buildsheet-updates.md` (16 butir). Pemetaannya: baris 12 → butir 3 · baris 5 → butir 4 & 12 ·
-baris 6 → butir 2 · baris 19 → butir 1 & 6 · baris 30 → butir 8 · baris 3 → butir 13 ·
-baris 32 → butir 10 · baris 18 → butir 5.
+`docs/pending-buildsheet-updates.md` **dihapus 2026-09-21** atas permintaan pemilik repo; daftar v34 akan
+disusun ulang dari awal. Isi lamanya (16 butir) tetap ada di riwayat git pada commit `24f3013` kalau
+sewaktu-waktu perlu dilihat lagi. File ini hanya pandangan status per baris, bukan teks yang akan ditulis
+ke Confluence.
