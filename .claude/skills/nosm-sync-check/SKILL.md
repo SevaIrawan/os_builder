@@ -75,35 +75,10 @@ so both of those rules are actually executed, not just written down.
    - Update `docs/source-versions.md` and record the substantive deltas in the reading
      notes. A version number alone is not an update; what changed is.
 
-7. **Jira and Slack sweep — the Confluence sweep does not cover these.**
-   Step 6 covers pages. Cards move independently, and a card comment can be newer than anything on
-   any page. On 2026-09-22 this was learnt the hard way: a sweep that covered Confluence, OSD-116 and
-   #nos-bo reported "nothing moved", while **NSE-1143 c50291** had been posted the evening before —
-   newer than the newest OSD-116 comment, and it contradicted a conclusion written minutes earlier.
-   - Run `searchJiraIssuesUsingJql` with `updated >= -Nd ORDER BY updated DESC` **on both connectors**.
-     They are different accounts and see different projects by design — the personal account sees OSD,
-     NSE, WT, MLKB; the Backend Operations account sees SSCSD, GPM, HR. This split is long-standing and
-     expected, not a defect: sweep both because each covers half, and do not report either one's
-     "not found" as a finding.
-   - **Run a control probe first**, per 07.06.1 E16: query one issue known to exist for that identity
-     (`key = SSCSD-411` for Backend Operations, `key = OSD-116` for the personal account). Only once the
-     probe returns may an empty result be read as "nothing changed". A JQL that returns zero because the
-     identity cannot see the project is indistinguishable from a JQL that returns zero because nothing
-     moved.
-   - **E16's own limit applies to the probe too** (NSE-1143 c50291 ⑫): an anchor proves *that one issue*
-     is visible, not that same-class objects in that project are. A TEST record as anchor gives a false
-     positive on coverage — its issue-level security differs from production records'.
-   - Then read the cards that matter, at minimum **OSD-116** and **NSE-1143**, newest comment first, and
-     stop only when reaching a comment id already on file.
-   - Slack: read #nos-bo, and check every thread's reply count and latest-reply timestamp, not just the
-     top-level messages. A thread can move while the channel looks unchanged.
-
-8. **Report outcome — say exactly what was checked.**
-   - Report steps 2–5, step 6 and step 7 as **three separate results**. Never let "the two controlled
+7. **Report outcome — say exactly what was checked.**
+   - Report steps 2–5 and step 6 as **two separate results**. Never let "the two controlled
      copies match" be phrased as "all documents are up to date": the copy check covers two
-     files, says nothing about the other ~30 source pages, and nothing at all about Jira or Slack.
-   - Name the window each sweep covered and the probe that backed it. "Nothing moved" without a stated
-     window and a passing probe is not a result.
+     files, and says nothing about the other ~30 source pages.
    - **In sync**: say which files were compared against which page versions; update the
      「上次同步日期」 line in both files only if the comparison actually ran (don't bump the
      date on a skipped check).
