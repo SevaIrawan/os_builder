@@ -1,8 +1,58 @@
 # 建造单 (2096463922) — daftar pembaruan tertunda, untuk satu kali update (v33 → v34)
 
 > Catatan kerja builder (Bambang). Belum ditulis ke Confluence. Setiap butir memakai kebiasaan halaman: 原文保留不删, tambah catatan bertanggal.
-> Disusun 2026-09-21; diperbarui 2026-09-21 ~18:30 WIB setelah sapuan penuh (Confluence + OSD-116 + #nos-bo).
-> Sumber tiap butir disebut di baris masing-masing. 建造单 masih **v33** (2026-09-20 14:55Z) — belum ada satu pun butir di bawah yang ditulis ke Confluence.
+> Disusun 2026-09-21; diperbarui 2026-09-21 ~18:45 WIB setelah sapuan penuh (Confluence + OSD-116 + #nos-bo).
+> Sumber tiap butir disebut di baris masing-masing.
+
+## Keputusan kerja (Bambang, 2026-09-21)
+
+**建造单 di Confluence (pageId 2096463922) masih v33** — terakhir diubah 2026-09-20 14:55:49Z, diverifikasi
+dari riwayat versinya. **Belum ada satu pun butir di halaman ini yang ditulis ke Confluence.**
+
+Itu disengaja. Semua butir **ditampung di repo dulu, untuk satu kali update v33 → v34**. Alasan: batch
+sekali tulis menjaga halaman tetap terbaca (kebiasaan halaman itu 原文保留不删 — tiap ronde menambah
+paragraf bertanggal, jadi banyak ronde kecil membuat sel jadi tidak terbaca; ini persis penyakit yang
+Alden suruh bereskan di 04.4 §十一 dengan c50273 ⑤ 「标准页只放结果」).
+
+**Pemicu untuk menulis v34**: jawaban terbaru dari **Felix, Alden, Kayden, atau Kent** — di comment OSD-116
+atau di #nos-bo. Sebelum itu, kerjanya hanya: pantau keempat sumber, tambah butir baru ke daftar ini.
+**Tidak ada tulisan ke Confluence, Jira, atau Slack tanpa perintah eksplisit.**
+
+## Siapa yang kita tunggu (status terverifikasi 2026-09-21 ~18:45 WIB)
+
+🔴 **Alden belum berkomentar di OSD-116 sejak 2026-09-10.** Diverifikasi: namanya tidak muncul di 60 comment
+terbaru, yang mundur sampai 2026-09-10 12:58. Dua permintaan kita menggantung padanya.
+
+| Siapa | Yang ditunggu | Sejak | Sumber |
+| --- | --- | --- | --- |
+| **Alden** | Balasan **c50279** — Pattern-9 扩展 (6 blok + 4 add-on + catatan Data Table). Ini yang mengunci 页首附表 baris 3 (阻塞中) dan N07. | 2026-09-21 15:17 | OSD-116 c50279 |
+| **Alden** | Balasan **c50237** — daftar field sisi 主单 (26 item → 35 field), termasuk 纪律记录有效期 yang butuh **2 field** (Final Written 永不自动失效 tidak bisa diwakili satu field date) dan dua 闭环闸 (离职单关联状态 / 下游流程触发状态) yang harus dibangun sebagai transition validator, bukan field biasa. Kent sudah menetapkan ini domain Alden/V1 (c50234 #2). | 2026-09-19 18:01 | OSD-116 c50237, c50234 |
+| **Alden** | Registrasi 8 频道 di **04.11** = 判据② baris 6 建造单. 04.11 masih **v2** (2026-08-24), tidak bergerak di sapuan mana pun. | — | 04.11 v2; butir 2 |
+| **Felix** | Jawaban atas 一问 Kent di c50290: 「PIP「延长周期」是否就 15/30/60/90 四档、无「视情况」超出的可能？」 **Ini yang mengunci tipe option**; Kent tidak mengunci sebelum dijawab. | 2026-09-21 17:18 | OSD-116 c50290 |
+| **Felix** | Menulis sendiri putusannya c50261 (2)(a)(b)(c) ke Spec — 权 tulis Spec ada padanya (04.5 §五). Kent c50238: 「Since S-05 is frozen, Felix decides whether they warrant a Spec change.」 (a) HR判定依据 append-only + timestamp + source-node tag; (b) N17 HR判定依据 wajib untuk ketiga outcome, D-9 【Result Summary】 menarik dari situ; (c) flag 疑似重复 + link Case asal harus tampak di layar review N07. | 2026-09-21 11:56 | OSD-116 c50261, c50238 |
+| **Kayden** | Apakah N28 perlu pengecualian terhadap 04.3 §六 互斥 — dirutekan oleh **c50263** kita. Belum dibalas. | 2026-09-21 12:30 | OSD-116 c50263 |
+| **Kayden** | Menulis urutan 切 active ke **OS 开发流 Spec** (masih v39). Sudah diputus di #nos-bo, belum turun ke halaman. | 2026-09-19 17:04 | #nos-bo thread 1789704362.435989 |
+| **Kayden** | 04.1 / 04.8 转正式登记 untuk Registry 纪律处分记录 (Option C). Kent c50257: 「04.1/04.8 转正式登记归你侧派人」, dan dia akan mengawal sampai tutup. | 2026-09-21 11:08 | OSD-116 c50255, c50257 |
+| **Kayden / Alden** | Menyetujui dua draf Kent (04.10 §二 权责判定标准; 改动分级三层文案). Kalau yang kedua turun, **暗号表 建造单 ini ikut kena** + 04.12 tambah satu baris. → butir 16. | 2026-09-21 13:41 / 13:59 | #nos-bo thread yang sama |
+| **Kent** | Membuat 13 field, memasang screen, dan mendaftarkannya di 04.10 §三 dengan bukti — **sisi Schema Owner, bukan kita** (c50290). Sebelum itu kita tidak bisa API 回读 maupun mengonsumsinya. | 2026-09-21 17:18 | OSD-116 c50290 |
+
+**Catatan**: Kent c50256 (Mode-5 ordering → Alden) sudah **kita tarik sendiri** lewat c50263, jadi bukan lagi
+hal yang kita tunggu dari Alden; sisanya (apakah N28 perlu pengecualian §六) ada di baris Kayden di atas.
+
+## Yang TIDAK menunggu siapa pun — bisa dikerjakan kapan saja
+
+Supaya daftar tunggu di atas tidak menutupi kerja kita sendiri:
+
+- **N28 方向 2**: konfigurasi izin transisi `Abort Case` (id 11) ke role group **HR Ops & Data**, plus 守护件
+  yang DM ke HR Ops & Data saat case masih berjalan tapi profil karyawan sudah berubah jadi departing/departed.
+  (Kent c50255, verbatim; 方向 1 auto-void = versi 2 pasca-上线.)
+- **N5 建库** untuk Registry 纪律处分记录 Option C — read-port hanya service account, di node tertentu
+  (grading/promotion), tanpa browse manusia. (Kent c50255: 「Build the library per N5」.)
+- **Memberi tahu Felix** kalau testing di `#sscos-hr` sudah selesai, supaya aksesnya dicabut. (Felix c50261,
+  kalimat terakhir.) — ini utang kita ke dia, bukan sebaliknya.
+- Sisa 页首附表 baris 28 (回读 API `hasScreen`/`isConditional` tiga transisi; live-run empat transisi terminal)
+  — **dibawa dari pembacaan 建造单 v33 kita sendiri, belum diverifikasi ulang sesi ini**; harus dicek lagi
+  terhadap baris 阻塞 v33 saat menyusun v34.
 
 | # | Lokasi di 建造单 | Yang salah / berubah | Teks yang diusulkan (tambahan bertanggal) | Sumber |
 | --- | --- | --- | --- | --- |
