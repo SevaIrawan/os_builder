@@ -81,18 +81,62 @@ hal yang kita tunggu dari Alden; sisanya (apakah N28 perlu pengecualian §六) a
 
 ## Yang TIDAK menunggu siapa pun — bisa dikerjakan kapan saja
 
-Supaya daftar tunggu di atas tidak menutupi kerja kita sendiri:
+> **Dibetulkan 2026-09-22 atas perintah Bambang.** Versi sebelumnya bagian ini mendaftarkan **N28 方向 2**,
+> **N5 建库** dan **“memberi tahu Felix testing sudah selesai”** sebagai pekerjaan yang bisa jalan kapan saja.
+> Ketiganya tidak benar; alasan per butir ada di bawah. Yang tersisa sebagai pekerjaan sisi kita hanya
+> baris 28, dan itu sudah diverifikasi live hari ini.
 
-- **N28 方向 2**: konfigurasi izin transisi `Abort Case` (id 11) ke role group **HR Ops & Data**, plus 守护件
-  yang DM ke HR Ops & Data saat case masih berjalan tapi profil karyawan sudah berubah jadi departing/departed.
-  (Kent c50255, verbatim; 方向 1 auto-void = versi 2 pasca-上线.)
-- **N5 建库** untuk Registry 纪律处分记录 Option C — read-port hanya service account, di node tertentu
-  (grading/promotion), tanpa browse manusia. (Kent c50255: 「Build the library per N5」.)
-- **Memberi tahu Felix** kalau testing di `#sscos-hr` sudah selesai, supaya aksesnya dicabut. (Felix c50261,
-  kalimat terakhir.) — ini utang kita ke dia, bukan sebaliknya.
-- Sisa 页首附表 baris 28 (回读 API `hasScreen`/`isConditional` tiga transisi; live-run empat transisi terminal)
-  — **dibawa dari pembacaan 建造单 v33 kita sendiri, belum diverifikasi ulang sesi ini**; harus dicek lagi
-  terhadap baris 阻塞 v33 saat menyusun v34.
+**Satu-satunya pekerjaan build S-05 yang tidak menunggu siapa pun: sisa 页首附表 baris 28.**
+
+Baris 28 statusnya **已解封 (2026-09-18)**, kolom 依赖谁 = **「建造侧」** (tanpa nama orang lain), dan
+解除判据-nya sendiri menyisakan dua hal verbatim: 「其中三条转换的 `hasScreen`／`isConditional` **待补 API
+回读**，四条终态转换**待实跑**」. Di 第八区 tabel 「尚未测试」 dua baris teratas ya itu:
+
+| Celah | Isinya |
+| --- | --- |
+| 四条终态转换实跑 + Resolution post function | `Reject`(3) · `Withdraw`(8) · `Cancel as Duplicate`(9) · `Abort Case`(11) — 「每条各需一张 TEST 单（单据入终态即止）。先例 GPM 用 11 张」 |
+| 三条转换属性 API 回读 | `Create`(1) · `Complete`(10) · `Abort Case`(11) — 「单据进入终态后不可再读，须在上一行补测时于 Pending Sub-tickets 态一并取得」 |
+
+Dasar bolehnya jalan — **baris 26, juga 已解封**: Kent c50198 「可先建 Jira 骨架（Issue Type、Workflow
+状态链、字段、转换）」, c50073 「全量并行建设，不是阻塞」, dan 「建造人账号已实测持有 Jira admin
+settings…边建边登记、Alden 验收后置」.
+
+**Diverifikasi live 2026-09-22, sebelum 09:31 WIB** (bukan dari halaman):
+- JQL `project = SSCSD AND issuetype = "Disciplinary Case"` → **hanya satu tiket**: SSCSD-411, status
+  `Completed` (10593), resolution `Done` (10000), reporter＝assignee＝Backend Operations. Jadi empat transisi
+  terminal itu memang belum pernah dijalankan sekali pun.
+- `getTransitions(SSCSD-411)` → **`transitions: []`**. Jadi betul: dari tiket itu tiga atribut tadi sudah tidak
+  bisa dibaca lagi. Harus tiket TEST baru, dibaca ketika tiketnya di Pending Sub-tickets.
+
+Empat catatan sebelum dikerjakan:
+1. 04.5.3: 测试单留终态不删 → tiap tiket TEST **permanen** di SSCSD. Tindakan tidak bisa dibatalkan, jadi
+   07.06.1 §六-2 minta izin eksplisit pemilik repo.
+2. SSCSD punya aturan penugasan bawaan — SSCSD-411 waktu dibuat diassign ke Alden lalu diubah balik ke
+   Backend Operations (tercatat di 第八区). Tiap tiket baru akan mampir sebentar di queue Alden.
+3. `Create`(1) tidak pernah muncul di daftar transisi sebuah tiket, di status apa pun — jadi angka
+   `hasScreen`/`isConditional`-nya **tidak dijanjikan** dari endpoint tingkat tiket. Yang pasti bisa:
+   `Complete`(10) dan `Abort Case`(11) saat tiket di Pending Sub-tickets.
+4. `Abort Case`(11): kolom 允许执行者-nya di 区二 masih 「本批未配置」 jadi teknis bisa dijalankan, tapi node
+   N28-nya masih punya pertanyaan terbuka di Kayden (baris 19). Kalau transisi ini ditahan, atribut API
+   transisi 11 ikut tertunda karena dibaca dari status yang sama.
+
+**Kerja meja yang juga tidak menunggu siapa pun** (di repo, tidak menyentuh Confluence/Jira/Slack):
+- Susun ulang pembelahan **16 baris tabel C** Spec v62 menurut 04.4 §8.1 (「这个被计时的对象在不在 SSCSD
+  里」). Angka lama di daftar aksi tidak berdiri (「13 dari 16」 sebenarnya 12; pembelahan 「1 JSM / 15 n8n」
+  tidak lolos §8.1), jadi ini harus dibangun ulang sebelum dipakai. Tidak butuh field jam kerja NTP.
+- **区四 Automation 规则清单** masih 🔲 待填, dan 填写前置-nya ditulis di halaman itu sendiri: 「须先实读 04.4
+  模式库（模式四／五／七／八），命名依 04.4 §十」. Pembacaan dan penyusunan draftnya bisa sekarang.
+  Apakah aturannya boleh benar-benar **dibangun** belum dicek — tidak diklaim di sini.
+- Rancangan baris 13 (target whitelist + bentuk 测试标识 04.5.3 §三) memang 「名单内自决」, jadi rancangannya
+  bisa dibereskan; pemasangannya tetap menunggu 04.9 分册 S-05 (Alden).
+
+**Tiga butir yang dulu ada di sini dan ternyata terkunci:**
+
+| Dulu ditulis di sini | Kenyataannya |
+| --- | --- |
+| **N28 方向 2** — konfigurasi izin transisi `Abort Case` ke role group HR Ops & Data + 守护件 | **Dua-duanya terkunci.** Izin transisi → **Kayden**: 04.3 v33 §六 untuk pintu itu berbunyi 「仅服务账号与该主单所在 Project 的 Owner」, HR Ops & Data tidak di dalamnya, sedangkan kalimat pembuka §六 「不设限制的转态视为配置未完成」; lebih keras lagi 撤回规则 §六 「全关子单中只要有一张「已完成」，走模式五自动转「已完成」，**不得再走本条中止路径**」. Dirutekan lewat c50263, belum dijawab. 守护件 → **Alden**: 04.9 §三 cuma punya enam 分册, **tidak ada untuk S-05**, sedangkan §一 铁律 三位一体 「缺任一项视为未完成」. → sekarang **B-16** di `docs/action-list.md` |
+| **N5 建库** untuk Registry 纪律处分记录 Option C | **Terkunci.** Perintahnya ada (Kayden c50244 「请按 N5 正式建库」, Kent c50255), tapi registrasinya belum turun: 04.1 v46 §一 baris itu masih 「**候选｜待N5**」, Project key 🔲, Owner 🔲. §1.1: 「该状态不可被 Spec、自动化或 **BO** 当作可执行 key」 dan 「N5 人工裁决：仅 Kayden 或 Alden…**BO 无此写权**」; §二: 「查不到已裁决的对应行…**停止建设并退回补齐**」. c50244 sendiri menugaskan 「04.1、04.8 两行由 **Kayden 侧派人**转正式登记」. → sekarang **B-19** |
+| **Memberi tahu Felix kalau testing sudah selesai** | **Tidak ada testing yang bisa disebut selesai.** Sampai hari ini belum ada satu pun tes yang dijalankan di S-05 selain 结构测试 2026-09-18; pembacaan daftar anggota channel adalah pengecekan prasyarat, bukan tes. Verifikasi kirim-nyata mustahil sebelum komponennya ada — semua pembangunan n8n S-05 terkunci di 04.9 分册 (B-08), dan baris 13 melarang kiriman tes ke `#sscos-hr` (04.5.3 §二 garis merah). Jadi mengabari Felix 「testing selesai」 sekarang tidak benar. Selain itu ia **tindakan keluar** — tetap butuh perintah pemilik repo, jadi bukan 「bisa dikerjakan kapan saja」 |
 
 | # | Status | Lokasi di 建造单 | Yang salah / berubah | Teks yang diusulkan (tambahan bertanggal) | Sumber |
 | --- | --- | --- | --- | --- | --- |
