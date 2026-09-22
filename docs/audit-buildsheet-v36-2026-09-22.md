@@ -161,3 +161,71 @@ Delapan kemunculan tersisa diperiksa satu per satu:
 **26 COMPLETED · 1 PENDING · 1 PANTAU.** Sisa satu-satunya: **butir 11** — sasarannya (baris
 「协作 Thread」 di 区六) tidak ada di halaman, dan butir itu sendiri menulis S-05 tidak memakai
 komponennya. Menunggu putusan Bambang.
+
+---
+
+## 7 · Butir 11 ditelusuri (2026-09-22, atas pertanyaan Bambang) — JANGAN digugurkan
+
+Pertanyaan Bambang: 「Butir 11 itu apa, dan dasar kau gugurkan itu apa」.
+
+**Koreksi lebih dulu: butir 11 tidak pernah kugugurkan.** Statusnya PENDING sejak awal. Yang kulaporkan
+hanyalah bahwa sasarannya tidak ketemu, lalu aku menawarkan dua pilihan (gugur / alih). **Menawarkan
+opsi gugur itu sendiri terlalu cepat** — penelusuran ini membuktikannya.
+
+### 7.1 · Isi butir 11
+
+Catatan sinkronisasi status. Bunyi teks tempelnya:
+
+> 「【2026-09-21 补】04.4 §十一 该行状态已改「可用」（Alden NSE-1143 c50273 验收），契约页 04.4.4 现行 v4。
+> 仍 inactive、至今零真跑，S-05 不消费本件，本行仅同步状态。」
+
+Sasaran yang tertulis: **区六 平台件表 — baris 协作 Thread (Collaboration Thread)**.
+
+### 7.2 · Dasar bahwa sasaran itu tidak ada — diverifikasi pada badan v37
+
+区六 平台件表 punya **tepat 7 baris**, tidak satu pun 协作 Thread:
+
+B6 Org Hierarchy Resolver · Notify · Slack Approval（模式九） · Error Handler (nos-ops) ·
+部门→Team Project／Collab 频道解析 · 岗位受控清单回避判断 · 提交人身份认证（身份件）
+
+Dan itu memang benar begitu: judul kolom 区六 adalah 「本流程用它做什么」 — komponen yang **dipanggil
+流程 ini**. Butir 11 sendiri menulis 「S-05 不消费本件」. Jadi 协作 Thread memang tidak punya tempat di 区六.
+
+### 7.3 · TETAPI — penelusuran ini menemukan pertentangan yang LOLOS dari audit §2
+
+Dua pernyataan di halaman yang sama memberi nilai berbeda untuk baris yang sama di sumber yang sama:
+
+| Letak | localId | Bunyi |
+|---|---|---|
+| 页首附表, baris N03 身份件, kolom 事项 | `277d67ba2b04` | 「另据 04.4 §十一 共享组件索引 **v31** 现行值：…身份件与协作 Thread **两件为「在建」**」 |
+| 区六, baris 身份件, kolom 已读结论 (koreksi butir 10, mendarat v34) | `c68f4340304e` | 「同表 协作 Thread 行即为反证（状态**「可用」**而件「仍 inactive、至今零真跑」）」 |
+
+**Dibaca langsung dari 04.4 v33 §十一 (2026-09-21 09:50Z), bukan dari ingatan atau dari repo:**
+
+- 协作 Thread: 「**可用**（Alden 验收 2026-09-21，NSE-1143 c50273）…**仍 inactive**…⚠️ 本件至今零真跑」
+- 身份件: 「**在建**（影子·shadow，随模式九批次上生产）」
+- Sisanya 可用: B6 · Slack 审批卡回调 · Notify · Policy Engine · Error Handler
+
+→ Di 04.4 **v33**: **可用 enam件**, **在建 satu件 (hanya 身份件)**.
+
+Jadi kalimat di 页首附表 basi pada dua hal sekaligus: nomor versi (v31 → v33) dan nilai 协作 Thread
+(在建 → 可用). Kalimat di 区六 yang benar. Klausa penutupnya 「仅身份件落在「在建」一侧」 **tetap benar**,
+bahkan makin tepat di v33.
+
+### 7.4 · Kelemahan auditku yang harus dicatat
+
+Audit §2 memeriksa **struktur** halaman plus **delapan titik yang berkaitan dengan tiga transisi terminal**.
+Audit itu **tidak** memeriksa ulang setiap kutipan sumber di halaman terhadap sumber hidupnya, dan tidak
+mengadu setiap pernyataan faktual dengan pernyataan lain di halaman yang sama. Pertentangan 协作 Thread ini
+lolos justru karena itu. Mungkin masih ada yang sejenis — pemeriksaan menyeluruh atas seluruh kutipan
+sumber di halaman ini adalah pekerjaan tersendiri, belum dikerjakan.
+
+### 7.5 · Usul: butir 11 dialihkan, bukan digugurkan
+
+| | |
+|---|---|
+| Sasaran baru | 页首附表 baris N03 身份件, kolom 事项 — `277d67ba2b04` |
+| Operasi | satu `replaceNode`, 原文保留不删 |
+| Isi | 04.4 已升 v33（上句按 v31 写）；协作 Thread 已转「可用」(c50273)，但 04.4 v33 本行自载「仍 inactive」「至今零真跑」；故 v33 下 可用六件、在建一件；末句「仅身份件落在「在建」一侧」不变且更准确；身份件在 v33 仍为「在建（影子·shadow）」 |
+
+Belum ditulis. Menunggu perintah Bambang.
