@@ -210,3 +210,56 @@ Diff manusia: https://nexmax.atlassian.net/wiki/pages/diffpagesbyversion.action?
 - Pertanyaan `共 33 行` di §7 butir 1 **belum berlaku** selama butir 15 belum masuk; baru mengikat saat
   baris ke-34 benar-benar ditambahkan.
 - **Butir 11** tidak ikut dan sasarannya memang tidak ada di halaman — menunggu putusan Bambang.
+
+---
+
+## 9 · Butir 15 mendarat di v35 — 2026-09-22 06:37:03.616Z
+
+Perintah Bambang: 「Butir 15 kerjakan sekarang, pakai insertNodeAfter」.
+
+Sesudah v34, setiap `<tr>` di tabel `952c32b3be2f` sudah punya `data-local-id` (ditambahkan server saat
+normalisasi v34) — yang di v33 tidak ada. `<tr>` terakhir: **`411da44320ce`**. Itulah yang membuat
+`insertNodeAfter` mungkin sekarang dan mustahil sebelumnya.
+
+### 9.1 · Dry run
+
+`ok: true` · `dry_run_validated` · badan 185.766 → 186.279 karakter (**+513**).
+
+| Pemeriksaan | Hasil |
+|---|---|
+| Baris data 页首附表 | 33 → **34** |
+| Baris baru berada **di dalam** tabel `952c32b3be2f` | **ya** — tepat sesudah `</tr>` baris terakhir, sebelum `</tbody></table>` |
+| `data-local-id` v34 (2.129) masih ada | **2.129 / 2.129, nol hilang** (11 id baru untuk `<tr>`＋5 `<td>`＋5 `<p>`) |
+| Uji balik: hasil dikurangi 1 baris == v34 | **sama persis karakter demi karakter** |
+
+Perbedaan entitas (`&#39;` → `'`) muncul lagi seperti di v34 — bentuk serialisasi, bukan perubahan isi;
+setelah dinormalkan uji balik lulus mutlak.
+
+### 9.2 · Penulisan sungguhan
+
+Satu operasi `insertNodeAfter`, payload **513 karakter**.
+
+```
+version 35 · createdAt 2026-09-22T06:37:03.616Z · snapshot v:35
+```
+
+### 9.3 · Bukti baca-balik
+
+`diffConfluenceContentVersions` v34↔v35 (`markdown`): bodyLength 62.573 → 62.759, lineCount 436 → 437,
+**additions 1 · deletions 0 · hunks 1**. Satu baris tabel ditambahkan, tepat di bawah baris
+「主单 Issue Type 命名…」 dan tepat di atas paragraf **统计**. Tidak ada baris lain yang tersentuh.
+
+Diff manusia: https://nexmax.atlassian.net/wiki/pages/diffpagesbyversion.action?pageId=2096463922&selectedPageVersions=34&selectedPageVersions=35
+
+### 9.4 · Satu akibat yang sudah dicatat, belum diperbaiki
+
+Paragraf **统计** (`data-local-id="a99c1693d3d4"`) tepat di bawah tabel masih berbunyi
+「共 33 行——阻塞中 5；待办 24…；已解封 4」（5＋24＋4＝33）. Sejak v35 tabelnya **34 baris / 待办 25**,
+jadi angka itu tidak lagi akurat.
+
+Ini **tidak disembunyikan**: sudah tertulis di pesan versi v35 sendiri — 「本表由 33 行增至 34 行；下方统计段
+「共 33 行……待办 24」因此不再准确，未在本版订正，另候指示。」
+
+Koreksinya sudah disiapkan sebagai **butir 21** di `pending-buildsheet-updates.md` (satu `replaceNode`
+pada `a99c1693d3d4`, ±140 karakter), **menunggu perintah Bambang** — sesuai aturan file itu sendiri:
+「Tidak ada butir yang ditulis ke Confluence tanpa perintah Bambang」.
