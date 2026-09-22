@@ -10,8 +10,11 @@
 > **Yang dibaca live 2026-09-22** (bukan dari ingatan atau catatan lama):
 > - **04.4｜自动化配置模式库** — §八 模式七 lengkap (§8.1 计时载体, §8.2 送达载体, §8.3 工作时口径).
 >   Halaman terakhir diubah 2026-09-21 16:50; versi tercatat di `docs/source-versions.md` = **v33**.
-> - **Spec S-05** (pageId 2036858900, terakhir diubah 2026-09-15 = **v62 已冻结**) — §② 节点表 lengkap
->   (23 node) dan §③ 增补区 C｜SLA细则 lengkap (16 baris).
+> - **Spec S-05** (pageId 2036858900) — §② 节点表 lengkap (23 node) dan §③ 增补区 C｜SLA细则 lengkap
+>   (16 baris). Halaman terakhir diubah **2026-09-15**, dan §① 状态区-nya berbunyi 「状态：**已冻结**」 —
+>   dua-duanya dibaca hari ini. Nomor **v62** **tidak** berasal dari pembacaan hari ini (API tidak
+>   mengembalikan nomor versi); ia dari `docs/source-versions.md`, yang pada sapuan 2026-09-22 06:21
+>   masih mencatat v62 dan tidak bergerak.
 >
 > **Batas file ini**: ia hanya menjawab satu pertanyaan — **siapa yang menghitung waktu tiap baris C**.
 > Ia tidak menetapkan angka, tidak menyentuh konfigurasi, dan tidak memutuskan hal yang bukan wewenang
@@ -52,7 +55,7 @@ nama node. Kolom 计时方式 dikutip apa adanya dari tabel C.
 | # | Baris C | 时限数值 (verbatim) | 计时方式 | Objek yang dihitung, dan di mana ia hidup | Di SSCSD? | **Pembawa timer** |
 | --- | --- | --- | --- | --- | --- | --- |
 | 1 | **C-1**｜N07 首次审核 | 2工作日 | 工作时 | N07 执行载体 ＝ 「**主单「待审批」状态上的审批动作**」 → 主单, SSCSD | **Ya** | **JSM 原生 SLA** |
-| 2 | **C-2**｜N07 打回补件回复 | 2工作日 | 工作时 | Tetap 主单 di 「待审批」 — N07 menulis 「打回补件循环期间保持本状态不变」 → 主单, SSCSD | **Ya** | **JSM 原生 SLA** (lihat catatan ①) |
+| 2 | **C-2**｜N07 打回补件回复 | 2工作日 | 工作时 | Tetap 主单 di 「待审批」 — Spec 需技术确认项 10 menulis 「案件在补件期间保持待审批状态」 → 主单, SSCSD | **Ya** | **JSM 原生 SLA** (lihat catatan ①) |
 | 3 | **C-3**｜N08 Show Cause 文书生成及发出 | **即时（与N07判定同一时点）** | 工作时 | N08 执行载体 ＝ 自动化, 「与判定同一时点自动生成并发出」 → tidak ada obyek Jira yang dihitung | — | **Tidak ada timer** (lihat catatan ②) |
 | 4 | **C-4**｜N09 员工回复 Show Cause | 3工作日（延期批准后重新计算，最多批准1次） | 工作时 | N09 执行载体 ＝ **子单**（载体名「等待员工解释」）→ HR Team Project | Tidak | **n8n 定时扫描件** (lihat catatan ③) |
 | 5 | **C-5**｜N12 Warning 文书准备及发出 | 当日／1个工作日内 | 工作时 | N12 执行载体 ＝ **子单** → HR Team Project | Tidak | **n8n 定时扫描件** |
@@ -194,4 +197,5 @@ Calendar-nya punya 口径 (B-07), dua baris itu bisa jalan tanpa menunggu 04.9 �
 
 | Tanggal | Perubahan |
 | --- | --- |
+| 2026-09-22 | **Audit atas perintah Bambang — satu kesalahan ditemukan dan dibetulkan.** Baris C-2 tadinya menulis 「N07 menulis 『打回补件循环期间保持本状态不变』」. Frasa itu **nol kali** ada di Spec dan **satu kali** di 建造单 区二 (diverifikasi dengan grep) — jadi salah sumber. Diganti ke kalimat Spec yang memang ada: 需技术确认项 10 「案件在补件期间保持待审批状态」 (satu kali di Spec). **Isi pembelahannya tidak berubah** — C-2 tetap JSM. Juga diperjelas: nomor v62 berasal dari ledger, bukan dari pembacaan hari ini. Seluruh aritmetika diverifikasi ulang dengan skrip: 16 baris · 12 工作时 · 4 日历时 · 2 即时 · B-07 mengunci 10 · klasifikasi 2/11/2/1 menutup ke-16 tepat sekali |
 | 2026-09-22 | Dibuat. 16 baris tabel C Spec v62 diadu satu per satu ke 04.4 v33 §8.1. Hasil: **2 JSM · 11 n8n · 2 tanpa timer · 1 butuh putusan**. Dua koreksi terhadap angka lama: 「13 dari 16 工作时」 → **12**, dan 「1 JSM / 15 n8n」 → **2 / 11 / 2 / 1**. Satu angka baru: yang benar-benar tergantung B-07 ada **10** baris, bukan 12 |

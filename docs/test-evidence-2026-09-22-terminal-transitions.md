@@ -11,7 +11,8 @@
 > 「建造人账号已实测持有 Jira admin settings…边建边登记、Alden 验收后置」).
 >
 > **Halaman standar yang dibaca live sebelum menyentuh apa pun**: 04.5.3｜Sandbox 与测试数据策略
-> (pageId 1729626578, lastModified 2026-09-15 = v13) — §一 sampai §五 lengkap.
+> (pageId 1729626578, lastModified **2026-09-15**) — §一 sampai §五 lengkap. Nomor **v13** bukan hasil
+> pembacaan hari ini (API tidak mengembalikan nomor versi); ia dari `docs/source-versions.md`.
 >
 > **Catatan proses**: tidak ada setelan harness yang diubah untuk menyelesaikan ini. Tiket ketiga
 > dibuat pada percobaan ketiga, dengan permintaan yang sama persis — lihat bagian «Catatan tentang
@@ -30,7 +31,7 @@
 
 **Yang kulakukan**: ikut preseden SSCSD-411 (结构测试 2026-09-18, sudah terdaftar di 建造单 第八区 sebagai
 「不涉真实员工」) — **tidak menyebut karyawan mana pun, dan tidak menulis ke field flow lain**
-(`Target Employee` cf18047 dibiarkan kosong; ia field flow 调薪, bukan 主体标识 S-05).
+(`Target Employee` cf18047 dibiarkan kosong — ia bukan 主体标识 S-05; field S-05 belum ada satu pun, jadi apa pun di layar itu milik flow lain. Flow mana persisnya tidak kupastikan dan tidak kuklaim).
 **Aku tidak mengklaim 双标识 terpenuhi** — syarat ② tidak bisa dipenuhi sebelum field-nya dibangun
 (sisi 主单 = Alden／V1, c50234 butir 2). Faktanya dicatat apa adanya di sini dan di butir untuk 区八.
 
@@ -45,7 +46,7 @@ terminal state, tidak dihapus, sesuai 建造单 第八区 「测试单留终态�
 
 ## Tiket yang dibuat
 
-| Tiket | id | Untuk transisi | Assignee saat dibuat | Status awal |末态 |
+| Tiket | id | Untuk transisi | Assignee saat dibuat | Status awal | 末态 / Resolution |
 | --- | --- | --- | --- | --- | --- |
 | **SSCSD-421** | 153097 | 8 `Withdraw` | **Backend Operations** (ditulis eksplisit) | `Pending Approval` (15855) | `Cancelled` / Cancelled |
 | **SSCSD-422** | 153098 | 9 `Cancel as Duplicate` | **Backend Operations** (ditulis eksplisit) | `Pending Approval` (15855) | `Cancelled` / Cancelled |
@@ -210,5 +211,6 @@ untuk 1 belum terbukti dan tidak kuklaim.
 
 | Tanggal | Perubahan |
 | --- | --- |
+| 2026-09-22 | **Audit atas perintah Bambang.** Seluruh angka dan kutipan diadu ulang ke sumbernya; keadaan Jira dibaca ulang live (4 tiket Disciplinary Case, status／resolution／assignee／label／komentar sesuai catatan, komentar 0 pada keempatnya). Tiga hal diperjelas, bukan kesalahan fakta: nomor v13 disebut berasal dari ledger bukan dari pembacaan hari ini; klaim bahwa cf18047 milik flow 调薪 dicabut (tidak ada sumbernya — yang pasti hanya bahwa ia bukan field S-05); satu header tabel yang rusak dibetulkan |
 | 2026-09-22 | Dibuat. SSCSD-421 (`Withdraw`) dan SSCSD-422 (`Cancel as Duplicate`) dijalankan dan dibaca balik. Tiket untuk `Reject` gagal dibuat dua kali karena classifier izin |
 | 2026-09-22 | **Diperbarui: `Reject` selesai.** Percobaan ketiga lolos tanpa mengubah apa pun — SSCSD-423 dibuat lalu dijalankan transisi 3, resolution `Rejected` (10042) ditulis otomatis. Sekarang **3 dari 4** transisi terminal 实跑; `Abort Case` tetap ditahan. Temuan 取消原因 diperluas ke tiga transisi, dengan pembedaan: `Withdraw` vs `Cancel as Duplicate` tidak terbedakan, `Reject` tetap terbedakan |
