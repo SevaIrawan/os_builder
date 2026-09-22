@@ -1,0 +1,114 @@
+[
+ {
+  "name": "replaceNode",
+  "localId": "47a99d847f37",
+  "value": "<p data-local-id=\"47a99d847f37\"><strong>【2026-09-20 补·裁决已下】</strong>Kayden c50244 一裁逐字：「<strong>选 C，独立 Registry 加授权读取口，与 9 月 2 日第 7 轮裁决一致。补一句口径：读取口只给流程在指定节点用服务账号读（评级、晋升等），不给人开浏览权限，否则等于 B。请按 N5 正式建库，04.1、04.8 两行由 Kayden 侧派人转正式登记。</strong>」<strong>本行状态不变（仍阻塞中）</strong>——裁决已下不等于库已建：2026-09-20 回读 04.1 <strong>v46</strong>（末次修订 2026-09-19 10:31，早于本裁决）该行仍为「候选｜待N5」，Project key 与 Owner 均 🔲；04.8 <strong>v20</strong> §三该实体行「归属 Project」亦仍为「🔲 候选｜待N5」。<strong>「依赖谁」由「Kayden 或 Alden（04.1 §1.1：N5 人工裁决仅二人任一）」改为「Kayden 侧派人（建库，并将 04.1 §一、04.8 §三两行转正式登记）」</strong>；解除判据不变。另记两项：①<strong>建设约束</strong>——读取口为服务账号在指定节点专用、不开人工浏览权限，N13／N26／N27 及未来消费方（评级／晋升）一律按此配置。②<strong>本实体状态列已有 SSOT，不待新建</strong>——按 2026-09-20 回读，04.8 §三该行「状态列定义」现载「<strong>Active → Expired/Reset；Active → 已解除</strong>」，「触发事件来源」载「<strong>S-05（纪律与绩效改进处置，OSD-116）N13/N26/N27写入并维护</strong>」，与 Spec 增补区 A <code>纪律处分记录状态</code> 同源；按 04.0 §二 档案卡「<strong>状态列不取自第三节状态词汇表</strong>」，其落地形态（档案卡 status 或自定义字段）随建库时按该 Registry 规则页定，建造侧不预设。「【2026-09-21 订正｜上句原文保留不删】「本行此前未录」不实：本行自 v8（2026-09-18）至 v27 均载有该句完整原文（含「不得再走本条中止路径」），v28（2026-09-19，c50233 之后约一小时）改写本行时被截至「互斥」，v31 补回。另见 OSD-116 c50263 对 c50233 的更正。」</p>",
+  "_butir": 1,
+  "_len": 1146
+ },
+ {
+  "name": "replaceNode",
+  "localId": "faf62231223f",
+  "value": "<p data-local-id=\"faf62231223f\">①@sscos-bot 受邀加入七个频道，并回读成员名单确认；②04.11 登记领域行并同步改 Notify 映射后回读；③<code>sscos-hr</code>（C0BHL8AE68G）的 bot 在位情况由该频道可见权者核实——建造人账号非其成员，本侧无从读取，而本流程九条 HR 内部知会发往该频道。原判据首项「逐个确认频道存在」已于 2026-09-19 成立，不再列入「【2026-09-21 补】判据①③已成立：建造侧 2026-09-21 以本人账号只读回读成员名单，@sscos-bot（U0BCPFHGURE）已在七个频道与 sscos-hr 名单内（Felix c50261 第 3 点）。余判据②（04.11 登记）待 Alden。」</p>",
+  "_butir": 2,
+  "_len": 366
+ },
+ {
+  "name": "replaceNode",
+  "localId": "222fca01406d",
+  "value": "<p data-local-id=\"222fca01406d\">确认这两个频道继续用于该团队知会，或统一改发 collab-hr-crm「【2026-09-21 补】Felix c50261 第 4 点：两频道继续分别使用，不并入 collab-hr-crm。业务口径已定；04.11 登记仍待 Alden。」</p>",
+  "_butir": 3,
+  "_len": 159
+ },
+ {
+  "name": "replaceNode",
+  "localId": "f7b0ccbccf05",
+  "value": "<p data-local-id=\"f7b0ccbccf05\">04.7 两行「请求类型」列填入双语名（格式依 04.1 §四→04.0 §五：中文在前·半角中点前后各一空格·英文在后）；<strong>且名称内不得含全角「｜」</strong>——04.0 §五原文：「全角「｜」为标题分段专用符号（04.2 第五节），不得出现在任何名称或短串内部——名称内出现「｜」会使标题从两段变三段，按第一个「｜」切分的自动化全部切错（实证：NSE-1143 c49117／c49123，离职与 Grade 均中招）」；该约定适用范围为「自 2026-09-05 起新建或修订的 Spec 与配置」，本流程在内。Spec、04.7 与平台显示名三者完全一致「【2026-09-21 补】Felix c50261 第 1 点已给出双语名（见左）。04.7 v46（2026-09-21 实读）两行尚未回填且 SUBMIT 中文名与 04.7 现行不同，名称一致（04.7 §四）未成立，本行仍阻塞。」</p>",
+  "_butir": 4,
+  "_len": 449
+ },
+ {
+  "name": "replaceNode",
+  "localId": "40633474c4c4",
+  "value": "<p data-local-id=\"40633474c4c4\">明确形状 C 是否强制配「已改道」；若是，Spec E 表须补该状态与 04.3 §2.1 的带指针要求「【2026-09-21 订正｜原文保留不删】04.3 Owner＝Kayden Lee（04.3 页尾维护说明），非 Alden。」</p>",
+  "_butir": 5,
+  "_len": 155
+ },
+ {
+  "name": "replaceNode",
+  "localId": "e3b04214f1d1",
+  "value": "<p data-local-id=\"e3b04214f1d1\">明确执行身份与模式五互斥条在本场景的适用口径「【2026-09-21 补】建造侧已于 OSD-116 c50263 撤回「先转主单已取消、再取消子单」的抢跑约束；余下问题为 N28 是否需对 04.3 §六 互斥条设例外，归 04.3 Owner。」</p>",
+  "_butir": 6,
+  "_len": 161
+ },
+ {
+  "name": "replaceNode",
+  "localId": "ec4987bfb47f",
+  "value": "<p data-local-id=\"ec4987bfb47f\"><strong>四条原地转换使模式九重复裁决主锁失效</strong>——Notify 调用契约 §9.4：主锁＝「所选 transition 已不在当前可用列表」；而原地转换（Pending Approval → Pending Approval）执行后仍停留原状态，<strong>该 transition 依旧可用</strong>，主锁对 ID 4／5／6／7 四条不成立。副锁（marker 回扫）与轮次防过期在 Notify §9.4 与 04.4.1 两页均登记「未实现」「【2026-09-21 订正｜原文保留不删】「均登记「未实现」」不准确：04.4.1 v13 与 Notify 契约 v13 均记 幂等标记回扫＝未实现、轮次防过期＝「🔲 待定，勿当已生效」（未定，非未实现）。OSD-116 c50279 (b) 已按此口径写。」</p>",
+  "_butir": 8,
+  "_len": 412
+ },
+ {
+  "name": "replaceNode",
+  "localId": "c68f4340304e",
+  "value": "<p data-local-id=\"c68f4340304e\">已读 2026-09-19。三合一判定（验签＋B6 直属＋Slack 身份一致）；状态在建·影子·inactive；现消费者仅离职 N3／Grade N3，均「仅通道二」；调用方硬要求：<code>identityOk:false</code> 阻止业务动作并私信回告，<code>mustAlert:true</code> 必须告警 nos-ops「【2026-09-21 补】本件已发布：04.9 v106 索引行新增、04.9.1 v19 状态改 <strong>active·已发布</strong>（versionId＝activeVersionId 616bbd91-5cd7-4c10-bcc4-ae9052592253，5 节点）。04.9.1 v19 并记真实链四例：真上级 identityOk；非上级按业务拒、不告警；<strong>档案查不到</strong>与<strong>档案重复</strong>两种均 fail-closed 且 mustAlert。<strong>【2026-09-22 订正】</strong> 此前本条写 04.4 §十一 与 04.4.3 「不一致，归 Alden」——<strong>不准确，已撤回</strong>。04.4 §十一 的「状态」列不是发布标志：其自身规则为「『在建』行由建设者开工时自登，<strong>验收通过后</strong>由建设者更新为『可用』」，同表 协作 Thread 行即为反证（状态「可用」而件「仍 inactive、至今零真跑」）。04.4.3 亦自载「验收：平台侧＝Alden；消费侧＝离职 N3＋Grade N3」，即验收未完成。故<strong>已发布但未验收的件记为「在建」是正确的</strong>，非漂移。<strong>对本流程的实际意义相反</strong>：建造单 baris 32 解除判据要的是「待其转<strong>『可用』</strong>后本流程方可建 N03 身份认证段」，而「可用」正是该列所报的事；读 04.4 §十一 得到的是<strong>对的</strong>答案。真正滞后的只有两句描述：04.4.3 页首仍写「本件自身仍 inactive」「影子·shadow」，04.4 §十一 该行仍带括注「随模式九批次上生产」。」</p>",
+  "_butir": 10,
+  "_len": 1017
+ },
+ {
+  "name": "replaceNode",
+  "localId": "9379c54a35e4",
+  "value": "<p data-local-id=\"9379c54a35e4\">平台扩展组件能力并更新 04.4.1「【2026-09-21 补】模式九扩展项已按 Kent c50227 ② 汇总为一份请求发出：OSD-116 <strong>c50279</strong>（→ Alden，cc Kent），含六块本体＋四项 add-on（(a) N03 分派钩子 flow 值 <code>disciplinary-n03</code>；(b) 原地转换幂等——本侧自建，另请在共享卡表「被哪些 workflow 引用」列补 S-05；(c) 身份件走向；(d) edit 屏前置）＋Data Table 说明。<strong>截至 2026-09-21 18:30 WIB 未获回复，本行仍 阻塞中。</strong>」</p>",
+  "_butir": 13,
+  "_len": 359
+ },
+ {
+  "name": "replaceNode",
+  "localId": "2346d7ab9cd5",
+  "value": "<p data-local-id=\"2346d7ab9cd5\">建成并经 API 逐项回读比对通过——<code>Disciplinary Case</code> 14357 与 <code>NOS: Disciplinary Workflow</code>（五态复用、十一条转换）已建、已挂两个 scheme 并 publish；TEST 单 SSCSD-411 实跑主链、changelog 与 Resolution 逐项回读通过。<strong>回读覆盖范围见第二、八区逐条注明</strong>——其中三条转换的 <code>hasScreen</code>／<code>isConditional</code> 待补 API 回读，四条终态转换待实跑「【2026-09-22 补】四条终态转换实跑进度：<strong>已实跑 3 条</strong>——<code>Reject</code>(3)、<code>Withdraw</code>(8) 与 <code>Cancel as Duplicate</code>(9)，各用一张 TEST 单（SSCSD-423／SSCSD-421／SSCSD-422），证据见第八区。<strong>未实跑 1 条</strong>：<code>Abort Case</code>(11)——<strong>按使用者指示暂缓</strong>，待 04.3 Owner 答复页首附表 baris 19 的互斥条口径。<strong>三条转换属性 API 回读仍为 0／3，未动</strong>：<code>Create</code>(1)／<code>Complete</code>(10)／<code>Abort Case</code>(11) 只能在 <code>Pending Sub-tickets</code> 态取得，而本轮三单按设计直接由「待审批」入终态（一单一条终态转换）。<strong>故本行仍不得视为判据齐备</strong>。」</p>",
+  "_butir": 19,
+  "_len": 857
+ },
+ {
+  "name": "replaceNode",
+  "localId": "c923492352a9",
+  "value": "<p data-local-id=\"c923492352a9\">Resolution＝<strong>Rejected</strong>（「取消原因」＝Dismissed，依 Spec N07②「取消原因登记为 Dismissed」）「【2026-09-22 补·实跑结论】本轮实跑证实：三条转换执行后<strong>均只写 Resolution，取消原因未落任何字段</strong>——<code>Withdraw</code>／<code>Cancel as Duplicate</code> 写 Cancelled（10041），<code>Reject</code> 写 Rejected（10042）；三单 changelog 各仅 status 与 resolution 两个 item，cf18054／cf18143 均 null。与既有分工一致而非冲突：「Cancellation Reason（新字段，非 18054，Kent c50234 第 3 点）」属<strong>主单侧字段</strong>，c50234 第 2 点已划归 Alden／V1，c50283 亦将其排除在本侧 13 项之外，故字段尚不存在、post function 无处可写。<strong>须登记的是其后果，且分两级不可混同</strong>：①该字段建成前，<code>Withdraw</code> 与 <code>Cancel as Duplicate</code> 两条路径在数据上<strong>完全不可区分</strong>（同 status、同 resolution、无其他标记），影响报表与审计口径，非仅便利性问题；②<code>Reject</code> <strong>仍可区分</strong>（Resolution＝Rejected 10042，非 Cancelled 10041），其缺的只是理由（Dismissed），不是路径身份。详见 findings <strong>F-007</strong>。本侧未新建字段、未写他流程字段、未改任何 post function。」</p>",
+  "_butir": 20,
+  "_len": 905
+ },
+ {
+  "name": "insertNodeBefore",
+  "localId": "8a864896-6869-38f3-be4b-d719342308f6",
+  "value": "<p><strong>【2026-09-22 v34 补·清单第 7 项】</strong>「2026-09-21 增读：OSD-116 c50255～c50263；#nos-bo 全部消息与线程；04.0 v26／04.3 v33 版本历史；本页 v3～v33 版本差异。」</p>",
+  "_butir": 7,
+  "_len": 122
+ },
+ {
+  "name": "insertNodeBefore",
+  "localId": "8a864896-6869-38f3-be4b-d719342308f6",
+  "value": "<p><strong>【2026-09-22 v34 补·清单第 9 项】</strong>「【2026-09-21 补】07.06.1 已升 v34（本条原按 v33 命中）。本次三项变动：① 新增 <strong>C9</strong>（Slack 三秒窗口：响应动作之前不排 Code 节点），主题速查表「发通知、发邮件、发 Slack」行已由 C1–C6 改为 C1–C6、C9 —— S-05 N03 入口一为 Slack 表单（04.7 本行「载体为Slack表单」），故本条 命中条目 增列 <strong>C9</strong>；② <strong>E6 口径反转</strong>，原「dry-run 会 pin 掉 HTTP 请求」改为「test_workflow 不会替你 pin 掉带凭据的节点，它会真发」，本侧今后一切干测须显式停用写／发节点或显式传 pinData，并核该次执行 pinData 是否为空；③ <strong>E16 订正</strong>，禁止以 /rest/api/3/mypermissions 的 BROWSE_PROJECTS 代替对照探针（单据级 issue security 会令 JQL 恒回空集而权限仍回 true），探针须查一张已知存在的单，且该单为<strong>承重对象</strong>、其用途须在本建造单登记。」</p>",
+  "_butir": 9,
+  "_len": 511
+ },
+ {
+  "name": "insertNodeBefore",
+  "localId": "8a864896-6869-38f3-be4b-d719342308f6",
+  "value": "<p><strong>【2026-09-22 v34 补·清单第 14 项】</strong>「【2026-09-21 补·依 OSD-116 c50290】Schema Owner Kent 审批结论：<strong>13 项全部准予按「新共享对象」登记</strong>（其已逐项现读 04.10 v19 §三 总表反重复）。三处类型裁定：①「Warning 生效信息」<strong>只登 Warning Effective Date（date）一个字段</strong>，「有效/重置规则」不另设字段——「发 D-6/D-11 时由卡从主单读（Warning 等级＋纪律记录有效期）当场 derive 出【Validity/Reset Rule】文案」，🔴 <strong>本侧因此多一项建设要求：卡需跨单读</strong>；②「PIP 延长周期」定为 <strong>option（15/30/60/90 天）</strong>，非 number，<strong>已由 Felix c50328（2026-09-22）确认「就 4 档」，类型锁定为 option 四值（15／30／60／90 天）</strong>；③其余按本侧所拟。两条建设约束：<strong>Check-in 记录需跨 7 个部门 Team Project 的 context（非 HR-only）</strong>；<strong>判定依据类型两值须与离职流「辞退原因」(Felix c50045) 逐字对齐</strong>。入口裁定：本批走 c48074 轻量入口，<strong>经 Kent 裁定例外不转开 Task</strong>，登记本体落 04.10 §三 总表、按 §2 先登记后启用、于字段建成＋API 回读后补入带证据的登记行。角色分工：<strong>13 个字段的创建、挂屏与 04.10 登记归 Schema Owner 侧（Kent），本侧只负责流程建设与消费</strong>（同 Grade / cf18152-153 分工）。」</p>",
+  "_butir": 14,
+  "_len": 743
+ },
+ {
+  "name": "insertNodeBefore",
+  "localId": "8a864896-6869-38f3-be4b-d719342308f6",
+  "value": "<p><strong>【2026-09-22 v34 补·清单第 18 项】</strong>「<strong>结构测试（2026-09-22，Backend Operations，标题 TEST｜，不涉真实员工，测试单留终态不删）</strong>」新增两行：①判据「回读验证（转换属性·API）」｜测试动作「读 SSCSD-421／SSCSD-422 于 Pending Approval 时的可用转换（<code>expand=transitions.fields</code>）」｜证据「两单各回八条（ID 2～9），<code>hasScreen: false</code>、<code>isConditional: false</code>、<code>fields: {}</code>；ID 4／5／6／7 另回 <code>isLooped: true</code>，机械印证四条原地转换。ID 1／10／11 仍未覆盖」；②判据「终态转换实跑与其 Resolution post function（04.3 §7.2）」｜测试动作「SSCSD-421 走转换 8 <code>Withdraw</code>；SSCSD-422 走转换 9 <code>Cancel as Duplicate</code>；SSCSD-423 走转换 3 <code>Reject</code>」｜证据「三单 changelog 各<strong>仅一条记录、两个 item</strong>（<code>status</code> ＋ <code>resolution</code>），无任何人工输入，与状态变更同一条 changelog，印证 §7.2 ①「由 post function 自动写入」：SSCSD-421／422 <code>status</code> 15855→<strong>15961 Cancelled</strong>、<code>resolution</code> null→<strong>10041 Cancelled</strong>（description「Process aborted (terminated by upstream)」），<code>resolutiondate</code> 10:05:57.894+07 与 10:05:49.311+07；SSCSD-423 <code>status</code> 15855→<strong>15850 Rejected</strong>、<code>resolution</code> null→<strong>10042 Rejected</strong>，<code>resolutiondate</code> 10:42:11.206+07。<strong>04.3 §7.1 四值的实测 id 现已登记三个</strong>：Done＝10000（SSCSD-411）、Cancelled＝10041、Rejected＝10042；<code>Rerouted</code> 本流程不用（区二：五态、无「已改道」）。<strong>五条 Resolution post function 现已实证四条</strong>：<code>Complete</code>／<code>Withdraw</code>／<code>Cancel as Duplicate</code>／<code>Reject</code>，余 <code>Abort Case</code>」。「测试单登记」加三行：<strong>SSCSD-421</strong>｜用途「转换 8 <code>Withdraw</code> 属性与 Resolution post function 回读」｜末态 Cancelled / Cancelled｜处置「留存不删（04.5.3 §四）。建单时已显式写 assignee＝Backend Operations，未经默认指派规则」；<strong>SSCSD-422</strong>｜用途「转换 9 <code>Cancel as Duplicate</code> 同上」｜末态 Cancelled / Cancelled｜处置同前；<strong>SSCSD-423</strong>｜用途「转换 3 <code>Reject</code> 同上」｜末态 <strong>Rejected / Rejected</strong>｜处置同前。<strong>另记 04.5.3 §三 双标识的实际状态</strong>：①标题标识成立（两单均 TEST｜ 起头）；②主体标识<strong>无法成立</strong>——2026-09-22 读 <code>getJiraIssueTypeMetaWithFields(SSCSD, 14357)</code> 共 48 个字段、仅 <code>project</code> 与 <code>summary</code> 为 required，<strong>无任何属于 S-05 的主体标识字段</strong>，故按 SSCSD-411 先例不涉任何员工、且不写他流程字段（<code>Target Employee</code> cf18047 留空）。本条不声称双标识已满足。」</p>",
+  "_butir": 18,
+  "_len": 1707
+ },
+ {
+  "name": "appendNodeToEnd",
+  "localId": "952c32b3be2f",
+  "value": "<tr><td><p>S-05 各 n8n 件切 active 的次序；Kayden 已裁「N14 通过之后、N15 上线之前」，且明确工程审关与验收关是两道关、Alden 拨开关时只核 04.9 登记与守护配置</p></td><td><p>Kayden（落 OS 开发流 Spec）</p></td><td><p>OS 开发流 Spec 出现该次序条款（现行 v39 无）</p></td><td><p>上线批次次序无成文依据，可能与平台侧预期不符</p></td><td><p>待办</p></td></tr>",
+  "_butir": 15,
+  "_len": 258
+ }
+]
