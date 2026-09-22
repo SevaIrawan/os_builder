@@ -232,6 +232,37 @@ and no instruction has been given. Recorded so it can be re-checked.
 
 ---
 
+**Status correction, 2026-09-22 — F-004 has the same defect F-008 had: it named a second evidence
+route (IN-041) and never opened it.** Appended, not rewritten, per rule 4.
+
+The entry's own «Why recorded» paragraph admits the possibility — 「or already settled somewhere not
+yet read」 — and its evidence table admits the OSD-116 comments were 「not re-opened when this entry
+was written」. IN-041 was named in fact 3 and never looked up. It has now been looked up.
+
+**IN-041 appears in exactly one place in the whole NOSM space, and that place is the S-05 Spec
+itself** (CQL `space = NOSM AND text ~ "IN-041"` → 1 hit, pageId 2036858900; a Jira-wide
+`text ~ "IN-041"` search returns **zero** issues). The Spec carries it as 需技术确认项 item 7, verbatim:
+
+> 7. N07"确认重复→已取消"转态——04.3§六转态权限表当前无对应出口（现有出口为请求人撤回／服务账号或
+>    Project Owner中止），实现路径待Alden确认（**已上报治理侧IN-041**）。
+
+**What this changes, and what it does not.**
+- **The substance of F-004 is CONFIRMED, and confirmed by the Spec's own words**: 04.3 §六 has no
+  covering exit for this transition, and the existing exits are exactly the two F-004 named
+  (请求人撤回 ／ 服务账号或 Project Owner 中止).
+- **The framing of F-004 is WRONG.** Facts 4 and 5 put it as an item that was classified 卡建设 and
+  then vanished from the final sign-off lists and from the 建造单 — i.e. that nobody is holding it.
+  That is not the case: it is registered in the Spec's 需技术确认项 as item 7, with the escalation id
+  and 「实现路径待 Alden 确认」. 需技术确认项 is the designated place for precisely this, so
+  c49740's 「卡建设的无」 is consistent with the item having been carried forward rather than dropped.
+  It is held, it is routed to Alden, and it is not ours.
+- Fact 5 (zero occurrences in the 建造单) stays true but stops being evidence of neglect: under
+  04.5 §五 唯一落点 the Spec is the semantic home and the 建造单 does not duplicate it.
+
+**Net**: F-004's absence claim stands; its "this slipped through" reading is withdrawn. Still not
+reported to anyone, still not acted on, and nothing here is a basis for raising it — item 7 already
+routes it.
+
 ## F-005 · 2026-09-20 · 04.3 §六 does not cover the executor c50244 mandates for N28
 
 **Status**: recorded on the 建造单 (v33) on the repo owner's explicit instruction, as an
@@ -417,6 +448,34 @@ on the repo owner's instruction pending B-15.
 Still not reported to anyone; still nothing added, changed or configured.
 
 ---
+
+**Status correction, 2026-09-22 — one sentence in F-007 over-reaches its evidence.** Appended per rule 4.
+
+F-007 states 「No 取消原因 field exists on this issue type at all — the create-screen read returns
+48 fields, none of them a cancellation-reason field belonging to S-05.」 That is inferred from
+`getJiraIssueTypeMetaWithFields`, which reports the **create screen only**. A field can exist on an
+issue type without being on that screen, and 04.10 §三 records from實測 exactly what then happens:
+for cf18203 it notes 「原写「不依赖挂屏」已证伪——实证机器 API 读/写均依赖挂屏（**未挂时读缺键**、写报
+not on screen）」. So an unmounted field would be invisible both to the create-screen read and to the
+field reads performed here. The inference is therefore not supported by what was done.
+
+**There is also no register to check as a second route, and 04.10 says so itself.** Its 权威边界
+reads 「**本页只承载执行卡／子单侧的共享字段；主单字段归 SSCSD/V1**，Registry 实体字段归 04.8 §5」, and
+§一 routes 「主单侧对象（SSCSD 四形状、主单字段）→ SSCSD／V1 范畴，Owner：Alden」. A cancellation-reason
+field on the master ticket is a **master-ticket** field, so it is outside 04.10 by design. There is no
+Confluence register for it to appear in.
+
+**What is unaffected — the measured core.** F-007's conclusion does not rest on the field-existence
+inference. It rests on the changelog, which is direct evidence: each of the three transitions produced
+**exactly one changelog entry with exactly two items** (`status` and `resolution`) and nothing else.
+Whatever fields do or do not exist, **the post functions wrote no cancellation reason**, and no such
+value is readable on any of the three tickets.
+
+**Corrected wording for the record**: not 「no such field exists」 but 「the post functions wrote only
+status and resolution, and no cancellation-reason value is readable on the ticket; whether an
+unmounted field exists was not established and cannot be established by the reads performed here」.
+The consequence recorded in F-007 — `Withdraw` and `Cancel as Duplicate` are indistinguishable in
+readable data — is unchanged.
 
 ## F-008 · 2026-09-22 · The S-05 audit baseline (Spec page v58) is not the Spec's current page version
 
