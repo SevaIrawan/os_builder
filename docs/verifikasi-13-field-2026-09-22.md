@@ -71,3 +71,29 @@ izin create di empat project itu.
 
 Syarat 「字段建成＋API 回读」 **terpenuhi untuk 13 field pada carrier HR (Sub-ticket 14316 ＋ Task 10004)**.
 Siap ditulis ke 建造单 dalam satu versi begitu diperintahkan, dengan batas verifikasi §3 ditulis apa adanya.
+
+---
+
+## §N — Sudah ditulis ke 建造单 (v40)
+
+**2026-09-22 07:46:03.333Z — v39 → v40**, lewat akun Bambang (`Atlassian_MCP`), jalur `edits`
+node-level, **9 operasi `replaceNode`** (7.093 karakter payload, bukan 198 KB badan penuh).
+
+Apa yang mendarat:
+
+| Node | Isi |
+|---|---|
+| `d60d1c617fdf` (区三 字段清单) | 13 cf ID + tipe + nilai option, tiga selisih redaksi dengan c50345, dan batas verifikasi 3-dari-7 berikut probe pembanding E16 |
+| `e9cd09bd56c2` (butir 14／31) | kutipan c50345 apa adanya; ketergantungan Schema Owner selesai, c50279 Alden masih menggantung |
+| `613d46be24bf` (daftar versi sumber) | 04.10 v19 → **v20**; 「四处过期」 dibaca 「五处」 |
+| `649d24ea-…` N10, `ac9ad7db-…` N12, `75abe7b2-…` N14, `5edab308-…` N16, `e9c08849-…` N17, `6e853153-…` N25 (区一 状态) | sisi field bukan lagi prasyarat baris itu; prasyarat lain tetap sebagaimana teks asli |
+
+**Bukti baca-balik.** Badan v40 dibaca ulang dari server (198.376 karakter). Uji balik: setelah
+sembilan nilai baru dikembalikan ke teks asalnya di v39, hasilnya **sama persis karakter demi
+karakter** dengan badan v39. `data-local-id` tetap **2.185** — nol hilang, nol ditambah. Nol tag
+menggantung (`table/tr/td/th/p/strong/code/ul/li` semuanya berpasangan) dan nol tabel bergerigi
+(tiap tabel lebar kolomnya seragam).
+
+**Satu-satunya perubahan dari sisi server**: spasi ekor di dalam `<code>PIP </code>` dipangkas jadi
+`<code>PIP</code>`. Kalimatnya tetap benar (「六个 PIP 字段在 Jira 的实名带 `PIP` 前缀」); tidak ada
+perubahan makna, dan tidak ada yang perlu diperbaiki.

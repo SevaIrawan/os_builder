@@ -59,14 +59,14 @@
 | 04.8｜Registry SSOT | 1690140756 | **v21** | Alden |
 | 04.9｜n8n Workflow SSOT | 1693089805 | **v106** | Alden |
 | 04.9.1｜详情：平台 | 1764622422 | **v19** | Alden |
-| 04.10｜Jira 共享配置治理 | 1738735636 | v19 | Kent |
+| 04.10｜Jira 共享配置治理 | 1738735636 | **v20** | Kent |
 | 04.11｜Slack Channel 登记表 | 1764524046 | v2 | Alden |
 | 04.12｜机读标记总清单 | 2091876367 | v5 | Kent |
 | Notify 子流程调用契约 | 1603633175 | v13 | Alden |
 | OS 开发流｜流程 Spec | 1729200354 | v39 | Kayden／Kent |
 | HR｜盘点与切分 | — | v38 | Felix |
 | 纪律与绩效改进处置｜流程 Spec (S-05) | 2036858900 | **v62** (冻结基线 v61) | Felix |
-| 纪律与绩效改进处置｜建造单 | 2096463922 | **v39** | Bambang (BO) |
+| 纪律与绩效改进处置｜建造单 | 2096463922 | **v40** | Bambang (BO) |
 
 **Tebal** = bergerak pada sapuan 2026-09-21 dan sudah dibaca diff-nya (lihat
 `docs/reading-notes-2026-09-21.md` bagian VERSION SWEEP).
