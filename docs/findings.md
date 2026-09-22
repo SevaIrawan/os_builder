@@ -75,6 +75,35 @@ blocked by this.
 
 ---
 
+**Re-verification, 2026-09-22 — F-001 HOLDS. Every checkable claim matched the live page verbatim.**
+Page 04 (1676804100) re-opened live today, lastModified **Sep 05, 2026** (unchanged). Appended per rule 4.
+
+| F-001 claim | Live result |
+| --- | --- |
+| §六 has 15 rows: 04.0·04.1·04.2·04.3·04.4·**04.4.1**·04.5·04.5.1·04.5.2·04.5.3·04.6·04.7·04.8·04.9·04.10 | **Exactly those 15, in that order.** ✓ |
+| 04.11, 04.12, 04.4.2, 04.4.3, 04.4.4 absent | ✓ none appears |
+| §五 登记集 has no 「领域→Slack Channel」 trigger row | ✓ §五 has 6 rows (04.0·04.1·04.7·04.8·04.9·04.10); no 04.11, no Slack row |
+| §九 quote 「子页新增、废弃、改名、权威边界改变或跨页结构重排时，必须同步核对本页路由与全部指针。一般正文更新无需复制到本页。」 | ✓ **verbatim**, last line of §九 |
+
+**Two things the earlier entry did not have, found by opening the page rather than trusting it.**
+
+1. **It is stronger than recorded.** 04's own 维护说明 makes the same thing an update trigger a second
+   time: 「更新触发：…**04 子页**或 AI 停止条件变化｜**每次更新必须检查：04.x 指针**…」. And 04.11 is not
+   decorative — 04.5 §七 item 22 makes it a hard structural-audit gate: 「增补区 D 与增补区 C 升级对象中
+   指定的每个 Slack 频道，必须在 04.11｜Slack Channel 登记表（pageId 1764524046）中有对应行…**查无对应行
+   ＝失败**」. A page that can fail a Gate is absent from both §五 and §六.
+
+2. **But there is a plausible legitimate reason for three of the five, and F-001 never considered it.**
+   04.4.2／04.4.3／04.4.4 are all 调用契约 pages for shared components, and **04.4 §十一 is their index** —
+   each row there carries a 契约页 column pointing at them. §六's own 边界铁律 ends 「任何页面不得复制另一个
+   SSOT 的值」, so listing them again in 04 could be read as duplication. **This is my inference, not
+   04's statement** — 04 nowhere says §六 excludes contract pages. Flagged so the entry is not read as
+   stronger than it is. No such alternative index exists for **04.11** or **04.12**, and 04.11 is the
+   load-bearing one.
+
+**Net**: F-001 stands as an observation, with its scope honestly narrowed for 04.4.2/3/4. Still not
+reported to anyone; Owner of 04 is Kayden Lee.
+
 ## F-002 · 2026-09-20 · "实测 404" on the build sheet was a visibility artefact, not absence
 
 **Status**: corrected on the build sheet (v32) on the repo owner's explicit instruction.
@@ -328,6 +357,43 @@ because the Spec page is not edited); the §2 transition table row 11; and the �
 writing — 04.8 §三 already registers it. See F-003's status correction.
 
 ---
+
+**Re-verification, 2026-09-22 — F-005 HOLDS on substance, with two corrections to how it was written.**
+04.3 (1676771343) re-opened live today, lastModified **Sep 16, 2026**. Appended per rule 4.
+
+**Verified verbatim.** §六 opens 「Workflow 的每个转态动作都必须限定允许执行者。**不设限制的转态视为配置未完成。**」
+✓. 维护说明 「Owner：Kayden Lee」 and 「更新触发条件：…**转态权限执法点、撤回规则**或 Resolution 映射变更时
+更新本页」 ✓. The 转态权限表 does carry 「**主单**转入「已取消」（执行中止） | 仅服务账号与该主单所在 Project
+的 Owner…」 ✓, and no row admits a role group.
+
+**Correction 1 — F-005 quoted that row TRUNCATED, dropping the row's own pointer.** The full cell reads
+「仅服务账号与该主单所在 Project 的 Owner；**触发与动作范围见本节下方撤回规则「进入待子单完成后」条**」.
+F-005 stopped at the semicolon. That is the same methodological error as F-004 and F-008 — quoting a row
+while omitting the place it sends you. **The pointer has now been followed, and it confirms rather than
+overturns**: 撤回规则「进入待子单完成后」 reads 「由处理方依实际情况处理：由**服务账号或 Project Owner**
+在同一动作范围内，把已生成、尚未关闭的子单转「已取消」，并将主单转入「已取消」」 — the same two executors,
+no role group. The conclusion is unchanged; the quotation discipline was not.
+
+**Concrete consequence now that the pointer is read**: 「该主单所在 Project 的 Owner」 resolves through
+04.1 §一, whose SSCSD row gives Owner ＝ **Alden（V1 平台持有）**. So the permitted set for this exit is
+**service account ＋ Alden**, and HR Ops & Data is outside it.
+
+**Correction 2 — the framing 「the executor c50244 mandates」 understates where the mismatch comes from.**
+The **frozen Spec itself** already carries it, before c50244 (2026-09-20) existed: the N28 row of the
+node table names 泳道 ＝ **HR Ops & Data** and its 执行载体 reads 「HR Ops & Data 在「处理中」状态执行中止
+（**04.3§六既有「Project Owner中止」出口，不新造转态**）」. So the frozen Spec asserts it reuses an exit
+that does not admit its own named executor. c50244 confirmed that direction; it did not create the
+mismatch. F-005 should be read as a mismatch **inside the frozen Spec**, which is a stronger and more
+accurate statement than a mismatch with a later comment.
+
+**Correction 3 — the F-004 analogue was checked, and it does NOT apply here.** F-004 turned out to be
+registered in the Spec's 需技术确认项 as item 7. The same list was read in full today: it has **ten**
+items (N01 · N13/N26/N27 · N20/N21 · N22/N23 · N25 · N16 · **N07 确认重复→已取消** · N16 跨部门 ·
+N03/N06 Slack · N07 审批交互), and **none of them covers N28's executor**. So unlike F-004, this one has
+no registered holder in the Spec — which is exactly why it sits on 建造单 row 19 and why our c50263
+routed it to the 04.3 Owner. That routing was correct.
+
+**Net**: F-005's substance survives unchanged and is now better grounded. Two writing defects corrected.
 
 ## F-006 — 身份件 (Submission Identity Verifier) status is recorded three ways and two of them are stale
 
