@@ -8,7 +8,7 @@
 | | |
 |---|---|
 | **Versi halaman 建造单 sekarang** | **v33** (2026-09-20 14:55:49Z) — diverifikasi dari riwayat versi |
-| **⏳ PENDING** (menunggu, belum ditulis ke Confluence) | **15** |
+| **⏳ PENDING** (menunggu, belum ditulis ke Confluence) | **16** |
 | **✅ COMPLETED** (sudah ditulis ke Confluence) | **0** |
 | **👁 PANTAU** (tidak mengubah baris apa pun, cuma diawasi) | **1** — butir 16 |
 | **Terakhir ditulis ke Confluence** | belum pernah — belum ada satu butir pun yang naik |
@@ -53,17 +53,17 @@ Daftar 待办 / 阻塞中 yang kau susun di 建造单 sekarang punya cermin ber-
 Hasil: **1 baris benar-benar tutup hari ini (baris 12)**, 9 baris bergerak tanpa 判据-nya terpenuhi,
 23 baris tidak bergerak. Tally: 阻塞中 tetap 5, 待办 24 → 23, 已解封 4 → 5.
 
-## Siapa yang kita tunggu (status terverifikasi 2026-09-21 ~18:45 WIB)
+## Siapa yang kita tunggu (status terverifikasi 2026-09-22 ~09:31 WIB)
 
-🔴 **Alden belum berkomentar di OSD-116 sejak 2026-09-10.** Diverifikasi: namanya tidak muncul di 60 comment
-terbaru, yang mundur sampai 2026-09-10 12:58. Dua permintaan kita menggantung padanya.
+🔴 **Alden belum berkomentar di OSD-116 sejak 2026-09-10.** Diverifikasi 2026-09-21: namanya tidak muncul di 60
+comment terbaru, yang mundur sampai 2026-09-10 12:58. Dicek ulang 2026-09-22 09:31 WIB: comment terbaru
+sekarang c50328 (Felix), dan Alden tidak muncul di 8 comment terbaru. Dua permintaan kita menggantung padanya.
 
 | Siapa | Yang ditunggu | Sejak | Sumber |
 | --- | --- | --- | --- |
 | **Alden** | Balasan **c50279** — Pattern-9 扩展 (6 blok + 4 add-on + catatan Data Table). Ini yang mengunci 页首附表 baris 3 (阻塞中) dan N07. | 2026-09-21 15:17 | OSD-116 c50279 |
 | **Alden** | Balasan **c50237** — daftar field sisi 主单 (26 item → 35 field), termasuk 纪律记录有效期 yang butuh **2 field** (Final Written 永不自动失效 tidak bisa diwakili satu field date) dan dua 闭环闸 (离职单关联状态 / 下游流程触发状态) yang harus dibangun sebagai transition validator, bukan field biasa. Kent sudah menetapkan ini domain Alden/V1 (c50234 #2). | 2026-09-19 18:01 | OSD-116 c50237, c50234 |
 | **Alden** | Registrasi 8 频道 di **04.11** = 判据② baris 6 建造单. 04.11 masih **v2** (2026-08-24), tidak bergerak di sapuan mana pun. | — | 04.11 v2; butir 2 |
-| **Felix** | Jawaban atas 一问 Kent di c50290: 「PIP「延长周期」是否就 15/30/60/90 四档、无「视情况」超出的可能？」 **Ini yang mengunci tipe option**; Kent tidak mengunci sebelum dijawab. | 2026-09-21 17:18 | OSD-116 c50290 |
 | **Felix** | Menulis sendiri putusannya c50261 (2)(a)(b)(c) ke Spec — 权 tulis Spec ada padanya (04.5 §五). Kent c50238: 「Since S-05 is frozen, Felix decides whether they warrant a Spec change.」 (a) HR判定依据 append-only + timestamp + source-node tag; (b) N17 HR判定依据 wajib untuk ketiga outcome, D-9 【Result Summary】 menarik dari situ; (c) flag 疑似重复 + link Case asal harus tampak di layar review N07. | 2026-09-21 11:56 | OSD-116 c50261, c50238 |
 | **Kayden** | Apakah N28 perlu pengecualian terhadap 04.3 §六 互斥 — dirutekan oleh **c50263** kita. Belum dibalas. | 2026-09-21 12:30 | OSD-116 c50263 |
 | **Kayden** | Menulis urutan 切 active ke **OS 开发流 Spec** (masih v39). Sudah diputus di #nos-bo, belum turun ke halaman. | 2026-09-19 17:04 | #nos-bo thread 1789704362.435989 |
@@ -73,6 +73,11 @@ terbaru, yang mundur sampai 2026-09-10 12:58. Dua permintaan kita menggantung pa
 
 **Catatan**: Kent c50256 (Mode-5 ordering → Alden) sudah **kita tarik sendiri** lewat c50263, jadi bukan lagi
 hal yang kita tunggu dari Alden; sisanya (apakah N28 perlu pengecualian §六) ada di baris Kayden di atas.
+
+**Sudah dijawab, keluar dari daftar tunggu (2026-09-22)**: baris **Felix** soal 「PIP「延长周期」是否就 15/30/60/90
+四档」 (一问 Kent di akhir c50290). Felix **c50328** (2026-09-22 08:37 +07) menjawab 「确认，PIP「延长周期」就维持
+15 / 30 / 60 / 90 天四档，不开放「视情况」填写其他天数」 dan 「可以按 option 锁定」. Sisa rantai ini ada di baris
+**Kent** di atas (membuat field, memasang screen, mendaftar 04.10). → butir **17**.
 
 ## Yang TIDAK menunggu siapa pun — bisa dikerjakan kapan saja
 
@@ -108,6 +113,8 @@ Supaya daftar tunggu di atas tidak menutupi kerja kita sendiri:
 | 15 | ⏳ PENDING | 页首附表（新增一行「上线次序：切 active 的位置」） · 区九 | Kayden 在 #nos-bo 2026-09-19 17:04 裁定：验收关（N13/N14）与工程审关（切 active）是两道关；并说 「切 active 放在 N14 通过之后、N15 上线之前。这个顺序我会写进 OS 开发流 Spec。」 **OS 开发流 Spec 现行仍 v39，尚未写入**，所以这是已裁未落页。 | 新增待办/阻塞行 —— 事项：「S-05 各 n8n 件切 active 的次序；Kayden 已裁「N14 通过之后、N15 上线之前」，且明确工程审关与验收关是两道关、Alden 拨开关时只核 04.9 登记与守护配置」｜依赖谁：Kayden（落 OS 开发流 Spec）｜解除判据：OS 开发流 Spec 出现该次序条款（现行 v39 无）｜不做的后果：上线批次次序无成文依据，可能与平台侧预期不符｜状态：待办。**来源为 Slack 裁定，非标准页；按 07 §二「Confluence 当前权威页是规则事实」，落页前不得当成已生效规则。** | #nos-bo thread 1789704362.435989 回复 3（Kayden 2026-09-19 17:04）；OS 开发流 Spec v39 |
 | 16 | 👁 PANTAU | （仅作观察登记，暂不改任何行） | 两份会影响本建造单的草稿已出但**未获批**：① Kent 2026-09-21 13:41 的 **04.10 §二 权责判定标准**草稿（Canvas F0C32N7MYR1）；② Kent 2026-09-21 13:59 的 **改动分级三层文案**草稿（Canvas F0C2TLMGST1），核心机制「拆两个版本号（页面版本号 vs 判据基线号；小改不停机、大改才停）」，Kayden 裁定其停机规则落 **07.04 §10.1**、机器识别方式写进**建造单的暗号表**、**04.12 同步加一行**。 | 暂不写入建造单。待 Kayden 批、Alden 点头并实际落页后，再按落页版本消费。若②落地，本页 **暗号接口契约表**（8 个 `nos-s05-*`）需同步。 | #nos-bo thread 1789704362.435989 回复 3／4／5 |
 
+| 17 | ⏳ PENDING | 区一 各子单字段行（pelengkap butir 14） | Butir 14 menulis 「「PIP 延长周期」定为 **option（15/30/60/90 天）**，非 number，**待 Felix 确认「就 4 档」后锁定**」. Syarat itu sudah turun 2026-09-22, jadi catatan butir 14 tidak boleh lagi ditulis ke halaman dengan kalimat 「待 Felix 确认」. | 「【2026-09-22 补·依 OSD-116 c50328】Felix 已答 Kent c50290 文末一问，逐字：「**确认，PIP「延长周期」就维持 15 / 30 / 60 / 90 天四档，不开放「视情况」填写其他天数**」；「延长后的周期继续沿用现有 C-10 对应的 Check-in 频率规则即可，**可以按 option 锁定**」。故本字段类型定案为 **option 四值（15／30／60／90 天）**，C-10 Check-in 频率规则不另立。**字段的创建、挂屏与 04.10 登记仍归 Schema Owner 侧（Kent，c50290 角色分工），建造侧只消费。**（写 v34 时同步把butir 14 的「待 Felix 确认「就 4 档」后锁定」改为「已由 c50328 确认，类型锁定为 option 四值」。）」 | OSD-116 c50328；c50290 文末一问 |
+
 ## Riwayat penulisan ke Confluence
 
 | Tanggal | Versi | Butir yang ikut | Diperintahkan oleh |
@@ -124,6 +131,11 @@ Status per 2026-09-21 18:30 WIB, diverifikasi dari daftar comment live:
 - **c50283** (15:59) 04.10 three-cell request → Kent, cc Alden. **Sudah dibalas: c50290, disetujui penuh.** → butir 14.
 - **c50263** (12:30) Correction → Kayden, cc Kent/Alden (N28 抢跑约束 ditarik). → sudah tercermin di butir 6.
 - Comment terbaru di OSD-116 tetap **c50290**; total comment 163. Tidak ada balasan Alden atas c50279 maupun atas Kent c50256.
+
+**Diperbarui 2026-09-22 09:31 WIB** (dibaca live, `-created`, 8 comment teratas): comment terbaru sekarang
+**c50328** — Felix, 08:37 +07, ditujukan ke Kent, soal empat tingkat PIP 「延长周期」. Total comment **164**.
+Jadi hanya **satu** comment baru sejak c50290. Alden tidak muncul di 8 comment teratas: c50279 dan Kent
+c50256 tetap belum dibalas.
 
 ## Belum masuk daftar (menunggu keputusan pemilik lain)
 - 04.7 dua baris nama Request Type: milik Felix/Alden, bukan 建造单.
