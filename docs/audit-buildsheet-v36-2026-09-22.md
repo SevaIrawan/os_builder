@@ -229,3 +229,75 @@ sumber di halaman ini adalah pekerjaan tersendiri, belum dikerjakan.
 | Isi | 04.4 已升 v33（上句按 v31 写）；协作 Thread 已转「可用」(c50273)，但 04.4 v33 本行自载「仍 inactive」「至今零真跑」；故 v33 下 可用六件、在建一件；末句「仅身份件落在「在建」一侧」不变且更准确；身份件在 v33 仍为「在建（影子·shadow）」 |
 
 Belum ditulis. Menunggu perintah Bambang.
+
+---
+
+## 8 · Butir 11 mendarat di v38, dan audit SELURUH kutipan sumber — 2026-09-22
+
+Perintah Bambang: 「Butir 11 alihkan sekarang, terus check semua kutipan sumber」.
+
+### 8.1 · Butir 11 → v38 (07:02:32.960Z)
+
+Satu `replaceNode` pada `277d67ba2b04` (页首附表 N03 身份件). Diff sisi server v37↔v38:
+**additions 1 · deletions 1** — kalimat lama utuh, koreksi ditempel di belakangnya. Dua tempat di
+halaman kini sepakat: 协作 Thread ＝ 可用 (c50273) tapi masih inactive dan zero 真跑; 身份件 ＝ 在建.
+
+### 8.2 · Cara auditnya
+
+Seluruh versi hidup diambil dari server hari ini lewat `listConfluenceContent` atas space NOSM
+(`snapshotToken` tiap halaman), bukan dari `docs/source-versions.md`. Lalu setiap rujukan `<halaman> v<n>`
+di badan v38 diadu dengan angka hidup itu.
+
+### 8.3 · Hasil — 31 sumber
+
+**A · Kutipan terbaru cocok dengan versi hidup (tidak ada yang perlu disentuh):**
+
+04 v25 · 04.0 v26 · 04.1 v46 · 04.3 v33 · 04.4 v33 · 04.4.1 v13 · 04.4.2 v12 · 04.4.3 v6 · 04.4.4 v4 ·
+04.5 v79 · 04.5.2 v11 · 04.5.3 v13 · 04.6 v20 · 04.9 v106 · 04.9.1 v19 · 04.10 v19 · 04.11 v2 ·
+04.12 v5 · 07 v28 · 07.03 v58 · 07.06 v30 · 07.06.1 v34 · 07.08 v3 · Notify 契约 v13 ·
+OS 开发流 Spec v39 · Spec S-05 v62
+
+**B · Sudah bergerak, dan halaman SUDAH mencatat pergerakannya sendiri** (paragraf 「①版本已移动…五页」):
+04.0 v24→v26 · 04.1 v45→v46 · 04.2 v39→v40 · 04.4 v30→v31 · 04.5 v78→v79.
+
+**C · Sudah bergerak TANPA dicatat halaman — inilah cacatnya:**
+
+Paragraf 「**②版本未移动、与既有登记一致的各页（2026-09-20 逐页回读确认）**」 memuat daftar yang
+sekarang **salah pada tiga entri**:
+
+| Entri di daftar 「未移动」 | Versi hidup 2026-09-22 | |
+|---|---|---|
+| `04.7 v45` | **v49** | bergerak 4 versi |
+| `04.8 v20` | **v21** | bergerak 1 versi |
+| `07.06.1 v33` | **v34** | bergerak 1 versi — halaman sendiri sudah mencatat v34 di tempat lain, jadi ini juga pertentangan internal |
+
+Ditambah: daftar 「已移动」 berhenti di `04.4 v30→v31`, padahal 04.4 kini **v33**.
+
+### 8.4 · Dampak isi — diperiksa lewat diff sisi server, bukan diduga
+
+Untuk setiap halaman yang bergerak, diff-nya dibaca guna melihat apakah **bagian yang dikutip 建造单**
+ikut berubah:
+
+| Halaman | Diff | Bagian yang dikutip 建造单 | Kesimpulan halaman |
+|---|---|---|---|
+| **04.7** v46→v49 | 3+/3− | Dua baris S-05 (`RT-HR-DISCIPLINARY-SUBMIT`／`-EVENT`) | **Tidak tersentuh** — seluruh perubahan di baris 招聘执行 (penomoran node N41/N42→N39/N40, N47/N49→N45/N47). 「两行尚未回填…本行仍阻塞」 **tetap sah** |
+| **04.8** v20→v21 | 1+/1− | Baris 纪律处分记录 (§三) dan §五 实体字段登记表 | **Tidak tersentuh** — yang berubah baris 员工 (transisi onboarding kini bersumber S-02). Klaim 建造单 **tetap sah** |
+| **04.4** v31→v33 | 1+/1− | §8.1／§8.2／§8.3 dan 模式四–八 | **Tidak tersentuh** — hanya baris 协作 Thread di §十一, dan itu **sudah dikoreksi di v38** |
+| **04.5** v78→v79 | 2+/2− | §6.1 基线失效 dan §八 DoD checklist | **Tidak tersentuh** — yang berubah 字段 5 载体 dan aturan 维护单 (GOV). Halaman sudah punya catatan batch itu tidak menyentuh S-05 |
+| **04.2** v39→v40 | 9+/7− | Baris 主单 `Master Ticket`, 三条护栏, §三 link 拓扑, §五 标题格式 | **Tidak tersentuh** — hanya baris 维护单 dan §六 |
+| **04.0** v24→v26 | 11+/11− | Baris 主单, 「每类单据对应一个 Issue Type」, 档案卡 状态列 rule, §五 全角「｜」禁令 | **Tidak tersentuh** — hanya definisi GOV Project／维护单 plus artefak markdown |
+
+### 8.5 · Kesimpulan
+
+**Tidak satu pun kesimpulan di 建造单 yang gugur oleh pergerakan sumber.** Enam halaman yang bergerak,
+semuanya bergerak di bagian yang tidak dikutip 建造单 — atau di bagian yang sudah dikoreksi (04.4 §十一).
+
+Cacat yang tersisa **hanya satu, dan sifatnya administratif**: daftar 「版本未移动」 menyebut tiga angka
+yang sudah kedaluwarsa (04.7 v45, 04.8 v20, 07.06.1 v33), dan daftar 「已移动」 berhenti di 04.4 v31.
+
+### 8.6 · Usul butir 29 — belum ditulis
+
+Satu `replaceNode` pada paragraf 已实读的规范源 yang memuat kedua daftar itu, 原文保留不删, mencatat:
+sapuan 2026-09-22 mendapati 04.7 **v45→v49**、04.8 **v20→v21**、07.06.1 **v33→v34**、04.4 **v31→v33**;
+dan bahwa diff tiap halaman sudah dibaca — tidak ada yang menyentuh bagian yang dikutip halaman ini,
+sehingga tidak ada kesimpulan yang berubah.

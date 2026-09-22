@@ -43,7 +43,7 @@
 | 04｜总纲 (sumber anchor) | 1676804100 | **v25** | Kayden |
 | 04.0｜词汇表 | 1676640265 | v26 | Kayden |
 | 04.1｜Project 判定 | 1676738564 | v46 | Kayden |
-| 04.2｜单据体系 | 1676607500 | v40 | Kayden |
+| 04.2｜单据体系 | 1676607500 | **v40** | Kayden |
 | 04.3｜状态与 Workflow | 1676771343 | v33 | Kayden |
 | 04.4｜自动化配置模式库 | 1677066244 | **v33** | Alden |
 | 04.4.1｜模式九 | 1729888419 | v13 | Alden |
@@ -55,7 +55,7 @@
 | 04.5.2｜建造单模板 | 1729626775 | v11 | Alden |
 | 04.5.3｜Sandbox 与测试 | 1729626578 | v13 | Alden |
 | 04.6｜n8n 使用规范 | 1690927120 | v20 | Alden |
-| 04.7｜Router SSOT | 1691254793 | **v46** | Alden |
+| 04.7｜Router SSOT | 1691254793 | **v49** | Alden |
 | 04.8｜Registry SSOT | 1690140756 | **v21** | Alden |
 | 04.9｜n8n Workflow SSOT | 1693089805 | **v106** | Alden |
 | 04.9.1｜详情：平台 | 1764622422 | **v19** | Alden |
@@ -66,7 +66,7 @@
 | OS 开发流｜流程 Spec | 1729200354 | v39 | Kayden／Kent |
 | HR｜盘点与切分 | — | v38 | Felix |
 | 纪律与绩效改进处置｜流程 Spec (S-05) | 2036858900 | **v62** (冻结基线 v61) | Felix |
-| 纪律与绩效改进处置｜建造单 | 2096463922 | **v37** | Bambang (BO) |
+| 纪律与绩效改进处置｜建造单 | 2096463922 | **v38** | Bambang (BO) |
 
 **Tebal** = bergerak pada sapuan 2026-09-21 dan sudah dibaca diff-nya (lihat
 `docs/reading-notes-2026-09-21.md` bagian VERSION SWEEP).
