@@ -66,7 +66,7 @@
 | OS 开发流｜流程 Spec | 1729200354 | v39 | Kayden／Kent |
 | HR｜盘点与切分 | — | v38 | Felix |
 | 纪律与绩效改进处置｜流程 Spec (S-05) | 2036858900 | **v62** (冻结基线 v61) | Felix |
-| 纪律与绩效改进处置｜建造单 | 2096463922 | **v36** | Bambang (BO) |
+| 纪律与绩效改进处置｜建造单 | 2096463922 | **v37** | Bambang (BO) |
 
 **Tebal** = bergerak pada sapuan 2026-09-21 dan sudah dibaca diff-nya (lihat
 `docs/reading-notes-2026-09-21.md` bagian VERSION SWEEP).

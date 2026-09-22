@@ -113,3 +113,51 @@ Tidak ada satu pun yang ditulis tanpa perintah Bambang.
   dijalankan, dan satu paragraf berbunyi seperti instruksi yang belum dikerjakan.
 - **Akarnya kelalaianku** waktu memindahkan daftar tempel-manual jadi daftar operasi `edits`, terutama
   butir 20 yang judulnya tiga baris tetapi jangkarnya cuma satu.
+
+---
+
+## 6 · TINDAK LANJUT — butir 22–28 dikerjakan, v37 (2026-09-22 06:53:16.294Z)
+
+Perintah Bambang: 「Kerjakan 22-28 sekarang, satu versi v37」. Seluruhnya masuk **satu versi**,
+**14 operasi** (9 `replaceNode` ＋ 5 `insertNodeAfter`), payload 7.390 karakter.
+
+### 6.1 · Dry run menangkap satu kesalahan lagi
+
+Dry run pertama menunjukkan **urutan baris terbalik** di kedua tabel 第八区. Dugaanku salah:
+`insertNodeAfter` berulang pada jangkar yang sama ternyata menyisipkan menurut **urutan kirim**
+(tiap baris baru masuk sesudah baris yang baru saja disisipkan), bukan terbalik. Urutan dibetulkan,
+dry run kedua memastikan: 测试记录 → 回读验证 lalu 终态转换实跑; 测试单登记 → SSCSD-421, 422, 423.
+
+### 6.2 · Verifikasi pada badan v37 yang TERSIMPAN (bukan dry run)
+
+Halaman dibaca ulang dari server sesudah penulisan, lalu diperiksa:
+
+| Pemeriksaan | Hasil |
+|---|---|
+| Tag menggantung / galat nesting | **nol / nol** |
+| 15 tabel, konsistensi kolom | **15/15 seragam** |
+| `<tr>` di luar tabel | nol |
+| Delapan titik kontradiksi audit §2 | **8/8 sudah dikoreksi** |
+| Cacat bentuk butir 18 | **ditutup** — 「新增两行」／「加三行」 dinyatakan sudah dilaksanakan |
+| Tabel 测试记录 | 6 → **8 baris data**, urutan benar |
+| Tabel 测试单登记 | 1 → **4 baris data** (411, 421, 422, 423), urutan benar |
+| 页首附表 | 34 baris, 统计 menyebut 共 34 行 |
+| `data-local-id` v36 (2.140) | **utuh, nol hilang**; 45 id baru = 5 `<tr>` ＋ 20 `<td>` ＋ 20 `<p>` |
+| **Uji balik**: v37 dikembalikan ke v36 | **sama persis karakter demi karakter** |
+
+### 6.3 · Kalimat 「未实跑」 yang masih ada — semuanya sah
+
+Delapan kemunculan tersisa diperiksa satu per satu:
+
+- **Tiga** benar-benar masih berlaku, semuanya tentang `Abort Case`(11) yang memang belum dijalankan
+  atas instruksi Bambang: 区二 转换 11 kolom 回读, 区一 baris N28, dan frasa 「未实跑 1 条：Abort Case(11)」.
+- **Lima** adalah kalimat lama yang **sengaja tidak dihapus** (原文保留不删) dengan koreksi tertempel di
+  sel/paragraf yang sama, atau kutipan kalimat lama di dalam koreksi itu sendiri.
+
+**Nol pernyataan salah yang berdiri tanpa koreksi.**
+
+### 6.4 · Status
+
+**26 COMPLETED · 1 PENDING · 1 PANTAU.** Sisa satu-satunya: **butir 11** — sasarannya (baris
+「协作 Thread」 di 区六) tidak ada di halaman, dan butir itu sendiri menulis S-05 tidak memakai
+komponennya. Menunggu putusan Bambang.
