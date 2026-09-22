@@ -415,3 +415,92 @@ ids — **Done ＝ 10000** (SSCSD-411, 2026-09-18), **Cancelled ＝ 10041**, **R
 on the repo owner's instruction pending B-15.
 
 Still not reported to anyone; still nothing added, changed or configured.
+
+---
+
+## F-008 · 2026-09-22 · The S-05 audit baseline (Spec page v58) is not the Spec's current page version
+
+**Status**: recorded. Not reported to anyone. Not acted on. **Not decided** — the question below
+belongs to the 04.5 Owner and the freeze 裁决人, not to this repo.
+
+**Found while**: tracing three version numbers the repo owner asked about after they turned up in the
+Spec's §① 状态区. Two of the three resolved cleanly (see «What is not a problem» below); this one did not.
+
+**Pages actually opened and read** (all live, 2026-09-22):
+
+| pageId | Page | lastModified as read |
+| --- | --- | --- |
+| 2036858900 | 纪律与绩效改进处置｜流程 Spec (S-05) | Sep 15, 2026 |
+| 1678573617 | 04.5｜流程 Spec 与建造单：编写与校验规范 | Sep 19, 2026 |
+
+**The rule, verbatim from 04.5 §6.1.** The 审计基线 column format is defined as
+「**Spec 页面 v{n}**＋04.5 v{n}（并列适用标准版本）」 — so that number is the Confluence **page**
+version. And the invalidation rule reads:
+
+> 基线失效规则：机器报告必须绑定被扫描的 Spec 页面版本与适用标准版本。机器扫描后页面或适用规则发生变化，
+> 结果立即失效并须重新进入结构审计；机器通过不得沿用。…**机械判据：状态区校验执行记录最后一行绑定的基线版本
+> ≠ 页面当前版本时，该审计结论自动失效，不得被任何下游 Gate 消费；正文修订后须重跑审计或由裁决人显式豁免留痕。**
+> 存量豁免：第四节「存量条款」明列的批次与检查项不触发本节基线失效…
+
+The same requirement appears as checklist item 20: 「**状态与记录等值**：状态区声明的状态所绑定的校验执行
+记录最后一行基线版本必须等于页面当前版本；不等＝失败（历史留档行除外）。」
+
+**The facts measured.**
+
+1. S-05 §① 状态区 has exactly **one** 结构审计执行记录 row, and its 审计基线 cell reads
+   「**Spec v58＋04.5 v69**」, machine-run 2026-09-10 11:43, dual sign-off passed the same day
+   (业务签 Kayden Comment 49740, 技术签 Alden Comment 49731).
+2. The Spec's page version is **not** v58 any more. Its own 自然语言版本迭代 table shows two
+   further semantic versions after the audit, both dated **2026-09-15**: **v26** (N11 对齐裁决收口 —
+   writing the alignment resolution into the page and marking it frozen) and **v27（现行版）**
+   (backfilling the standard header fields per Alden's NSE-1153 c50014 reverse-link requirement).
+   Each of those is at least one page revision, so the current page version is strictly greater than 58.
+3. **No explicit 豁免留痕 for the baseline mismatch appears anywhere on the Spec page** — §① has the
+   audit row and the 判例引用 list; §⑤ 对齐与结构审计证据 records 「冻结状态：已冻结｜裁决人：Felix｜
+   冻结时间：2026-09-15」. Neither records an exemption.
+4. **The freeze evidence does not record the frozen page version.** 04.5 §六 「已冻结」 row requires the
+   authorised AI to 「记录对齐证据、**冻结页面版本与日期**，并把状态改为「已冻结」」. The date is there
+   (2026-09-15); the page version is not — on the Spec, and likewise on the 建造单 状态区 (「已冻结｜
+   冻结时间：2026-09-15」).
+5. **The §四 存量条款 do not appear to cover this.** Each of them (2026-08-19 / 08-31 / 09-03 / 09-04 /
+   09-14 / 09-16) exempts *specific checklist items added on that date* from triggering baseline
+   invalidation for existing Specs. None of them speaks to page revisions made by the flow's own Owner
+   after the audit. Read as written, they are a different exemption.
+
+**Why this is not obviously a defect, and why it is not mine to call.** Two of the post-audit edits
+(semantic v26) are the very writes the lifecycle *requires* in order to freeze — 04.5 §六 instructs the
+authorised AI to record the alignment evidence and set the status on the page. Those edits necessarily
+bump the page version after the audit baseline was pinned. Read literally, the mechanical rule would
+make every freeze invalidate its own audit, which cannot be the intent. 04.5 §6.1 provides the escape
+in its own text — 「由裁决人显式豁免留痕」 — so the question is whether such an exemption exists,
+is unnecessary, or still needs to be recorded. That call belongs to the 04.5 Owner (Kayden Lee, per
+04.5's 维护说明) and to the freeze 裁决人 (Felix). **This entry does not answer it, does not route it,
+and nothing here may be used as a basis for proceeding or for stopping.**
+
+**Why it matters for the build, stated without inflating it.** 07.06's 「开发入口的冻结要求」 requires BO
+to have read the 冻结版 Spec, the 结构审计通过证据 and the 对齐签收证据 before starting, 「任一缺失即退回
+上游」. The evidence exists and is registered; what is unresolved is whether the audit row satisfies
+04.5 §6.1's equality rule on today's page. So this is a question about the paperwork of the entry gate,
+not a claim that the Spec's content is wrong or that any work done so far was wrong.
+
+**What is NOT a problem — the other two numbers, resolved.**
+
+- 「**当前生效版本：无**」 is **correct and expected**. 04.5 §六 defines 「当前生效版本」 as the 已上线 vN
+  state — 含义「当前生效版本，配置与本页一致」, entered only by completing §八's 上线三合一 (Gate 3).
+  S-05 is 已冻结, not 已上线 (建造单 区九: 「🔲 未上线」), so having no 生效版本 is exactly right.
+- 「**签收绑定 Spec v25**」 vs 「**Spec v58**」 are **two different numbering systems, both legitimate**.
+  v25 is the Spec's own 自然语言版本 (dated 2026-09-10, 「双签通过后状态区更新＋对齐期非实质订正」) — the
+  semantic version the 18 signatories signed, by the 口令 「签收｜S-05 Spec v25」. v58 is the Confluence
+  **page** version, which is what 04.5 §6.1's format mandates for 审计基线. Both rows sit in the same
+  §① 状态区 and both write the prefix 「Spec v…」, which is what makes them easy to misread — this
+  reader did misread them at first.
+
+**Verification limits, stated plainly.**
+- This session has **no Confluence version-history tool**, and `getConfluencePage` returns
+  `version: null` for these pages. So I could **not** verify from the page itself that page v58
+  corresponds to 2026-09-10, nor what the page's current version number is.
+- The figure **v62** used throughout this repo comes from `docs/source-versions.md` and earlier
+  sessions, not from today's read. The mismatch in fact 2 does not depend on it: it follows from the
+  two post-audit semantic versions being dated after the audit.
+
+**Where the related trace lives**: this entry; no separate file was created.
