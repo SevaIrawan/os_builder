@@ -504,3 +504,57 @@ not a claim that the Spec's content is wrong or that any work done so far was wr
   two post-audit semantic versions being dated after the audit.
 
 **Where the related trace lives**: this entry; no separate file was created.
+
+**Status correction, 2026-09-22 (same day) — F-008 is RETRACTED on its two main claims.**
+Written after the repo owner told me to check properly before claiming. Appended, not rewritten,
+per rule 4. What follows overrides the entry above wherever they conflict.
+
+**Retracted claim 1 — «the freeze evidence does not record the frozen page version».** This is
+**wrong**. It is recorded, and machine-readably. OSD-116 **c50009** (Felix_HR, 2026-09-15 16:06 +07)
+is an `OSD-FREEZE` marker carrying verbatim:
+`{"specPageId":"2036858900","frozenPageVersion":61,"frozenBy":"Felix","frozenAt":"2026-09-15"}`,
+repeated as a single-line marker in **c50013**. The error was mine: I looked only at the Spec page
+and did not look at the Feature's comments, which is where the marker lives.
+
+**This repo already had it right.** `docs/source-versions.md` records
+「v62 (冻结基线 v61)」, the 建造单 names 「Spec v61」 three times and states explicitly
+「`frozenPageVersion` 权威值住 OSD-116 的 `OSD-FREEZE` 标记 Comment，本页不复述（04.5 §五 唯一落点）」,
+and Kent's c50071/c50073 handoff already said 「frozen Spec v61」. So the registration is correct,
+correctly routed under 04.5 §五's single-landing-point rule, and nothing was missing.
+
+**Retracted claim 2 — the framing that the audit conclusion is auto-invalid and 「不得被任何下游 Gate
+消费」.** I had no evidence that this is the gate that actually runs, and there is evidence to the
+contrary. On the same day, **Bot_SSC** posted 【开发门禁未过·已退回对齐（Q3-5）】 twice — **c50006**
+(16:03) and **c50010** (16:06) — both with a single reason: 「冻结门禁未过：**未找到 OSD-FREEZE 冻结标记**」.
+So the machine's development gate checks for the freeze marker, not for baseline/page version equality.
+Felix posted the marker at 16:06 and again at 16:12. Presenting the version-equality sentence as the
+operative blocker was over-reading on my part.
+
+**What still stands, unchanged and now corroborated.**
+- 「当前生效版本：无」 is correct. Corroborated on a second Spec: 员工离职｜流程 Spec (pageId 1711276058,
+  read live today) writes 「当前生效版本：**无（尚未上线）**」 with the reason in brackets.
+- v25 vs v58 are two different numbering systems. Now corroborated from inside 04.5 itself: its §四
+  存量条款 2026-09-04 says 「（**04.5 v62 发布日**）」, and the ledger has 04.5 at v79 today. So 04.5's
+  own page version ran v62 (09-04) → **v69** (09-10, the figure in S-05's audit row) → v79 (09-19).
+  That ladder is consistent only if the audit row's numbers are **page** versions, as 04.5 §6.1's
+  prescribed format 「Spec 页面 v{n}＋04.5 v{n}」 says.
+
+**What remains as an observation, much smaller than the original entry, and not ours.** S-05's
+状态区 carries **one** 结构审计执行记录 row (baseline page v58) and no row covering the revisions made
+after it. The sister Spec 员工离职 keeps **22** rows — one per revision, including purely
+non-substantive ones (双语化, 订正, 分隔符统一, 登记) — and marks superseded rows
+「基线已随 04.5 升版失效，留档」 and 「【基线已失效，留档】」. So the mechanism for a moved baseline is
+established practice, and S-05 simply has fewer rows. Whether that matters is the Spec Owner's
+business (04.5 §五 写权分离), it is not a blocker for the build, and it is **not raised**.
+
+**One fact worth carrying into 验收, not a finding.** The page moved **61 → 62 after the freeze**:
+Kent's **c50020** (2026-09-15 17:23) asked Felix to add the 「对应 Feature：OSD-116」 backlink line,
+because Alden's new N8 build (NSE-1153 c50014) would otherwise judge it `NO_BACKLINK`. That is the
+自然语言 v27 row. So what this repo reads as «the Spec» (page v62) is one revision past the frozen
+baseline (page v61), and the delta is that header backlink line. 04.5 §八's DoD requires
+「验收前确认实际消费的冻结 Spec 版本与对齐、结构审计证据及冻结基线一致」, so this is stated then. The
+建造单 already carries both numbers (「对应 Spec v61 + v62 核对段」), so nothing needs adding.
+
+**Net effect on this entry**: F-008 should be read as **closed and mostly wrong**. It produced no
+correct new finding; it produced one correct clarification (the two numbering systems) that was
+already implicit in the repo's own ledger. Nothing was reported to anyone at any point.
