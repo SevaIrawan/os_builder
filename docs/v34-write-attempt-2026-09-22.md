@@ -150,3 +150,63 @@ Jaring: `restoreConfluenceContentVersion` ke v33 kalau diff tidak bersih.
 3. **Butir 18 kurang tanda kutip penutup di draft.** Teksnya berakhir 「…本条不声称双标识已满足。」 tanpa
    `」` penutup di file draft. Aku **menambahkan** `」` di payload supaya kutipnya seimbang. Kalau tidak
    dikehendaki, bilang, akan kuhapus.
+
+---
+
+## 8 · HASIL — v34 tertulis 2026-09-22 06:27:52.898Z
+
+Akses akun Bambang pulih (`atlassianUserInfo` → `712020:0ec04d28-…`). Urutan dijalankan penuh.
+
+### 8.1 · Dry run menangkap satu kesalahan nyata
+
+`dryRun: true` dengan 16 operasi → `ok: true`, `reason: dry_run_validated`, badan hasil 186.279 karakter.
+Diverifikasi dengan skrip terhadap badan v33:
+
+| Pemeriksaan | Hasil |
+|---|---|
+| 16 sisipan hadir tepat sekali, dan tidak ada di v33 | **lulus 16/16** |
+| `data-local-id` lama (1.964) masih ada | **1.964 / 1.964, nol hilang** |
+| Uji balik: hasil dikurangi 16 sisipan == v33 | **sama persis karakter demi karakter** |
+| **Butir 15 (`appendNodeToEnd` pada tabel `952c32b3be2f`)** | ❌ **salah tempat** — `<tr>` mendarat di **ujung dokumen**, sesudah paragraf 维护说明, **di luar tabel mana pun**. Tabel 页首附表 tetap **33 baris** |
+
+Dua perilaku server yang tercatat (bukan perubahan isi):
+- Server **menambah 176 `data-local-id`** pada simpul yang sebelumnya tidak punya (mis. `<tr>`, `<tbody>`).
+- Server menulis `&#039;` (6×) dan `&quot;` (8×) menjadi `'` dan `"` literal. Karakternya sama, hanya bentuk serialisasinya.
+
+Setelah dua hal itu dinormalkan, uji balik lulus mutlak.
+
+### 8.2 · Penulisan sungguhan
+
+Butir 15 dikeluarkan. **15 operasi** ditulis: 11 `replaceNode` ＋ 4 `insertNodeBefore`.
+
+Satu percobaan pertama ditolak `400 INVALID_REQUEST_BODY`: `versionMessage: size must be between 0 and 255`.
+Pesan versi dipendekkan lalu diterima.
+
+```
+version 34 · createdAt 2026-09-22T06:27:52.898Z · snapshot v:34
+```
+
+### 8.3 · Bukti baca-balik
+
+`diffConfluenceContentVersions` v33↔v34 (`content_format: markdown`):
+
+| | v33 | v34 |
+|---|---|---|
+| bodyLength | 56.708 | 62.573 |
+| lineCount | 428 | 436 |
+
+**additions 19 · deletions 11 · hunks 5.** Sebelas "deletion" itu adalah baris versi-lama dari 11 sel yang
+disisipi — setiap pasangan `-`/`+` memperlihatkan teks lama **utuh kata demi kata** dengan kalimat baru
+ditempel di belakangnya. Empat paragraf baru muncul sebagai baris `+` murni sebelum judul `一、配置对应表`.
+Tidak ada satu pun teks yang hilang.
+
+Diff manusia: https://nexmax.atlassian.net/wiki/pages/diffpagesbyversion.action?pageId=2096463922&selectedPageVersions=33&selectedPageVersions=34
+
+### 8.4 · Sisa
+
+- **Butir 15** belum mendarat. Perlu cara lain (mis. `replaceNode` pada seluruh tabel `952c32b3be2f`,
+  ~32.9 rb karakter; atau `insertNodeAfter` pada `<tr>` terakhir yang **kini sudah punya** `data-local-id`
+  sesudah v34 — payload cuma ~258 karakter). Yang kedua jauh lebih murah dan baru mungkin sesudah v34 ada.
+- Pertanyaan `共 33 行` di §7 butir 1 **belum berlaku** selama butir 15 belum masuk; baru mengikat saat
+  baris ke-34 benar-benar ditambahkan.
+- **Butir 11** tidak ikut dan sasarannya memang tidak ada di halaman — menunggu putusan Bambang.
