@@ -395,3 +395,23 @@ post function was touched, and nobody was told. Both test tickets were left in t
 per 04.5.3 §四 (「永不硬删」).
 
 **Where the raw evidence lives**: `docs/test-evidence-2026-09-22-terminal-transitions.md`.
+
+**Status update, 2026-09-22 (same day) — extended to a third transition, with one distinction.**
+Transition 3 `Reject` was live-run on a third TEST ticket (SSCSD-423) after the entry above was
+written. Same shape: changelog holds exactly one entry with two items, `status` 15855 → 15850
+Rejected and `resolution` `null` → `10042` Rejected; `customfield_18054` and `customfield_18143`
+are both `null`. So 区二's 「取消原因」＝**Dismissed** (from Spec N07②) is not written either — the
+gap covers all three transitions run today, not two.
+
+**But the consequence is not the same for all three, and must not be flattened.** `Reject` lands on
+a *different* resolution (`Rejected` 10042, not `Cancelled` 10041), so it remains distinguishable
+from the other two paths; what is missing there is only the reason, not the identity of the path.
+The indistinguishability this finding is about holds specifically between `Withdraw` and
+`Cancel as Duplicate` — those two are identical in every stored field.
+
+Also measured while doing it: of 04.3 §7.1's four permitted resolutions, three now have observed
+ids — **Done ＝ 10000** (SSCSD-411, 2026-09-18), **Cancelled ＝ 10041**, **Rejected ＝ 10042**.
+`Rerouted` is not used by this flow (区二: 五态、无「已改道」). `Abort Case`(11) is still unrun, held
+on the repo owner's instruction pending B-15.
+
+Still not reported to anyone; still nothing added, changed or configured.
