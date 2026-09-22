@@ -350,3 +350,48 @@ disagreement stands exactly as recorded. Still not reported to anyone.
 | 2026-09-21 ~11:20Z | 07.06 §八 (1730347066, **v30**) vs `CLAUDE.md` §一, by script | **Identical** — 19 bullets and the whole 开发入口的冻结要求 subsection match after normalisation. No drift. |
 | 2026-09-21 ~11:20Z | 04 §一/§五/§六 (1676804100, **v25**) vs `docs/04-anchor-navigation.md`, by script | **Drift found and fixed** (commit `ebd09b0`): §一 was missing its 4th column 责任边界 entirely; §五 was missing its 4th column 放行条件 and the section's lead sentence; §六 边界铁律 was missing its closing sentence. All restored verbatim; the three tables now compare row-for-row identical (5 / 7 / 16 rows). |
 | 2026-09-21 ~11:30Z | Second version sweep + OSD-116 + #nos-bo | **No Confluence page moved** past the 11:00Z versions (verified per page, not inferred from the CQL list). OSD-116: 163 comments, newest still c50290. #nos-bo: no new top-level message; one thread moved (latest reply 2026-09-21 13:59 +07). (commit `5e5c58f`) |
+
+---
+
+## F-007 · 2026-09-22 · `Withdraw` and `Cancel as Duplicate` leave byte-identical terminal data
+
+**Status**: recorded. Not reported to anyone. Not acted on.
+
+**Pages and objects actually read** (all live, 2026-09-22):
+- 04.5.3｜Sandbox 与测试数据策略 (pageId 1729626578, lastModified 2026-09-15) — §一–§五 in full,
+  read *before* creating any test ticket.
+- 04.3 §7.1／§7.2 as quoted on 建造单 (pageId 2096463922, lastModified 2026-09-20 = v33), 区二.
+- Jira, project SSCSD: `getJiraIssueTypeMetaWithFields(SSCSD, 14357, requiredFieldsOnly=false)`;
+  `getTransitionsForJiraIssue` on SSCSD-421 and SSCSD-422; `getJiraIssue` with `expand=changelog`
+  on both after transitioning.
+
+**What the build sheet says** (区二, transition table):
+- transition 8 `Withdraw` → 「Resolution＝**Cancelled**（「取消原因」＝Withdrawn）」
+- transition 9 `Cancel as Duplicate` → 「Resolution＝**Cancelled**（「取消原因」＝Duplicate Case）」
+
+**What was measured.** Two fresh TEST tickets were created and each run through one of those
+transitions (SSCSD-421 → 8, SSCSD-422 → 9). Each ticket's changelog has **exactly one entry with
+two items**: `status` 15855 → 15961, and `resolution` `null` → `10041` Cancelled. Nothing else was
+written. `customfield_18054` (Reason) is `null` on both; `customfield_18143` (Rejection Reason) is
+`null` on both. No 取消原因 field exists on this issue type at all — the create-screen read returns
+48 fields, none of them a cancellation-reason field belonging to S-05.
+
+So after the fact the two tickets are indistinguishable in data: same status, same resolution, no
+other marker. A withdrawal by the requester cannot be told apart from a duplicate cancellation.
+
+**Why this is not a contradiction of the existing split.** 「Cancellation Reason (new, not 18054 —
+c50234 item 3)」 is a **master-ticket** field, and c50234 item 2 places master-ticket fields in
+Alden／V1's domain; OSD-116 c50283 explicitly excluded it from the 13-field request. The field
+therefore does not exist yet and the post function has nowhere to write. The **new** part is the
+measured consequence: while it does not exist, the two cancellation paths are not separated in the
+data, which touches reporting and audit rather than convenience.
+
+**Relation to F-004.** F-004 records that 04.3 §六 has no row covering the built `Cancel as
+Duplicate` exit. F-007 is a separate, empirical observation about what the two exits write; it does
+not restate or replace F-004.
+
+**Explicitly not done**: no field was created, nothing was written into another flow's field, no
+post function was touched, and nobody was told. Both test tickets were left in their terminal state
+per 04.5.3 §四 (「永不硬删」).
+
+**Where the raw evidence lives**: `docs/test-evidence-2026-09-22-terminal-transitions.md`.
