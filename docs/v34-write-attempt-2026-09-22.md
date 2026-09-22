@@ -263,3 +263,57 @@ Ini **tidak disembunyikan**: sudah tertulis di pesan versi v35 sendiri — 「�
 Koreksinya sudah disiapkan sebagai **butir 21** di `pending-buildsheet-updates.md` (satu `replaceNode`
 pada `a99c1693d3d4`, ±140 karakter), **menunggu perintah Bambang** — sesuai aturan file itu sendiri:
 「Tidak ada butir yang ditulis ke Confluence tanpa perintah Bambang」.
+
+---
+
+## 10 · Butir 21 (koreksi statistik) mendarat di v36 — 2026-09-22 06:41:40.175Z
+
+Perintah Bambang: 「Butir 21 kerjakan sekarang」.
+
+### 10.1 · Angka dihitung mekanis, tidak dikira
+
+Sebelum menyusun teks koreksi, kolom 状态 tiap baris tabel `952c32b3be2f` di badan v35 dibaca satu per satu:
+
+| Nilai kolom 状态 apa adanya | Jumlah |
+|---|---|
+| 待办 | 13 |
+| 待办（建造侧提出·双签未表态） | 10 |
+| 阻塞中 | 5 |
+| 已解封（2026-09-18） | 3 |
+| 待办（阻塞带主体测试段） | 1 |
+| 已解封（2026-09-19） | 1 |
+| 待办（建造侧提出·双签未表态·文档订正） | 1 |
+
+→ **阻塞中 5 · 待办 25 · 已解封 4 = 34.** Sub-hitungan 「建造侧提出·双签未表态」 tetap **11** (10＋1),
+karena baris baru dari v35 bukan kategori itu. Jadi hanya dua angka yang berubah: total 33→34, 待办 24→25.
+
+### 10.2 · Dry run
+
+`ok: true` · badan 186.343 → 186.558 (**+215**).
+
+| Pemeriksaan | Hasil |
+|---|---|
+| Node hasil identik dengan `value` yang dikirim, tepat 1 kali | ya |
+| Kalimat asli 「共 33 行……待办 24」 masih utuh | ya — node lama tertanam apa adanya di depan koreksi |
+| 「共 34 行」 muncul | 1 kali |
+| `data-local-id` v35 (2.140) | **2.140 utuh, nol hilang, nol ditambah** |
+| Baris data tabel | tetap 34 (tidak tersentuh) |
+| Uji balik: node dikembalikan == v35 | **sama persis karakter demi karakter** |
+
+Satu cek di skrip sempat berbunyi gagal — 「共 33 行」 dihitung 1 kali, ternyata 2. Itu salah skripku,
+bukan salah isi: frasa itu muncul sekali sebagai kalimat asli dan sekali lagi sebagai kutipan di dalam
+kalimat koreksi.
+
+### 10.3 · Bukti baca-balik
+
+`diffConfluenceContentVersions` v35↔v36 (`markdown`): bodyLength 62.759 → 62.999, lineCount **437 → 437**,
+**additions 1 · deletions 1 · hunks 1** — satu paragraf, kalimat lama utuh kata demi kata dengan koreksi
+ditempel di belakangnya (原文保留不删).
+
+Diff manusia: https://nexmax.atlassian.net/wiki/pages/diffpagesbyversion.action?pageId=2096463922&selectedPageVersions=35&selectedPageVersions=36
+
+### 10.4 · Sisa daftar
+
+**19 COMPLETED · 1 PENDING · 1 PANTAU.** Yang tersisa cuma **butir 11** — sasarannya (baris
+「协作 Thread」 di 区六 建造单) memang tidak ada di halaman, dan butir itu sendiri menulis S-05 tidak
+memakai komponennya. Menunggu putusan Bambang: digugurkan, atau dialihkan ke baris lain.
