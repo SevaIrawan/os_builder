@@ -7,11 +7,11 @@
 
 | | |
 |---|---|
-| **Versi halaman 建造单 sekarang** | **v38** (2026-09-22 07:02:32.960Z) — ditulis lewat akun Bambang, jalur `edits` node-level |
-| **⏳ PENDING** (menunggu, belum ditulis ke Confluence) | **1** — butir 29 (daftar versi sumber; baru) |
-| **✅ COMPLETED** (sudah ditulis ke Confluence) | **27** |
+| **Versi halaman 建造单 sekarang** | **v39** (2026-09-22 07:17:32.384Z) — ditulis lewat akun Bambang, jalur `edits` node-level |
+| **⏳ PENDING** (menunggu, belum ditulis ke Confluence) | **0** — daftar kosong |
+| **✅ COMPLETED** (sudah ditulis ke Confluence) | **32** |
 | **👁 PANTAU** (tidak mengubah baris apa pun, cuma diawasi) | **1** — butir 16 |
-| **Terakhir ditulis ke Confluence** | **2026-09-22 06:53:16Z — v36 → v37** (butir 22–28, 14 operasi: 9 `replaceNode` ＋ 5 `insertNodeAfter`). Sebelumnya **06:41:40Z — v35 → v36** (butir 21, satu `replaceNode`, diff additions 1 / deletions 1). Sebelumnya **06:37:03Z — v34 → v35** (butir 15, satu `insertNodeAfter`, diff additions 1 / deletions 0). Sebelumnya **06:27:52Z — v33 → v34**, 15 operasi `edits` (11 `replaceNode` ＋ 4 `insertNodeBefore`). Didahului `dryRun` yang lulus uji balik: hasil dikurangi sisipan sama persis dengan v33, 1.964 `data-local-id` lama utuh, nol hilang |
+| **Terakhir ditulis ke Confluence** | **2026-09-22 07:17:32Z — v38 → v39** (butir 29–33, 5 `replaceNode`, diff 5/5). Sebelumnya **06:53:16Z — v36 → v37** (butir 22–28, 14 operasi: 9 `replaceNode` ＋ 5 `insertNodeAfter`). Sebelumnya **06:41:40Z — v35 → v36** (butir 21, satu `replaceNode`, diff additions 1 / deletions 1). Sebelumnya **06:37:03Z — v34 → v35** (butir 15, satu `insertNodeAfter`, diff additions 1 / deletions 0). Sebelumnya **06:27:52Z — v33 → v34**, 15 operasi `edits` (11 `replaceNode` ＋ 4 `insertNodeBefore`). Didahului `dryRun` yang lulus uji balik: hasil dikurangi sisipan sama persis dengan v33, 1.964 `data-local-id` lama utuh, nol hilang |
 
 ### Arti tiap status
 
@@ -170,7 +170,11 @@ Empat catatan sebelum dikerjakan:
 | 26 | ✅ COMPLETED 2026-09-22 · mendarat di **v37** (06:53:16Z) · bukti baca-balik: badan v37 dibaca ulang dari server, uji balik **sama persis karakter demi karakter** dengan v36 setelah 14 sisipan dikembalikan; 2.140 `data-local-id` utuh, nol hilang — tabel 测试记录 (`7ea6f8f4-…`) **naik 6 → 8 baris data**, dua baris betulan, urutan benar |
 | 27 | ✅ COMPLETED 2026-09-22 · mendarat di **v37** (06:53:16Z) · bukti baca-balik: badan v37 dibaca ulang dari server, uji balik **sama persis karakter demi karakter** dengan v36 setelah 14 sisipan dikembalikan; 2.140 `data-local-id` utuh, nol hilang — tabel 测试单登记 (`5e5cda82-…`) **naik 1 → 4 baris data**: SSCSD-421／422／423, urutan benar |
 | 28 | ✅ COMPLETED 2026-09-22 · mendarat di **v37** (06:53:16Z) · bukti baca-balik: badan v37 dibaca ulang dari server, uji balik **sama persis karakter demi karakter** dengan v36 setelah 14 sisipan dikembalikan; 2.140 `data-local-id` utuh, nol hilang — paragraf butir 18 (`e8243bb38a83`) ditutup: 「新增两行」／「加三行」 dinyatakan sudah dilaksanakan |
-| 29 | ⏳ PENDING | 已实读的规范源 — paragraf yang memuat daftar 「①版本已移动…」 dan 「②版本未移动…」 | Sapuan 2026-09-22 (versi hidup diambil dari server, bukan dari catatan repo) mendapati daftar 「未移动」 salah pada **tiga entri**: `04.7 v45`→hidup **v49**, `04.8 v20`→hidup **v21**, `07.06.1 v33`→hidup **v34**; dan daftar 「已移动」 berhenti di `04.4 v30→v31` padahal hidup **v33**. **Diff tiap halaman sudah dibaca**: tidak satu pun menyentuh bagian yang dikutip 建造单, jadi **tidak ada kesimpulan yang gugur** — cacatnya administratif. | （teks koreksi disusun saat diperintahkan; 原文保留不删） | Diff sisi server: 04.7 v46↔v49, 04.8 v20↔v21, 04.4 v31↔v33, 04.5 v78↔v79, 04.2 v39↔v40, 04.0 v24↔v26 |
+| 29 | ✅ COMPLETED 2026-09-22 · mendarat di **v39** (07:17:32Z) · bukti baca-balik: `diffConfluenceContentVersions` v38↔v39 **additions 5 / deletions 5 / hunks 5**, lineCount 442→442; badan v39 dibaca ulang — 2.185 `data-local-id` utuh, nol hilang nol ditambah — daftar versi sumber (`613d46be24bf`): 04.7 v45→**v49**, 04.8 v20→**v21**, 07.06.1 v33→**v34**, 04.4 v31→**v33**, plus hasil diff enam halaman |
+| 30 | ✅ COMPLETED 2026-09-22 · mendarat di **v39** (07:17:32Z) · bukti baca-balik: `diffConfluenceContentVersions` v38↔v39 **additions 5 / deletions 5 / hunks 5**, lineCount 442→442; badan v39 dibaca ulang — 2.185 `data-local-id` utuh, nol hilang nol ditambah — 页首附表 N03 身份件 (`277d67ba2b04`): 04.9.1 **v19** ＋ n8n実読 keduanya **active·已发布** (`616bbd91-…`), tiga kalimat lama dicabut; tapi 已发布≠已验收, baris tetap 待办 |
+| 31 | ✅ COMPLETED 2026-09-22 · mendarat di **v39** (07:17:32Z) · bukti baca-balik: `diffConfluenceContentVersions` v38↔v39 **additions 5 / deletions 5 / hunks 5**, lineCount 442→442; badan v39 dibaca ulang — 2.185 `data-local-id` utuh, nol hilang nol ditambah — paragraf butir 14 (`e9cd09bd56c2`): OSD-116 **c50343** Kent 13:29 「至此 S-05 这 13 个字段的类型裁定全部锁定」 |
+| 32 | ✅ COMPLETED 2026-09-22 · mendarat di **v39** (07:17:32Z) · bukti baca-balik: `diffConfluenceContentVersions` v38↔v39 **additions 5 / deletions 5 / hunks 5**, lineCount 442→442; badan v39 dibaca ulang — 2.185 `data-local-id` utuh, nol hilang nol ditambah — 页首附表 baris 3 (`9379c54a35e4`): c50279 dicek ulang sampai **2026-09-22 13:37 WIB**, masih tanpa jawaban Alden; baris tetap 阻塞中 |
+| 33 | ✅ COMPLETED 2026-09-22 · mendarat di **v39** (07:17:32Z) · bukti baca-balik: `diffConfluenceContentVersions` v38↔v39 **additions 5 / deletions 5 / hunks 5**, lineCount 442→442; badan v39 dibaca ulang — 2.185 `data-local-id` utuh, nol hilang nol ditambah — 已实读的规范源 (`2d8d27d468b1`): OSD-116 **143 → 166 条**, sudah dibaca sampai c50344 |
 
 ## Riwayat penulisan ke Confluence
 

@@ -301,3 +301,55 @@ Satu `replaceNode` pada paragraf 已实读的规范源 yang memuat kedua daftar 
 sapuan 2026-09-22 mendapati 04.7 **v45→v49**、04.8 **v20→v21**、07.06.1 **v33→v34**、04.4 **v31→v33**;
 dan bahwa diff tiap halaman sudah dibaca — tidak ada yang menyentuh bagian yang dikutip halaman ini,
 sehingga tidak ada kesimpulan yang berubah.
+
+---
+
+## 9 · AUDIT MENYELURUH — SELESAI. v39 (2026-09-22 07:17:32.384Z)
+
+Perintah Bambang: 「Kau audit detail menyeluruh sampai habis dan tidak ada kesimpulan sesat disana」.
+
+### 9.1 · Dimensi yang diperiksa kali ini (yang sebelumnya belum)
+
+| Dimensi | Cara | Hasil |
+|---|---|---|
+| **Jira — 4 TEST 单** | `searchJiraIssuesUsingJql` lewat Rovo | SSCSD-411 Completed(10593)/Done(10000) 18:53:20.909; SSCSD-421 Cancelled(15961)/Cancelled(10041) 10:05:57.894; SSCSD-422 sama 10:05:49.311; SSCSD-423 Rejected(15850)/Rejected(10042) 10:42:11.206; Issue Type 14357 `Disciplinary Case` subtask=false; assignee Backend Operations — **cocok persis dengan halaman, termasuk description 10041 「Process aborted (terminated by upstream)」** |
+| **Jebakan E16** | JQL yang sama lewat akun Bambang | **balik 0 baris** — akun itu tidak punya akses SSCSD. Dicatat: kalau tidak pakai probe pembanding, ini bisa disalahbaca jadi 「单不存在」 |
+| **n8n — 6 id** | `search_workflows` | `eYOFfHfGUwpfg6ss` Notify active · `6wdHhygWmyRFQAoX` Slack Approval active · `VUIgv9Ujj1KEoIne` Error Handler active · `hf4KKa7CytWxjAFy` B6 active · `v0Ta9NW64VJiVQqd` 身份件 **active** · `jdF8S9cV7ZIZowvw` = Data Table (dikonfirmasi 04.9.1) — semuanya cocok |
+| **04.9.1 v19 isi** | dibaca penuh | 身份件 「**active·已发布**（versionId＝activeVersionId `616bbd91-…`）。5 节点」 — halaman mengutip **verbatim benar** di 区六, **tetapi 页首附表 N03 masih memuat bacaan 2026-09-20 yang sudah terlampaui** → dikoreksi butir 30 |
+| **OSD-116** | daftar comment | **166 条**, bukan 143. Dua baru hari ini: **c50343** Kent 13:29, **c50344** Bambang 13:37 → butir 31 & 33 |
+| **c50279 masih tanpa jawaban?** | urutan comment | Benar — setelah c50279 tidak ada satu pun dari Alden. Cutoff disegarkan ke 13:37 → butir 32 |
+| **Slack channel id** | silang dengan 04.9.1 | `C0BHL8AE68G`＝sscos-hr · `C0BRSTNNY4A`＝nos-bo · `C0BBT5ZC9L6`＝nos-ops — cocok |
+
+### 9.2 · Verifikasi akhir pada badan v39 yang tersimpan
+
+| | |
+|---|---|
+| Tag menggantung / galat nesting | **nol / nol** |
+| Tabel cacat kolom | **0 dari 15** |
+| `<tr>` di luar tabel | nol |
+| `data-local-id` v38 (2.185) | **utuh — nol hilang, nol ditambah** |
+| 页首附表 | 34 baris, 统计 menyebut 34 |
+| Diff v38↔v39 | additions 5 / deletions 5 / hunks 5, lineCount 442→442 |
+
+### 9.3 · Seluruh cacat yang pernah ditemukan, dan statusnya
+
+| # | Cacat | Ditutup di |
+|---|---|---|
+| 1 | 8 kontradiksi transisi terminal (区二 ×5, 区一 ×2, 第八区 ×1) | **v37** |
+| 2 | butir 18 berbunyi seperti instruksi; dua tabel 第八区 tidak bertambah baris | **v37** |
+| 3 | 统计 「共 33 行」 basi sesudah baris ke-34 | **v36** |
+| 4 | 协作 Thread dua nilai berbeda di halaman yang sama | **v38** |
+| 5 | Daftar 「版本未移动」 salah 3 entri ＋ 「已移动」 berhenti di 04.4 v31 | **v39** |
+| 6 | 身份件 masih tertulis `inactive`·未发布, padahal sudah active·已发布 | **v39** |
+| 7 | c50343 (13 字段类型全部锁定) belum tercatat | **v39** |
+| 8 | c50279 cutoff masih 2026-09-21 18:30 | **v39** |
+| 9 | OSD-116 「143 条」 → 166 条 | **v39** |
+
+**Nol tersisa. Daftar `pending-buildsheet-updates.md` kosong.**
+
+### 9.4 · Apa yang TIDAK bisa diverifikasi, dan sudah tercatat jujur di halaman
+
+- `Abort Case`(11) belum 实跑 — ditahan atas perintah Bambang, menunggu putusan 04.3 Owner.
+- Tiga atribut transisi (`Create` 1／`Complete` 10／`Abort Case` 11) belum terbaca API — hanya bisa diambil di state `Pending Sub-tickets`.
+- Dua scheme id (19812／12991) — halaman sendiri menulis 「本轮未核实」, tidak ada endpoint di sisi ini.
+- Baris 阻塞中／待办 yang menunggu Alden, Felix, Kayden, Kent — itu pekerjaan orang lain, bukan cacat halaman.
