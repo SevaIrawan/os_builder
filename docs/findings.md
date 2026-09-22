@@ -384,6 +384,46 @@ disagreement stands exactly as recorded. Still not reported to anyone.
 
 ---
 
+**Status correction, 2026-09-22 — F-006 is WRONG on two points, one of them a quotation that is not
+on the page.** Written after the repo owner pointed out that 04.4.3 had never been opened. It has
+now been opened live (pageId 2076508181, lastModified 2026-09-14). Appended per rule 4.
+
+**Wrong point 1 — a quotation that does not exist.** F-006 states 「Its own 维护说明 lists a status
+change of the piece as an update trigger.」 04.4.3's 维护说明 reads, verbatim and in full:
+「更新触发：**输入/输出字段增减、消费者增减**时更新本页并同步 04.4 §十一 与（如有）04.9。」 Two triggers,
+and **a status change of the piece is not one of them**. Note also the direction: the sync this page
+owes runs **outward** (this page → 04.4 §十一 → 04.9), not inward. So 04.4.3 is not in breach of its
+own rule, and F-006's stated basis for calling it a delinquent copy is fabricated.
+
+**Wrong point 2 — the framing 「one fact (是否已发布) sits in four places」 conflates two different
+facts.** 04.4 §十一's 状态 column is not a publication flag. Its own rule reads
+「「在建」行由建设者开工时自登，**验收通过后**由建设者更新为「可用」」 — it flips on **acceptance**, not on
+publication. The same table proves it in the other direction: the 协作 Thread row was set to
+「**可用**（Alden 验收 2026-09-21，NSE-1143 c50273）」 while that same row states the piece is
+「仍 inactive」 and 「至今零真跑」. So in this table **可用 does not mean active, and 在建 does not mean
+unpublished**. 04.4.3 says the same thing in its own words: 「验收：平台侧＝Alden；消费侧＝离职（N3）＋
+Grade（N3）」 — acceptance is still outstanding. A piece that is published but not yet accepted is
+correctly recorded as 在建. There is no contradiction to report.
+
+**What actually remains, and it is small.** Two descriptions have genuinely fallen behind the facts,
+without breaching any page's own update rule:
+- 04.4.3's page-head 状态 paragraph still says 「本件自身仍 **inactive**」 and 「**影子 · shadow**」.
+  04.9.1 v19 records the piece as `active·已发布` with 「件名已去「DO NOT ACTIVATE · shadow」后缀」.
+- 04.4 §十一's 身份件 row still carries the parenthetical 「（影子·shadow，**随模式九批次上生产**）」,
+  which describes a future that has since happened.
+The 在建 word itself in that row may well be correct, for the reason above.
+
+**This correction also reverses F-006's practical warning.** F-006 says a builder routing via
+04.4 §十一 「reads the wrong answer」. For this repo the opposite holds: 建造单 row 32's 解除判据 is
+「若走身份件，**待其转「可用」后**本流程方可建 N03 身份认证段」 — the gate for us is **可用**, i.e.
+acceptance, which is exactly what 04.4 §十一's column reports. Reading 在建 there gives us the
+**right** answer for our own gate. The item `docs/pending-buildsheet-updates.md` butir 10 has been
+corrected accordingly.
+
+**Net**: F-006 keeps only a narrow observation about two out-of-date descriptive phrases. Its
+contradiction claim, its rule-breach claim and its builder-risk claim are all withdrawn. Nothing was
+reported to anyone at any point.
+
 ## F-007 · 2026-09-22 · `Withdraw` and `Cancel as Duplicate` leave byte-identical terminal data
 
 **Status**: recorded. Not reported to anyone. Not acted on.
