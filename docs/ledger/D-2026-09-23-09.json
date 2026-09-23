@@ -1,0 +1,59 @@
+{
+ "write_id": "D-2026-09-23-09",
+ "kind": "draft",
+ "target": {
+  "system": "draft",
+  "path": "docs/drafts/2026-09-23-nos-bo-agree-reply-draft.md"
+ },
+ "discovery": {
+  "topic_terms": ["HR不担任本子单Owner"],
+  "calls": ["toolu_01D7NZk4SAU2RcVyfVUsoyxL"],
+  "excluded": {}
+ },
+ "sources": [
+  {
+   "source_id": "S1",
+   "system": "confluence",
+   "content_id": "2036858900",
+   "read_call": "toolu_01HyvCKUSQ2kqX9dGwJHFHYK"
+  },
+  {
+   "source_id": "S2",
+   "system": "slack_thread",
+   "channel": "C0BRSTNNY4A",
+   "ts": "1790160390.243079",
+   "read_call": "toolu_01Auh2TsMYs8yPPhCBpuZsMP"
+  },
+  {
+   "source_id": "S3",
+   "system": "jira_comments",
+   "issue": "OSD-116",
+   "read_calls": ["toolu_01JsU8opUuN18TsVEoBmtWyR", "toolu_01FmJbdvi9dhd1QGuKQfPU6Z"]
+  }
+ ],
+ "claims": [
+  {"id": "K1", "text": "排查了切分序号 S-05 自己 Spec 里所有节点。", "source_id": "S1", "quote": "切分序号：S-05"},
+  {"id": "K2", "text": "逐条对照缺位条款和原则过一遍：", "source_id": "S1", "quote": "缺位不替代发送"},
+  {"id": "K3", "text": "N01 事件入口", "source_id": "S1", "quote": "N01 事件入口"},
+  {"id": "K3b", "text": "该员工的Direct Supervisor（缺位不替代发送）——知会，非确认动作", "source_id": "S1", "quote": "该员工的Direct Supervisor（缺位不替代发送）——知会，非确认动作"},
+  {"id": "K4", "text": "N22 触发降级：Direct Supervisor（Slack确认最终处置结果，缺位不替代发送）", "source_id": "S1", "quote": "N22 触发降级 | 自动化 | 系统 | N17判定=降级 | 自动化（Triggers link，跨流程） | 无 | Direct Supervisor（Slack确认最终处置结果，缺位不替代发送）"},
+  {"id": "K5", "text": "N21 离职单信息补齐跟踪，N20自动建立离职单及Issue Link关联完成后交给它跟踪", "source_id": "S1", "quote": "N21 离职单信息补齐跟踪 | 自动化 | 系统 | N20自动建立离职单及Issue Link关联完成"},
+  {"id": "K6", "text": "这条也写 Direct Supervisor（缺位由HR Ops & Data代为补充）", "source_id": "S1", "quote": "Direct Supervisor（缺位由HR Ops & Data代为补充）"},
+  {"id": "K7", "text": "跟离职 N13 资料补齐相关", "source_id": "S2", "quote": "N13 资料补齐的 B 表"},
+  {"id": "K8", "text": "Kent 刚在这条 thread 里回过：「在那之前 N13 这条不建」", "source_id": "S2", "quote": "在那之前 N13 这条不建"},
+  {"id": "K9", "text": "N03 提交处置申请", "source_id": "S1", "quote": "N03 提交处置申请"},
+  {"id": "K10", "text": "提交资格＝仅可由该员工登记的Direct Supervisor提交，缺位由HR Ops & Data代为受理", "source_id": "S1", "quote": "提交资格＝仅可由该员工登记的Direct Supervisor提交，缺位由HR Ops & Data代为受理"},
+  {"id": "K11", "text": "切分序号 S-05 自己的主入口，跟原则冲突", "source_id": "S1", "quote": "切分序号：S-05"},
+  {"id": "K12", "text": "这题此前已经问过 Alden，答复仍待定", "source_id": "S3", "quote": "明确 N03 走身份件还是直调 B6"},
+  {"id": "K13", "text": "N16 PIP执行与Check-in跟踪：Direct Supervisor（缺位→HR Ops & Data承接）", "source_id": "S1", "quote": "N16 PIP执行与Check-in跟踪 | 工作流（子单） | Direct Supervisor（缺位→HR Ops & Data承接）"},
+  {"id": "K14", "text": "HR 直接接手执行角色，不只是告警", "source_id": "S1", "quote": "HR不担任本子单Owner，监督经C-10频率提醒及D表知会承担"},
+  {"id": "K15", "text": "N17 PIP结果评估也靠那位已承接的 HR 做提前终止判断", "source_id": "S1", "quote": "N17 PIP结果评估"}
+ ],
+ "boilerplate": [
+  "认同。",
+  "不算问题，本来就符合原则：",
+  "不算新问题，今晚这条 thread 已经有裁决：",
+  "仍然卡住、待处理的：",
+  "—— Bambang"
+ ]
+}
