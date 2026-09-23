@@ -15,7 +15,8 @@
    "toolu_01EmXxfUk1BzEW5iyZTeYVVa",
    "toolu_01WEk3A6T6ey2m2V8AgRgnLV",
    "toolu_01VPsFG3ovbm4XeCS1zf3gxM",
-   "toolu_01VbU6wfM9PspPbq4fED445U"
+   "toolu_01VbU6wfM9PspPbq4fED445U",
+   "toolu_01B5nGSs2T5tBuntxsVBZYj6"
   ],
   "excluded": {
    "confluence:2096463922": "Our own S-05 build sheet: it summarises these same rules; the draft quotes the Spec and 04.4.2 directly instead of the build sheet's summary",
@@ -23,7 +24,9 @@
    "confluence:1765015618": "04.9.3 resignation workflow detail book: 04.9 §一 reading rule limits consumers to their own book; channel two's rule is quoted from the resignation Spec itself",
    "confluence:1742766267": "Grade build sheet: another flow's build record; no sentence of this draft cites or depends on it",
    "confluence:1693089805": "04.9 workflow register: lists workflows only; no sentence of this draft cites or depends on it",
-   "confluence:2063400992": "Recruitment Spec: another flow; its absent-supervisor wording is unrelated to the resignation hand-over asked about here"
+   "confluence:2063400992": "Recruitment Spec: another flow; its absent-supervisor wording is unrelated to the resignation hand-over asked about here",
+   "confluence:2075394050": "S-02 new-hire Spec: another flow; its absent-supervisor wording is not cited and does not bear on the resignation hand-over asked about",
+   "confluence:1761443890": "F0B leadership baseline card: strategy module page, unrelated to the absent-supervisor rule of this flow"
   }
  },
  "sources": [
@@ -65,6 +68,30 @@
     "toolu_01VPsFG3ovbm4XeCS1zf3gxM",
     "toolu_01VbU6wfM9PspPbq4fED445U"
    ]
+  },
+  {
+   "source_id": "S8",
+   "system": "confluence",
+   "content_id": "1695744021",
+   "read_call": "toolu_0167BxFPjLZpZMr8y599voZd"
+  },
+  {
+   "source_id": "S9",
+   "system": "confluence",
+   "content_id": "1690927120",
+   "read_call": "toolu_015A2EA3nFvXAXUDU5kVwJfG"
+  },
+  {
+   "source_id": "S10",
+   "system": "confluence",
+   "content_id": "1704362028",
+   "read_call": "toolu_01KjsSm75EEYGaNPxTHYiYjK"
+  },
+  {
+   "source_id": "S11",
+   "system": "confluence",
+   "content_id": "1730347066",
+   "read_call": "toolu_012DWugtf5zFJBzyt4QS8nfi"
   }
  ],
  "claims": [
@@ -100,72 +127,97 @@
   },
   {
    "id": "K6",
-   "text": "For the same hand-over, this flow's Spec has HR Ops & Data step in when the supervisor is absent: 「缺位由HR Ops & Data代为补充」.",
+   "text": "In this flow's target design the system itself opens the resignation case: 「系统自动在「员工离职Spec」建立一张离职主单」.",
    "source_id": "S3",
-   "quote": "缺位由HR Ops & Data代为补充"
+   "quote": "系统自动在「员工离职Spec」建立一张离职主单"
   },
   {
    "id": "K7",
-   "text": "Until the system entrance is built, who starts the resignation case when 「缺位由HR Ops & Data代为补充」 applies?",
+   "text": "People only fill in the remaining details afterwards: 「离职单已自动建立，通知其在规定时限内补齐最后工作日等信息」.",
+   "source_id": "S3",
+   "quote": "离职单已自动建立，通知其在规定时限内补齐最后工作日等信息"
+  },
+  {
+   "id": "K8",
+   "text": "Those details come from the direct supervisor, or from HR Ops & Data when the supervisor is absent: 「缺位由HR Ops & Data代为补充」.",
    "source_id": "S3",
    "quote": "缺位由HR Ops & Data代为补充"
   },
   {
-   "id": "K8",
+   "id": "K9",
+   "text": "During the interim manual path, who submits the resignation case when the supervisor is absent, given 「缺位由HR Ops & Data代为补充」?",
+   "source_id": "S3",
+   "quote": "缺位由HR Ops & Data代为补充"
+  },
+  {
+   "id": "K10",
    "text": "This flow's Spec already routes the case to HR Ops & Data at submission: 「缺位由 HR Ops & Data 代为受理提交」.",
    "source_id": "S3",
    "quote": "缺位由 HR Ops & Data 代为受理提交"
   },
   {
-   "id": "K9",
+   "id": "K11",
    "text": "The shared supervisor lookup only reports reporting-line facts and leaves the decision to each flow: 「只回答汇报线事实，不做资格判定」.",
    "source_id": "S4",
    "quote": "只回答汇报线事实，不做资格判定"
   },
   {
-   "id": "K10",
+   "id": "K12",
    "text": "It reports these situations separately:",
    "source_id": "S4",
    "quote": "空值是档案没填、Inactive 是人已停用，两者的修法不同"
   },
   {
-   "id": "K11",
+   "id": "K13",
    "text": "(a) the employee's record lists no direct supervisor",
    "source_id": "S4",
    "quote": "上司字段为空"
   },
   {
-   "id": "K12",
-   "text": "(b) the listed supervisor has been deactivated",
+   "id": "K14",
+   "text": "(b) the listed supervisor's status is anything other than Active",
    "source_id": "S4",
-   "quote": "上司 Talent Status ＝ Inactive"
+   "quote": "非 Active 即无效"
   },
   {
-   "id": "K13",
+   "id": "K15",
    "text": "(c) the listed supervisor's status is left blank",
    "source_id": "S4",
    "quote": "上司 Talent Status 为空"
   },
   {
-   "id": "K14",
+   "id": "K16",
    "text": "(d) the employee's own record cannot be found",
    "source_id": "S4",
    "quote": "主体查无 NTP 档案"
   },
   {
-   "id": "K15",
+   "id": "K17",
+   "text": "Kayden's comment c49740 (2026-09-10) says the general rule will be set on a standards page:",
+   "source_id": "S6",
+   "quote": "c49740 | Kayden Lee | 2026-09-10T12:57:48.581+0700"
+  },
+  {
+   "id": "K18",
+   "text": "「通用规则归制度页另定」.",
+   "source_id": "S6",
+   "quote": "通用规则归制度页另定"
+  },
+  {
+   "id": "K19",
    "text": "For this flow, which of (a) to (d) count as 「缺位由HR Ops & Data承接」, and which should go to HR to correct the record first?",
    "source_id": "S3",
    "quote": "缺位由HR Ops & Data承接"
   }
  ],
  "boilerplate": [
-  "【Spec question → @Felix_HR @Kent】",
+  "【Spec question → @Felix_HR @Kent, cc @Kayden Lee】",
   "Interim hand-over",
   "A. HR Ops & Data may submit through the manager submission channel for these cases.",
   "B. HR first corrects the employee's record so that a direct supervisor is listed, and that supervisor submits.",
   "C. Another arrangement — please describe.",
   "Which situations count",
+  "Please also say whether to decide this now for this flow or wait for the general rule.",
   "Your answers will be copied into the build sheet as given.",
   "—— Bambang"
  ]

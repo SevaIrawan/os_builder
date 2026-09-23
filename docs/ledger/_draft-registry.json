@@ -8,8 +8,8 @@
   "status": "legacy: written before G-01 v3, never gated; any change must pass the gate"
  },
  "docs/drafts/2026-09-23-absent-supervisor-questions-draft.md": {
-  "passed_at": "2026-09-23T04:14:14.850355+00:00",
-  "sha": "965cec954a87",
+  "passed_at": "2026-09-23T04:50:42.720046+00:00",
+  "sha": "c324ba21f7cb",
   "write_id": "D-2026-09-23-06"
  },
  "docs/drafts/2026-09-23-interim-handling-draft.md": {
