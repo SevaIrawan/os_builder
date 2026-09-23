@@ -355,11 +355,16 @@ for cmd in ['git commit -a -m x', 'git commit -am x', 'git commit --all -F msg.t
             'git add docs/ledger', 'git add -u && git commit -m x', 'git stash', 'git checkout -- .',
             'git reset --hard', 'git -C . commit -a -m x', 'sh -c "git commit -a -m x"', 'cd . && git commit -a -m x',
             'git commit -m "unbalanced quote', 'echo `git stash`', 'echo $(git commit -a -m x)',
-            '(git commit -a -m "a (b) c")', 'git status\ngit commit -a -m x']:
+            '(git commit -a -m "a (b) c")', 'git status\ngit commit -a -m x',
+            'git stash push', 'git stash pop', 'git commit -m "msg $(git stash)"', "bash -c 'git add -A'",
+            'eval "git commit -a -m x"', 'echo "`git stash`"']:
     rc, msg = bash_hook(cmd)
     expect('git gap: blocked  %s' % cmd, rc == 2 and 'G-01' in msg, msg)
 for cmd in ['git add docs/drafts/x-draft.md && git commit -F msg.txt',
             'git add docs/drafts/x-draft.md && git commit -q -m "Record test (foreground; background | put back)"',
+            'git add docs/drafts/x-draft.md && git commit --dry-run -m "Live test (a; b | c)"; echo "git exit=$?"',
+            'git add docs/drafts/x-draft.md && git commit -m "fix the git gap (stash list)"',
+            'git stash list', 'git stash show', 'git status --short; git stash list | wc -l',
             'git status --short', 'git diff',
             'git log --oneline -3', 'git push -u origin b']:
     rc, msg = bash_hook(cmd)

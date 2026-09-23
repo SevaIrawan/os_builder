@@ -131,3 +131,33 @@ Dijalankan di repo asli, tanpa UNLOCK G-01 di pesan terakhir owner. Alat uji: pr
   - boleh saat bersih: pesan dengan tanda kurung, kutipan tidak seimbang;
   - boleh saat ada file gate berubah: `git add <file sendiri> && git commit -m "... (…; … | …)"`;
   - tetap diblokir saat ada file gate berubah: kutipan tidak seimbang, `` `git stash` ``, `$(git commit -a)`, `(git commit -a -m "a (b) c")`, dua perintah dipisah baris baru.
+
+## Uji langsung pemeriksaan git (perintah Bambang: "Jalankan uji langsung pemeriksaan git itu sekarang", lalu "Jalankan uji git sekarang")
+
+Tahap 1, repo bersih, tanpa UNLOCK, dengan `--dry-run`:
+- Lolos: `git commit --dry-run -m "Live test (parens; semicolon | pipe)"` (dulu ditolak "could not be parsed"), `git commit -a --dry-run`, `git add -A --dry-run`. Git menjawab "nothing to commit".
+- Diblokir: `git add --dry-run scripts/hooks/pre_tool.py` (aturan lama: perintah menyebut file gate).
+
+Tahap 2, satu baris kosong ditambahkan di akhir `lexicon.json` atas perintah "UNLOCK G-01 buat perubahan kecil di lexicon untuk uji itu" (tidak di-commit), lalu diuji tanpa UNLOCK:
+- Diblokir, 6/6:
+  - `git commit -a --dry-run`: "git commit -a / --all would commit"
+  - `git add -A --dry-run`: "would stage"
+  - `git add --dry-run .`: "pathspec covers"
+  - `git stash`: "git stash runs while gate files have uncommitted changes"
+  - `git commit -m "unbalanced quote`: "could not be parsed while gate files have uncommitted changes"
+  - `` echo `git stash` ``: "git stash runs…"
+- Lolos: `git add <draft sendiri> && git commit --dry-run -m "Live test (a; b | c)"`, `git status --short`, `git diff --stat`.
+- Sesudahnya: baris uji masih ada, `.git/refs/stash` tidak ada (tidak ada yang masuk stash).
+- Dua blokir berlebihan ditemukan (hanya terjadi saat ada file gate berubah; arahnya memblokir, tidak meloloskan):
+  1. `git stash list` diblokir, padahal hanya membaca.
+  2. `echo "git exit=$?"` diblokir: teks berkutip yang memuat kata "git" diurai sebagai perintah git.
+
+## Perbaikan dua blokir berlebihan (perintah Bambang: "UNLOCK G-01 buang baris uji, perbaiki dua blokir itu, lalu catat")
+
+- Baris uji di `lexicon.json` dibuang (`git checkout`), repo bersih lagi.
+- Perbaikan 1: sub-perintah yang hanya membaca tidak diblokir: `git stash list`, `git stash show`, `git worktree list`, `git config --get / --list`.
+- Perbaikan 2: teks berkutip hanya diurai sebagai perintah bila memang dijalankan shell (`sh`/`bash`/`zsh`/`dash`/`ksh -c`, `eval`, `su`, `script`) atau memuat `$( )` / backtick. `echo "git exit=$?"` dan pesan commit yang menyebut kata git kini dianggap teks.
+- Self-test: 114/114 lulus (103 lama + 11 uji baru):
+  - lolos saat ada file gate berubah: `git stash list`, `git stash show`, `git status --short; git stash list | wc -l`, `... ; echo "git exit=$?"`, `git commit -m "fix the git gap (stash list)"` setelah `git add` file sendiri;
+  - tetap diblokir saat ada file gate berubah: `git stash push`, `git stash pop`, `git commit -m "msg $(git stash)"`, `bash -c 'git add -A'`, `eval "git commit -a -m x"`, `` echo "`git stash`" ``.
+- Belum diuji langsung di sesi nyata, karena uji langsung butuh file gate yang berubah dan pesan tanpa UNLOCK, dan baris uji sudah dibuang.

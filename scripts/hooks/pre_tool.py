@@ -49,6 +49,8 @@ def dirty_protected(L):
 
 
 SHELL_OPERATORS = {'&&', '||', ';', '|', '&', '(', ')', ';;', '|&'}
+SHELL_RUNNERS = {'sh', 'bash', 'zsh', 'dash', 'ksh', 'eval', 'su', 'script'}
+GIT_READONLY_SUB = {'stash': {'list', 'show'}, 'worktree': {'list'}, 'config': {'--get', '--list', '-l', '--get-all'}}
 
 
 def shell_segments(cmd):
@@ -79,10 +81,13 @@ def git_calls(cmd):
     segs = shell_segments(cmd)
     if segs is None:
         return None
-    for toks in segs:
-        toks = [t.strip('`') for t in toks]   # `git stash` in backticks
-        for t in toks:                      # sh -c "git commit -a", eval '...'
-            if re.search(r'\s', t) and re.search(r'\bgit\b', t):
+    for raw in segs:
+        toks = [t.strip('`') for t in raw]    # `git stash` in backticks
+        # quoted text is only a command when a shell runs it (sh -c "...", eval '...') or it holds $( ) / backticks;
+        # otherwise "git exit=$?" or a commit message mentioning git is just text
+        runs_text = any(os.path.basename(t) in SHELL_RUNNERS for t in toks)
+        for r, t in zip(raw, toks):
+            if re.search(r'\s', t) and re.search(r'\bgit\b', t) and (runs_text or '$(' in r or '`' in r):
                 inner = git_calls(t)
                 if inner is None:
                     return None
@@ -116,7 +121,8 @@ def git_touches_protected(cmd, L):
         return ''
     calls = git_calls(cmd)
     if calls is not None:
-        calls = [(s, a) for s, a in calls if s not in GIT_READONLY]
+        calls = [(s, a) for s, a in calls
+                 if s not in GIT_READONLY and not (a and a[0] in GIT_READONLY_SUB.get(s, ()))]
         if not calls:
             return ''
     dirty, staged = dirty_protected(L)
