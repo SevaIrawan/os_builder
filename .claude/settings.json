@@ -1,0 +1,41 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {"type": "command", "command": "python3 \"$CLAUDE_PROJECT_DIR/scripts/hooks/session_start.py\"", "timeout": 30}
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {"type": "command", "command": "python3 \"$CLAUDE_PROJECT_DIR/scripts/hooks/prompt.py\"", "timeout": 60}
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "mcp__.*|Write|Edit|MultiEdit|NotebookEdit|Bash",
+        "hooks": [
+          {"type": "command", "command": "python3 \"$CLAUDE_PROJECT_DIR/scripts/hooks/pre_tool.py\"", "timeout": 120}
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "mcp__Atlassian_MCP__.*|mcp__Atlassian_Rovo__.*|mcp__Slack__.*",
+        "hooks": [
+          {"type": "command", "command": "python3 \"$CLAUDE_PROJECT_DIR/scripts/hooks/post_tool.py\"", "timeout": 60}
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {"type": "command", "command": "python3 \"$CLAUDE_PROJECT_DIR/scripts/hooks/stop.py\"", "timeout": 120}
+        ]
+      }
+    ]
+  }
+}
