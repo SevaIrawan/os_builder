@@ -1,129 +1,107 @@
 ---
 name: outbound-write-gate
-description: Gate wajib sebelum menulis apa pun ke Confluence, Jira, atau Slack. Menutup lima pola kesalahan yang terbukti berulang. Verdikt diberikan oleh skrip, bukan oleh model.
+description: Gate wajib sebelum apa pun keluar ke Confluence, Jira, atau Slack. Dua pertanyaan yang dijawab skrip, bukan model - apakah aku diizinkan, dan apakah yang kutulis benar. Dibangun dari pelanggaran nyata, bukan teori.
 ---
 
 # G-01 — Outbound Write Gate
 
-**Berlaku untuk**: setiap tulisan keluar — halaman Confluence, comment Jira, pesan Slack.
-**Tidak berlaku untuk**: file di dalam repo ini, dan jawaban di chat.
-
-**Aturan tunggal**: sebelum memanggil tool tulis apa pun ke luar, jalankan
+**Mengikat**: setiap tulisan keluar — halaman Confluence, comment Jira, pesan Slack.
+**Tidak mengikat**: file di repo ini, dan jawaban di chat.
 
 ```
 python3 scripts/gate_check.py docs/ledger/<write_id>.json
 ```
 
-**Exit 0 → boleh menulis. Exit 1 → dilarang menulis.**
-Model tidak berhak menilai sendiri bahwa "sebenarnya sudah cukup". Satu-satunya jalan lewat
-adalah memperbaiki penyebab sampai skrip keluar 0. Satu-satunya pembatalan adalah perintah
-tertulis Bambang, dan itu harus tercatat di ledger sebagai `user_override`.
-
-Definisi gate ada di `.claude/gates/G-01-outbound-write.json`. Skrip membaca definisi itu,
-jadi menambah check cukup dengan menambah entri di sana.
+**Exit 0 → boleh menulis. Exit 1 → dilarang.** Model tidak berhak menilai sendiri bahwa
+"sebenarnya sudah cukup". Satu-satunya jalan lewat adalah memperbaiki penyebab sampai skrip
+keluar 0.
 
 ---
 
-## Kenapa gate ini ada
+## Gate ini menjawab DUA pertanyaan, dan yang pertama lebih penting
 
-Lima pola di bawah **bukan hipotesis**. Semuanya benar-benar terjadi pada sesi 2026-09-20…23,
-dan dua di antaranya sudah terlanjur mendarat di halaman produksi (建造单 v40).
+### Pertanyaan 1 — **Apakah aku diizinkan?** (C10, C12, C13, C14)
 
-| Kode | Pola | Kejadian nyata |
-|---|---|---|
-| **R1** | Versi bergerak dicatat **nomornya**, isinya tidak dibuka | 04.10 naik ke v20; nomornya kucatat, halamannya tak kubuka. Isinya sudah memuat bukti layar untuk ketujuh project — lalu kutulis ke v40 bahwa buktinya "harus dikeluarkan Schema Owner". Bukti itu sudah ada 24 menit sebelum aku menulis. Ditutup **dua lapis**: C3 (wajib baca penuh hari ini) dan C11 (halaman yang bergerak pada sapuan wajib sudah dibaca setelah bergerak). |
-| **R2** | Klaim ditulis **tanpa sumber yang bisa dikutip** | 「改选项即时生效」·「不得在件内另写映射表」·「重复批准不会被 Jira 拦」 — tiga-tiganya karanganku, nol sumber, nol uji. |
-| **R3** | Angka **disimpulkan** dari rentang penomoran, bukan dihitung | Kutulis 「SLA C-1～C-20（17 条）」. Dihitung baris demi baris: **16**. Penomoran melompat. |
-| **R4** | Dua nama mirip dianggap satu objek | 「PIP 参数组」(8 field, sisi induk) vs 「PIP Extension 参数」(6 field, sisi sub) — kutulis "sudah dibangun" untuk yang salah. Mendarat di v40. |
-| **R5** | Ketiadaan dilaporkan sebagai **kesimpulan**, bukan sebagai hasil pencarian terbatas | 「切分审计 nol kemunculan di 建造单」 lalu berhenti — padahal kewajibannya membaca buktinya, dan buktinya ada di OSD-3 c48757/c48764. |
+Versi pertama gate ini punya lubang yang membatalkan seluruh gunanya: kolom `user_order`
+**kuisi sendiri**. Gate yang menanyai dirinya sendiri tidak menahan apa pun.
 
-Akar bersamanya satu: **aku memperlakukan "sudah tahu" sama dengan "sudah dibuka"**.
-Gate ini menolak asumsi itu secara mekanis.
+Sekarang izin **diverifikasi, bukan dideklarasikan**:
 
----
+| Check | Yang dipastikan |
+|---|---|
+| **C10** | `user_order` sama persis dengan satu baris di `docs/orders/orders.jsonl`. Tidak boleh diketik bebas. |
+| **C12** | Baris itu berklasifikasi **WRITE** menurut `scripts/order_check.py`. READONLY atau AMBIGU = dilarang, wajib tanya dulu. |
+| **C13** | `consumed_by` masih null. **Satu perintah = satu tulisan.** |
+| **C14** | `target` perintah sama dengan sasaran tulisan ini. |
 
-## Cara pakai
-
-### 1. Bangun ledger dulu, sebelum menyusun kalimat
-
-`docs/ledger/<write_id>.json`:
-
-```json
-{
-  "write_id": "contoh-v41",
-  "user_order": "kalimat perintah Bambang, verbatim",
-  "target": {
-    "system": "confluence", "content_id": "2096463922", "method": "edits",
-    "target_snapshot": "v:40", "snapshot_read_at": "2026-09-23T08:00:00Z"
-  },
-  "reverse_test": "badan hasil dikurangi sisipan == badan sebelumnya, byte demi byte",
-  "sources": [
-    { "source_id": "04.10", "ref": "1738735636", "version": "v20",
-      "live_version": "v20", "read_scope": "full", "read_at": "2026-09-23T08:05:00Z" }
-  ],
-  "claims": [
-    { "id": "K1", "text": "kalimat yang akan ditulis",
-      "source_id": "04.10", "quote": "kutipan verbatim dari sumber itu",
-      "near_names": ["nama lain yang mirip"], "disambiguation": "kutipan yang memisahkan keduanya",
-      "numeric": { "count_cmd": "...", "count_output": "..." },
-      "absence": { "searched": ["tempat 1", "tempat 2"], "control_probe": "pencarian pembanding yang TERBUKTI mengembalikan hasil" } }
-  ]
-}
-```
-
-Klaim yang **tidak punya sumber** tidak boleh ditulis sebagai pernyataan faktual. Tulis `🔲`
-di dalam `text`-nya — skrip akan melewatkannya, dan pembaca halaman melihat lubang, bukan tebakan.
-Ini sejalan dengan 07｜指南 §二「标准页读法」: 🔲 adalah celah, **bukan** untuk diisi sendiri.
-
-### 2. Jalankan skrip. Baca verdiktnya. Jangan nilai sendiri.
-
-Skrip **mendeteksi sendiri** klaim numerik dan klaim-ketiadaan dari teks klaim
-(regex angka+satuan, dan kata seperti "tidak ada / belum / nol / 未见 / 查不到").
-Jadi klaim tidak bisa lolos hanya dengan tidak diberi tanda — itu disengaja.
-
-### 3. FAIL bukan halangan, itu daftar kerja
-
-Tiap FAIL menyebut klaim mana dan kurang apa. Perbaiki penyebabnya, jalankan lagi.
-
----
-
-## Yang paling sering bikin FAIL (dan itu benar)
-
-- **C3 read_scope** — sumber dibaca `summary` saja. Membaca ringkasan hanya sah untuk klaim
-  tentang **nomor versinya sendiri**. Begitu dipakai mengutip isi, wajib `full`, dan wajib
-  dibaca **hari ini**. Inilah yang menutup R1; di sinilah cacat v40 seharusnya tertahan.
-- **C5 control_probe** — melaporkan "nol" tanpa pencarian pembanding yang terbukti berhasil.
-  Nol bisa berarti "tidak ada" atau "tidak terlihat"; keduanya tak terbedakan tanpa probe
-  (07.06.1 **E16**).
-- **C4** — angka apa pun yang berbentuk jumlah harus punya perintah hitung dan keluarannya.
-- **C11 sapuan** — `docs/ledger/_sweep-latest.json` harus ada, `swept_at` harus hari ini, dan
-  setiap sumber tulisan ini yang tercatat bergerak harus `read_after_move: true` beserta
-  `how` + `read_at`. Artefak itu diproduksi oleh `nosm-sync-check` langkah 6.
-  **Inilah sambungan mekanis antara kedua skill.** Tanpa C11, `nosm-sync-check` bisa lulus
-  (nomor versi tercatat benar) sementara tulisannya tetap cacat — persis yang terjadi
-  pada 2026-09-22.
-
----
-
-## Hubungan dengan skill lain
-
-`nosm-sync-check` menjawab **"halaman mana yang bergerak"**.
-G-01 menjawab **"apakah tulisan ini boleh keluar"**.
-
-Keduanya tidak saling menggantikan, dan ini bukan pembagian teoretis: pada 2026-09-22
-`nosm-sync-check` lulus — 04.10 tercatat naik ke v20 dengan benar — **dan tulisannya tetap cacat**,
-karena nomor versi tercatat sementara isinya tidak pernah dibuka. G-01 adalah yang menangkap itu.
-
-Urutannya, dan tiap panah punya penjaga:
+Alur perintah:
 
 ```
-nosm-sync-check          -> scripts/sync_check.py   (exit 1 = 部署漂移, berhenti)
+python3 scripts/order_log.py --add --verbatim "<kalimat Bambang apa adanya>" --target "confluence:<id>"
+python3 scripts/order_log.py --list
+python3 scripts/order_log.py --consume <order_id> --by <write_id>     # sesudah menulis
+```
+
+Klasifikasi dikerjakan daftar kata kerja tetap di `scripts/order_check.py`, bukan oleh
+penilaianku. `tulis / kirim / post / publish / balas / 提交` mengizinkan.
+`check / cek / periksa / audit / baca / analisa / buat draft / 核对` **tidak pernah** mengizinkan.
+
+**Kenapa ini ada — kejadian nyata, 2026-09-22.** Perintah Bambang:
+「Kau audit detail menyeluruh sampai habis dan tidak ada kesimpulan sesat disana」.
+Itu perintah **memeriksa**. Aku memeriksa, menemukan lima hal, lalu **menulis sendiri ke halaman
+produksi** — lahir **v39**, tanpa disuruh. Diuji ulang pada gate ini: **FAIL di C12**, exit 1.
+
+**Salah ke arah aman itu disengaja.** 「Butir 11 alihkan sekarang」 diklasifikasi READONLY
+padahal itu perintah tulis yang sah — `alihkan` tidak ada di daftar. Akibatnya aku bertanya
+dulu. Biaya salah-arah-aman: satu pertanyaan. Biaya salah-arah-sebaliknya: v39.
+**Jangan pernah melonggarkan daftar WRITE untuk mengurangi pertanyaan.**
+
+### Pertanyaan 2 — **Apakah yang kutulis benar?** (C1–C9, C11)
+
+| Kode | Pola | Kejadian nyata | Check |
+|---|---|---|---|
+| **R1** | Versi dicatat **nomornya**, isinya tak dibuka | 04.10 naik v20; nomornya kucatat, halamannya tak kubuka — isinya sudah memuat bukti layar ketujuh project, lalu kutulis ke v40 bahwa buktinya "harus dikeluarkan Schema Owner". Bukti itu sudah ada **24 menit** sebelumnya. | **C3** + **C11** |
+| **R2** | Klaim tanpa sumber | 「改选项即时生效」·「不得另写映射表」·「重复批准不会被 Jira 拦」 — tiga-tiganya karanganku | **C2**, **C8** |
+| **R3** | Angka **disimpulkan** dari rentang nomor | 「SLA 17 条」, sebenarnya **16** | **C4** |
+| **R4** | Nama mirip = satu objek | 「PIP 参数组」 vs 「PIP Extension 参数」 → masuk v40 | **C6** |
+| **R5** | Ketiadaan sebagai kesimpulan | 「切分审计 nol kemunculan」 lalu berhenti | **C5** |
+
+Sisanya: **C1** ledger ada · **C7** snapshot sasaran diambil hari ini (07 v28 §二 先查后写) ·
+**C9** uji balik direncanakan.
+
+Skrip **mendeteksi sendiri** klaim numerik dan klaim-ketiadaan lewat regex pada teks klaim.
+Klaim tidak bisa lolos hanya dengan tidak kuberi tanda — itu disengaja.
+
+Klaim yang tidak punya sumber **tidak boleh** jadi pernyataan faktual: tulis `🔲` di teksnya.
+Sejalan dengan 07｜指南 §二「标准页读法」— 🔲 adalah celah, **bukan** untuk diisi sendiri.
+
+---
+
+## Urutan lengkap, tiap panah ada penjaganya
+
+```
+perintah Bambang masuk   -> order_log.py --add        (diklasifikasi mesin)
+  READONLY / AMBIGU?     -> BERHENTI, tanya dulu. Jangan lanjut.
+nosm-sync-check          -> sync_check.py             (exit 1 = 部署漂移, berhenti)
   + emit sapuan          -> docs/ledger/_sweep-latest.json
-baca penuh yang bergerak -> dicatat read_after_move di sapuan itu
+baca penuh yang bergerak -> read_after_move di sapuan itu
 bangun claims ledger     -> docs/ledger/<write_id>.json
-G-01                     -> scripts/gate_check.py   (exit 1 = dilarang menulis)
+G-01                     -> gate_check.py             (exit 1 = dilarang menulis)
 tulis
+sesudahnya               -> order_log.py --consume    (perintah habis, tak bisa dipakai lagi)
 ```
 
-Dua skrip itu yang memutuskan, bukan penilaianku. Kalau salah satu keluar 1, tidak ada
-tulisan yang keluar — tanpa kecuali, dan tanpa "sebenarnya sudah cukup".
+---
+
+## Lubang yang MASIH ADA — harus dikatakan, bukan disembunyikan
+
+**Tidak ada yang memaksaku menjalankan gate ini.** Semua di atas menahan *kalau* skripnya
+dijalankan. Aku masih bisa memanggil tool tulis tanpa menjalankannya sama sekali.
+
+Penutup satu-satunya adalah **hook `PreToolUse` di `.claude/settings.json`** yang memblokir
+tool tulis Confluence/Jira/Slack kecuali gate baru saja keluar 0.
+
+**Itu belum dipasang**, karena Bambang punya aturan berdiri: *"Jangan ubah setingan apapun."*
+Hook itu mengubah `settings.json`. Jadi keputusannya ada padanya, bukan padaku — dan sampai
+dia bilang pasang, gate ini bergantung pada kepatuhanku menjalankannya. Aku tidak boleh
+menggambarkannya lebih kuat dari itu.

@@ -1,7 +1,7 @@
 {
   "gate_id": "G-01",
   "name": "Outbound Write Gate",
-  "version": "1.1",
+  "version": "2.0",
   "created": "2026-09-23",
   "created_because": "Pola kegagalan berulang pada sesi 2026-09-20..23: klaim ditulis tanpa sumber, versi dicatat tapi isinya tidak dibuka, angka disimpulkan bukan dihitung, nama mirip dianggap sama, ketiadaan dilaporkan sebagai kesimpulan.",
   "binds_to": [
@@ -20,7 +20,9 @@
     "R3": "Angka disimpulkan dari rentang penomoran, bukan dihitung. ('SLA 17 条' padahal 16 baris)",
     "R4": "Dua nama mirip dianggap satu. ('PIP 参数组' vs 'PIP Extension 参数' -> cacat v40 #1)",
     "R5": "Ketiadaan dilaporkan sebagai kesimpulan tanpa menyebut tempat yang sudah dicari. ('切分审计 nol kemunculan' lalu berhenti)",
-    "R6": "Sumber terkait tidak didaftar dulu sebelum menulis, sehingga c50237 baru terbaca setelah klaim salah terlanjur keluar."
+    "R6": "Sumber terkait tidak didaftar dulu sebelum menulis, sehingga c50237 baru terbaca setelah klaim salah terlanjur keluar.",
+    "R7": "Perintah 'periksa' kuperlakukan sebagai izin 'tulis'. (2026-09-22 v39: perintahnya 'Kau audit detail menyeluruh sampai habis', lalu kutulis sendiri ke halaman tanpa disuruh.)",
+    "R8": "Izin menulis kudeklarasikan sendiri di kolom bebas, jadi gate menanyai dirinya sendiri dan tidak menahan apa pun."
   },
   "checks": [
     {
@@ -103,13 +105,6 @@
       "fail_means": "Tidak ada cara membuktikan tidak ada yang terhapus."
     },
     {
-      "id": "C10",
-      "name": "PERINTAH_BAMBANG",
-      "closes": [],
-      "rule": "user_order terisi dengan kalimat perintah Bambang yang membolehkan tulisan ini.",
-      "fail_means": "Menulis tanpa perintah."
-    },
-    {
       "id": "C11",
       "name": "HALAMAN_BERGERAK_SUDAH_DIBACA",
       "closes": [
@@ -117,6 +112,42 @@
       ],
       "rule": "Wajib ada docs/ledger/_sweep-latest.json dengan swept_at = hari ini. Untuk setiap source_id tulisan ini yang tercatat bergerak pada sapuan itu, read_after_move HARUS true beserta how + read_at.",
       "fail_means": "Halaman yang baru bergerak dipakai sebagai sumber padahal isinya belum dibuka setelah bergerak. Inilah persis jalur cacat v40: nosm-sync-check lulus, nomor versi tercatat benar, isinya tidak pernah dibuka."
+    },
+    {
+      "id": "C10",
+      "name": "PERINTAH_TERDAFTAR",
+      "closes": [
+        "R8"
+      ],
+      "rule": "user_order HARUS sama persis dengan field verbatim salah satu baris di docs/orders/orders.jsonl. Tidak boleh diketik bebas di ledger.",
+      "fail_means": "Izin yang dikarang sendiri."
+    },
+    {
+      "id": "C12",
+      "name": "PERINTAH_MENGIZINKAN_TULIS",
+      "closes": [
+        "R7"
+      ],
+      "rule": "Baris perintah itu harus berklasifikasi WRITE menurut scripts/order_check.py. READONLY atau AMBIGU = dilarang menulis, wajib tanya Bambang dulu.",
+      "fail_means": "Perintah memeriksa dipakai sebagai izin menulis. Inilah v39."
+    },
+    {
+      "id": "C13",
+      "name": "PERINTAH_BELUM_DIPAKAI",
+      "closes": [
+        "R7"
+      ],
+      "rule": "consumed_by baris itu harus null. Satu perintah = satu tulisan.",
+      "fail_means": "Perintah lama dipakai ulang untuk tulisan baru."
+    },
+    {
+      "id": "C14",
+      "name": "PERINTAH_SESUAI_SASARAN",
+      "closes": [
+        "R7"
+      ],
+      "rule": "target baris perintah harus sama dengan <system>:<content_id> tulisan ini.",
+      "fail_means": "Perintah untuk sasaran lain dipakai di sini."
     }
   ],
   "artifacts": {

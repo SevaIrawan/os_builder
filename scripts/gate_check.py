@@ -93,8 +93,22 @@ def main(path):
     add('C9', (not need9) or bool((L.get('reverse_test') or '').strip()),
         'uji balik: %s' % ('ada' if (L.get('reverse_test') or '').strip() else 'TIDAK ADA'))
 
-    # C10
-    add('C10', bool((L.get('user_order') or '').strip()), 'perintah: %r' % (L.get('user_order') or '')[:60])
+    # C10 / C12 / C13 / C14 — izin menulis diverifikasi, bukan dideklarasikan
+    import os
+    uo = (L.get('user_order') or '').strip()
+    orders = []
+    if os.path.exists('docs/orders/orders.jsonl'):
+        orders = [json.loads(l) for l in open('docs/orders/orders.jsonl', encoding='utf-8') if l.strip()]
+    hit = next((o for o in orders if (o.get('verbatim') or '').strip() == uo and uo), None)
+    add('C10', hit is not None,
+        'cocok dengan %s' % hit['order_id'] if hit else 'user_order tidak ada di docs/orders/orders.jsonl (diketik bebas?)')
+    add('C12', bool(hit) and hit.get('classified') == 'WRITE',
+        ('%s = %s' % (hit['order_id'], hit.get('classified'))) if hit else 'tidak ada perintah untuk dinilai')
+    add('C13', bool(hit) and not hit.get('consumed_by'),
+        ('sudah dipakai oleh %s' % hit['consumed_by']) if hit and hit.get('consumed_by') else 'belum dipakai')
+    want = '%s:%s' % (tgt.get('system'), tgt.get('content_id'))
+    add('C14', bool(hit) and (hit.get('target') == want),
+        ('perintah untuk %s, tulisan ke %s' % (hit.get('target'), want)) if hit else 'tidak ada perintah untuk dinilai')
 
     # C11 — halaman yang bergerak pada sapuan terakhir wajib sudah dibaca isinya
     c11bad = []
