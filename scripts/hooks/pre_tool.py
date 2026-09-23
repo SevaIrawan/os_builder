@@ -9,6 +9,7 @@
 Exit 0 = allow. Exit 2 = block (stderr is shown to Claude)."""
 import json, os, re, shlex, subprocess, sys
 from _common import N, read_input, transcript, deny, latest_owner_text, is_gated_tool, ledgers
+import _guard
 import gate_check
 
 SAFE_BASH = re.compile(r'^\s*(python3\s+scripts/(gate_check|order_check|read_source|sync_check|selftest)\.py\b|cat\s|head\s|tail\s|grep\s|rg\s|wc\s|ls\b|git\s+(diff|log|show|status)\b|sed\s+-n\s)')
@@ -131,9 +132,16 @@ def main():
     L = N.lexicon()
 
     # ---- 4. gate files are not mine to change
+    # 4a. anything that changed them since the last hook (a program that did not name them) is put back first
+    put_back = _guard.enforce(L, lambda tok: tok in latest_owner_text(transcript(inp)))
+    if put_back:
+        deny(_guard.message(put_back, L))
+    L = N.lexicon()                  # re-read: the lexicon itself may have just been put back
     if name in ('Write', 'Edit', 'NotebookEdit', 'MultiEdit'):
         path = N.rel(ti.get('file_path') or ti.get('notebook_path') or '')
         hits = [p for p in L['protected_paths'] if path == p or (p.endswith('/') and path.startswith(p))]
+        if _guard.STATE_MARKER in path:
+            hits.append(_guard.STATE_MARKER)
         if hits:
             tr = transcript(inp)
             if L['order_words']['unlock_token'] not in latest_owner_text(tr):
@@ -144,7 +152,7 @@ def main():
         cmd = ti.get('command', '')
         if 'G01_HOOK_PROBE' in cmd:
             deny('G-01 hook is active (probe).')
-        hits = protected_hit(cmd, L)
+        hits = protected_hit(cmd, L) + ([_guard.STATE_MARKER] if _guard.STATE_MARKER in cmd else [])
         if hits and not (SAFE_BASH.match(cmd) and not re.search(r'>|\btee\b|-i\b|\brm\b|\bmv\b|\bcp\b|open\(|write', cmd)):
             tr = transcript(inp)
             if L['order_words']['unlock_token'] not in latest_owner_text(tr):

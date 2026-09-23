@@ -6,6 +6,7 @@
 Exit 2 = keep working (stderr is shown to Claude). Exit 0 = may stop."""
 import json, os, re, sys
 from _common import N, read_input, transcript, deny, append_log, read_log, ledgers, REGISTRY, latest_owner_text
+import _guard
 import gate_check
 
 
@@ -38,6 +39,11 @@ def main():
     tr = None
     problems = []
 
+    # 0. gate files changed outside the hooks (e.g. by a background program) are put back
+    put_back = _guard.enforce(L, lambda tok: tok in latest_owner_text(transcript(inp)))
+    if put_back:
+        problems.append(_guard.message(put_back, L))
+
     # 1. drafts
     reg = load_registry()
     changed = [p for p in draft_files(L) if reg.get(N.rel(p), {}).get('sha') != file_sha(p)]
@@ -57,6 +63,7 @@ def main():
                 problems.append('draft %s fails G-01 (%s):\n%s' % (r, N.rel(lp), gate_check.render(R, lg)))
         with open(REGISTRY, 'w', encoding='utf-8') as f:
             json.dump(reg, f, ensure_ascii=False, indent=1, sort_keys=True)
+        _guard.seal(L, only=[N.rel(REGISTRY)])
 
     # 2. read-back after outbound writes
     log = read_log()

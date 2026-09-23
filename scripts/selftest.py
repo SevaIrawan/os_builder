@@ -73,6 +73,8 @@ if len(sync_reads) < 2:
     sys.exit(1)
 
 tmp = tempfile.mkdtemp(prefix='g01-')
+STATE = tempfile.mkdtemp(prefix='g01-state-')        # sealed copy of the gate files for the throw-away repo
+os.environ['G01_STATE_DIR'] = STATE
 for item in ('scripts', '.claude', 'CLAUDE.md', 'docs/04-anchor-navigation.md', 'docs/working-rules.md'):
     src, dst = os.path.join(REPO, item), os.path.join(tmp, item)
     os.makedirs(os.path.dirname(dst), exist_ok=True)
@@ -337,10 +339,14 @@ def bash_hook(cmd, tpath=tp):
     return hook('pre_tool.py', {'tool_name': 'Bash', 'tool_input': {'command': cmd}}, tpath)
 rc, msg = bash_hook('git commit -a -m x')
 expect('git gap: commit -a allowed while no gate file is changed', rc == 0, msg)
+t.owner('UNLOCK G-01 commit the registry'); tpu = t.save(os.path.join(tmp, 'transcript-unlock.jsonl'))
+t.lines.pop(); t.save(tp)
 with open(os.path.join(tmp, 'docs/ledger/_draft-registry.json'), 'a', encoding='utf-8') as f:
     f.write('\n')
 with open(os.path.join(tmp, 'docs/drafts/x-draft.md'), 'a', encoding='utf-8') as f:
     f.write('\n')
+rc, msg = bash_hook('git status', tpu)                # owner-approved change of a gate file is sealed
+expect('guard: gate-file change under UNLOCK is sealed, not put back', rc == 0, msg)
 for cmd in ['git commit -a -m x', 'git commit -am x', 'git commit --all -F msg.txt', 'git add -A', 'git add .',
             'git add docs/ledger', 'git add -u && git commit -m x', 'git stash', 'git checkout -- .',
             'git reset --hard', 'git -C . commit -a -m x', 'sh -c "git commit -a -m x"', 'cd . && git commit -a -m x']:
@@ -353,10 +359,50 @@ for cmd in ['git add docs/drafts/x-draft.md && git commit -F msg.txt', 'git stat
 git('add', 'docs/ledger/_draft-registry.json')
 rc, msg = bash_hook('git commit -m x')
 expect('git gap: plain commit blocked when a gate file is already staged', rc == 2, msg)
-t.owner('UNLOCK G-01 commit the registry'); tpu = t.save(os.path.join(tmp, 'transcript-unlock.jsonl'))
 rc, msg = bash_hook('git commit -a -m x', tpu)
 expect('git gap: allowed after UNLOCK G-01', rc == 0, msg)
-t.lines.pop(); t.save(tp)
+
+# gap found 2026-09-23: a non-git program can change a gate file without its path in the command
+def fpath(rel):
+    return os.path.join(tmp, rel)
+def fread(rel):
+    with open(fpath(rel), 'rb') as f:
+        return f.read()
+def fwrite(rel, data):
+    with open(fpath(rel), 'wb') as f:
+        f.write(data)
+def guard_hook(tpath=tp):
+    return hook('post_guard.py', {'tool_name': 'Bash', 'tool_input': {'command': 'python3 some_tool.py'}}, tpath)
+LEX, SKILL = '.claude/gates/lexicon.json', '.claude/skills/nosm-sync-check/SKILL.md'
+orig_lex, orig_rs, orig_skill = fread(LEX), fread('scripts/read_source.py'), fread(SKILL)
+fwrite(LEX, orig_lex.replace(b'"UNLOCK G-01"', b'"UNLOCK"'))
+rc, msg = guard_hook()
+expect('guard: changed gate file reported after the command', rc == 2 and LEX in msg and 'put back' in msg, msg)
+expect('guard: changed gate file restored byte for byte', fread(LEX) == orig_lex)
+fwrite(LEX, orig_lex.replace(b'"scripts/hooks/", ', b''))    # shrink the protected list and use the hole at once
+fwrite('scripts/hooks/evil.py', b'print(1)\n')
+rc, msg = guard_hook()
+expect('guard: shrinking protected_paths does not unprotect a folder',
+       rc == 2 and fread(LEX) == orig_lex and not os.path.exists(fpath('scripts/hooks/evil.py')), msg)
+fwrite('scripts/hooks/evil.py', b'print(1)\n')
+os.remove(fpath('scripts/read_source.py'))
+rc, msg = guard_hook()
+expect('guard: new file in a gate folder removed', rc == 2 and not os.path.exists(fpath('scripts/hooks/evil.py')), msg)
+expect('guard: deleted gate file put back', os.path.exists(fpath('scripts/read_source.py')) and fread('scripts/read_source.py') == orig_rs)
+fwrite(SKILL, orig_skill + b'\nextra rule\n')          # e.g. a background job, noticed at the next tool call
+rc, msg = hook('pre_tool.py', {'tool_name': 'mcp__Atlassian_MCP__getConfluenceContent', 'tool_input': {'content_id': '1'}}, tp)
+expect('guard: change noticed and put back at the next tool call', rc == 2 and fread(SKILL) == orig_skill, msg)
+fwrite(SKILL, orig_skill + b'\nextra rule\n')
+rc, msg = hook('stop.py', {}, tp)
+expect('guard: change noticed and put back at the end of the turn', rc == 2 and 'put back' in msg and fread(SKILL) == orig_skill, msg)
+fwrite(LEX, orig_lex + b'\n')
+rc, msg = guard_hook(tpu)
+rc2, msg2 = guard_hook()
+expect('guard: change made under UNLOCK stays', rc == 0 and rc2 == 0 and fread(LEX) == orig_lex + b'\n', msg + msg2)
+rc, msg = guard_hook()
+expect('guard: hook-written registry / consumed.jsonl are not put back', rc == 0, msg)
+rc, msg = bash_hook('rm -rf ~/.claude/g01-state')
+expect('guard: command naming the sealed copy blocked', rc == 2, msg)
 
 # defect 4: a Jira issue key is an identifier, not a number to be found in the quote
 toks = N.numeric_tokens('OSD-116 c50345 记：共 13 个字段', L)
@@ -392,6 +438,7 @@ rows = {row[0]: row for row in json.loads(r.stdout)['rows']}
 expect('defect 3: 17 h old draft order refused (B1)', rows['B1'][1] is False, rows['B1'][2])
 
 shutil.rmtree(tmp, ignore_errors=True)
+shutil.rmtree(STATE, ignore_errors=True)
 print('-' * 60)
 print('SELFTEST: %s' % ('ALL EXPECTATIONS MET' if not FAILS else 'FAILED: %d' % len(FAILS)))
 sys.exit(1 if FAILS else 0)

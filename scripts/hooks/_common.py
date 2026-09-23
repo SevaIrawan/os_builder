@@ -31,6 +31,8 @@ def append_log(rec):
     rec['at'] = N.now_utc().isoformat()
     with open(LOG, 'a', encoding='utf-8') as f:
         f.write(json.dumps(rec, ensure_ascii=False) + '\n')
+    import _guard                       # the hook wrote a gate file: accept exactly that write
+    _guard.seal(N.lexicon(), only=[N.rel(LOG)])
 
 
 def read_log():

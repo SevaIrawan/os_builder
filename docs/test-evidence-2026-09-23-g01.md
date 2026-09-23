@@ -87,3 +87,21 @@ Self-test: 59/59 lulus, termasuk lima uji baru untuk ketiga cacat.
 - Akibatnya: `_draft-registry.json` ditulis ulang oleh gate setiap kali draft PASS, jadi meng-commit file itu sekarang butuh "UNLOCK G-01".
 - Sisa batas (dicatat di `known_limits` G-01): program non-git yang menulis file gate tanpa nama path-nya muncul di perintah tidak terdeteksi.
 - Self-test: 84/84 lulus (63 lama + 21 uji git baru).
+
+## Menutup celah program non-git (perintah Bambang: "UNLOCK G-01 tutup juga celah program non-git itu")
+
+- Celahnya: program yang menulis file gate tanpa nama path-nya muncul di perintah tidak bisa dikenali sebelum jalan.
+- Perbaikan: salinan resmi (sealed copy) semua file gate disimpan di luar repo (`~/.claude/g01-state/`, kode `scripts/hooks/_guard.py`). File gate dibandingkan dengan salinan itu:
+  - sebelum setiap tool call (`pre_tool.py`),
+  - setelah setiap Bash / Write / Edit (hook baru `post_guard.py`, didaftarkan di `.claude/settings.json`),
+  - saat giliran berakhir (`stop.py`).
+- Kalau ada yang beda dan pesan terakhir owner tidak memuat "UNLOCK G-01": isi resmi dikembalikan (file baru dihapus, file terhapus dikembalikan), lalu tool call ditolak atau giliran tidak boleh selesai, dengan daftar file yang dikembalikan.
+- Dengan "UNLOCK G-01": keadaan baru disimpan sebagai salinan resmi.
+- Daftar file yang dilindungi diambil dari lexicon versi resmi, jadi mengubah `lexicon.json` tidak bisa melepas perlindungan.
+- Tulisan sah oleh hook sendiri (`_draft-registry.json` oleh Stop, `consumed.jsonl` oleh PostToolUse) langsung disimpan ke salinan resmi, jadi tidak dikembalikan.
+- Perintah yang menyebut `g01-state` diperlakukan sebagai menyentuh file gate.
+- Batas yang tersisa (dicatat di `known_limits` G-01):
+  1. Perubahan dibatalkan di hook berikutnya, bukan dicegah; selama perintah atau job latar itu masih jalan, perubahannya ada.
+  2. Hook, salinan resmi, dan model berjalan sebagai user OS yang sama. Program yang sengaja dibuat untuk mematikan kode hook atau salinan resmi dalam satu langkah tidak bisa dihentikan. Pengaman ini untuk kecelakaan dan jalan pintas, bukan serangan yang disengaja.
+  3. Salinan resmi hilang bersama container, lalu dibuat ulang dari clone baru di hook pertama.
+- Self-test: 95/95 lulus (84 lama + 11 uji baru: file diubah, file baru, file dihapus, lexicon dipersempit, perubahan terdeteksi di tool call berikutnya dan di Stop, perubahan di bawah UNLOCK tetap, tulisan hook tidak dikembalikan, perintah yang menyebut salinan resmi diblokir).
