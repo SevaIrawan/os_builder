@@ -51,3 +51,21 @@ Perbaikan ketiganya butuh "UNLOCK G-01" dari Bambang.
 3. Izin draft kedaluwarsa setelah `windows_minutes.draft_order_age` (720 menit). "Buat draft dulu" berumur 1018 menit sekarang ditolak dengan pesan "ask the owner".
 
 Self-test: 59/59 lulus, termasuk lima uji baru untuk ketiga cacat.
+
+## Cacat keempat (ditemukan saat membuat draft koreksi v40, belum diperbaiki)
+
+4. **Nomor issue Jira terbaca sebagai angka.** "OSD-116" menghasilkan angka 116, yang lalu dituntut ada di kutipan. Salahnya ke arah aman. Untuk sumber Confluence, content_id sudah dikecualikan, tetapi kunci issue Jira belum. Usulan: token angka yang merupakan bagian kunci issue (`[A-Z]+-\d+`) diperlakukan sebagai identitas, bukan jumlah. Perbaikan butuh "UNLOCK G-01".
+   - Pada draft ini aku menggantinya dengan nomor komentar (c50345, c50237) yang dikutip langsung, jadi aturannya tidak dilonggarkan.
+
+## Draft koreksi dua cacat v40: PASS
+
+- Ledger: `docs/ledger/D-2026-09-23-02.json`
+- Draft: `docs/drafts/2026-09-23-v40-correction-draft.md`
+- Sumber, semua dibaca penuh:
+  - 建造单 v40, 8/8 bagian
+  - Spec v62, 8/8 bagian
+  - 04.10 v20
+  - 04.7 v49
+  - 04.8 v21
+  - OSD-116, 167 komentar, 25/25 bagian
+- Pencarian: tiga CQL dan dua halaman listing komentar; 172 hit, semuanya dibaca.
