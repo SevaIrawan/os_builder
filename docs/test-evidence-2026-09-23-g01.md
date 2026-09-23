@@ -105,3 +105,18 @@ Self-test: 59/59 lulus, termasuk lima uji baru untuk ketiga cacat.
   2. Hook, salinan resmi, dan model berjalan sebagai user OS yang sama. Program yang sengaja dibuat untuk mematikan kode hook atau salinan resmi dalam satu langkah tidak bisa dihentikan. Pengaman ini untuk kecelakaan dan jalan pintas, bukan serangan yang disengaja.
   3. Salinan resmi hilang bersama container, lalu dibuat ulang dari clone baru di hook pertama.
 - Self-test: 95/95 lulus (84 lama + 11 uji baru: file diubah, file baru, file dihapus, lexicon dipersempit, perubahan terdeteksi di tool call berikutnya dan di Stop, perubahan di bawah UNLOCK tetap, tulisan hook tidak dikembalikan, perintah yang menyebut salinan resmi diblokir).
+
+## Uji langsung pengaman program non-git (perintah Bambang: "Jalankan uji langsung pengaman itu sekarang")
+
+Dijalankan di repo asli, tanpa UNLOCK G-01 di pesan terakhir owner. Alat uji: program kecil di scratchpad (`probe.py`) yang menulis ke file gate. Nama file gate tidak muncul di perintah Bash (`python3 <scratchpad>/probe.py`).
+
+- Kondisi awal: hash gabungan `SKILL.md` nosm-sync-check + `lexicon.json` = `bb3628c9612450890a8e02ccdefdc366facb8fa41d348f9e069a73684b31284a`; `scripts/hooks/live_probe.py` tidak ada; `git status` bersih.
+- Uji 1, program jalan biasa: menambah satu baris ke `SKILL.md` dan membuat `scripts/hooks/live_probe.py`.
+  - PostToolUse `post_guard.py` langsung menolak: "SKILL.md (changed, put back)" dan "live_probe.py (new file removed)".
+  - Sesudahnya: hash kembali `bb3628c9…`, `live_probe.py` tidak ada, `git status` bersih.
+- Uji 2, program jalan di latar belakang: menunggu 5 detik, lalu menambah baris kosong ke `lexicon.json` saat tidak ada tool call yang berjalan.
+  - Stop hook menangkapnya saat giliran mau berakhir: "lexicon.json (changed, put back)", dan giliran tidak boleh selesai.
+  - Pengingat git sistem ("There are uncommitted changes") muncul bersamaan, karena mengecek repo sebelum lexicon selesai dikembalikan.
+  - Sesudahnya: hash kembali `bb3628c9…`, `git status` bersih.
+- Kesimpulan: kedua jalur (sesudah perintah, dan di akhir giliran) bekerja di sesi nyata. Uji 2 juga memperlihatkan batas (a) di `known_limits`: perubahan sempat ada dari saat job latar menulis sampai Stop hook mengembalikannya. Perubahan dibatalkan, bukan dicegah.
+- Temuan sampingan saat mencatat hasil ini: perintah `git commit -m "..."` yang pesannya memuat tanda kurung ditolak dengan alasan "could not be parsed", padahal tidak ada file gate yang berubah. Pemeriksaan git menolak perintah yang tidak bisa diurai sebelum mengecek apakah ada file gate yang berubah. Aman, tapi terlalu ketat. Memperbaikinya perlu UNLOCK G-01.
