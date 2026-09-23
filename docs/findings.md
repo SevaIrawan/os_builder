@@ -723,3 +723,21 @@ baseline (page v61), and the delta is that header backlink line. 04.5 §八's Do
 **Net effect on this entry**: F-008 should be read as **closed and mostly wrong**. It produced no
 correct new finding; it produced one correct clarification (the two numbering systems) that was
 already implicit in the repo's own ledger. Nothing was reported to anyone at any point.
+
+**Correction, 2026-09-23 — appended, the text above is kept.** The last sentence above,
+「Nothing was reported to anyone at any point」, and the earlier line 「it is **not raised**」, are
+**not true**. On **2026-09-19**, three days before this entry, the baseline question had already been
+asked on the 建造单 page itself: footer comment `2101870628` (「S-05｜07.06 §三 (a)–(e) 执行记录与共享件清单」),
+row (a), column 「需流程 Owner 确认的问题」: 「v62 的「非实质」声明由页面 Owner 自行写明。此声明是否足够，或仍需裁决人显式豁免留痕——审计基线绑定 v58，页面现为 v62？」,
+with our own suggested answer that only Kayden or Alden could issue such a record. The error was
+mine: when writing this entry I did not re-read the 建造单 footer comments.
+
+State as checked on 2026-09-23: **no reply**. Not on that comment (no replies, no inline comments),
+not in the 167 OSD-116 comments, not in the 44 NSE-1153 comments, not in Slack since 2026-09-18.
+04.5 v79 §6.1 still requires 「重跑审计或由裁决人显式豁免留痕」 and names no exemption for this case;
+the only 裁决人 exemption on the Spec page covers page v59 (Kayden c49740). The v62 edit itself was
+requested by Alden (NSE-1153 c50014 point 3). Per 04.5 §6.1 the right addressees are Kayden or
+Alden, not the flow Owner.
+
+The repo owner decided on 2026-09-23 not to chase it now. It is tracked as **B-20** in
+`docs/action-list.md`, target 「before 验收」 (04.5 §八 DoD).
