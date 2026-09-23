@@ -1,0 +1,18 @@
+{
+  "write_id": "SELFTEST-FAIL (sengaja mengulang kelima pola R1-R5)",
+  "user_order": "",
+  "target": { "system": "confluence", "content_id": "2096463922", "method": "edits",
+              "target_snapshot": "v:40", "snapshot_read_at": "2026-09-20T07:00:00Z" },
+  "reverse_test": "",
+  "sources": [
+    { "source_id": "04.10", "ref": "1738735636", "version": "v20",
+      "live_version": "v20", "read_scope": "summary", "read_at": "2026-09-23T01:00:00Z" }
+  ],
+  "claims": [
+    { "id": "K1", "text": "改选项即时生效，消费方不得在件内另写映射表。", "source_id": "self", "quote": "" },
+    { "id": "K2", "text": "SLA C-1 sampai C-20 berjumlah 17 条.", "source_id": "04.10", "quote": "ada" },
+    { "id": "K3", "text": "Bukti 切分审计 tidak ada di mana pun.", "source_id": "04.10", "quote": "ada" },
+    { "id": "K4", "text": "PIP 参数组 sudah dibangun seluruhnya.", "source_id": "04.10", "quote": "ada",
+      "near_names": ["PIP Extension 参数"], "disambiguation": "" }
+  ]
+}

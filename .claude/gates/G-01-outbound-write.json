@@ -1,0 +1,96 @@
+{
+  "gate_id": "G-01",
+  "name": "Outbound Write Gate",
+  "version": "1.0",
+  "created": "2026-09-23",
+  "created_because": "Pola kegagalan berulang pada sesi 2026-09-20..23: klaim ditulis tanpa sumber, versi dicatat tapi isinya tidak dibuka, angka disimpulkan bukan dihitung, nama mirip dianggap sama, ketiadaan dilaporkan sebagai kesimpulan.",
+  "binds_to": [
+    "setiap tulisan keluar ke Confluence (updateConfluenceContent / createConfluenceContent / comment)",
+    "setiap comment atau edit di Jira",
+    "setiap pesan Slack"
+  ],
+  "does_not_bind": ["file di dalam repo ini", "jawaban di chat"],
+  "verdict_rule": "PASS hanya jika SEMUA check berstatus PASS. Satu FAIL = dilarang menulis. Tidak ada override oleh model; hanya Bambang yang boleh membatalkan gate, dan pembatalan itu harus tertulis di ledger sebagai user_override.",
+
+  "root_causes_closed": {
+    "R1": "Versi bergerak dicatat nomornya, isinya tidak dibuka. (Cacat v40 #2: 04.10 naik ke v20, kucatat nomornya, tak kubuka; isinya sudah memuat bukti 7 project.)",
+    "R2": "Klaim ditulis tanpa sumber yang bisa dikutip. ('改选项即时生效', '不得另写映射表', '重复批准不会被 Jira 拦')",
+    "R3": "Angka disimpulkan dari rentang penomoran, bukan dihitung. ('SLA 17 条' padahal 16 baris)",
+    "R4": "Dua nama mirip dianggap satu. ('PIP 参数组' vs 'PIP Extension 参数' -> cacat v40 #1)",
+    "R5": "Ketiadaan dilaporkan sebagai kesimpulan tanpa menyebut tempat yang sudah dicari. ('切分审计 nol kemunculan' lalu berhenti)",
+    "R6": "Sumber terkait tidak didaftar dulu sebelum menulis, sehingga c50237 baru terbaca setelah klaim salah terlanjur keluar."
+  },
+
+  "checks": [
+    {
+      "id": "C1",
+      "name": "LEDGER_ADA",
+      "closes": ["R6"],
+      "rule": "Ada file ledger JSON untuk tulisan ini, berisi satu baris per klaim.",
+      "fail_means": "Tidak boleh menulis apa pun sebelum klaimnya didaftar satu per satu."
+    },
+    {
+      "id": "C2",
+      "name": "SETIAP_KLAIM_BERSUMBER",
+      "closes": ["R2"],
+      "rule": "Setiap klaim punya source_id + version + quote verbatim dari sumber itu. Klaim tanpa sumber HARUS bertanda placeholder (isi teksnya memuat U+1F532) dan tidak boleh berbentuk pernyataan faktual.",
+      "fail_means": "Klaim karangan sendiri. Buang atau ubah jadi placeholder."
+    },
+    {
+      "id": "C3",
+      "name": "SUMBER_DIBACA_LIVE",
+      "closes": ["R1"],
+      "rule": "Setiap source_id unik punya live_version hasil pembacaan pada sesi penulisan ini, dan live_version HARUS sama dengan version yang dipakai klaim. read_scope wajib 'full' untuk sumber yang jadi dasar klaim faktual; 'summary' hanya sah untuk klaim tentang nomor versi itu sendiri.",
+      "fail_means": "Kutipan berdiri di atas versi yang belum dibuka isinya."
+    },
+    {
+      "id": "C4",
+      "name": "ANGKA_DIHITUNG_MESIN",
+      "closes": ["R3"],
+      "rule": "Setiap klaim yang memuat angka jumlah wajib punya count_cmd (perintah yang dijalankan) dan count_output (hasilnya).",
+      "fail_means": "Angka hasil terkaan."
+    },
+    {
+      "id": "C5",
+      "name": "KETIADAAN_PUNYA_HIMPUNAN_CARI",
+      "closes": ["R5"],
+      "rule": "Klaim yang menyatakan sesuatu tidak ada / belum ada / nol wajib punya searched[] berisi minimal 2 tempat yang benar-benar dibuka, plus control_probe: satu pencarian pembanding yang TERBUKTI mengembalikan hasil (disiplin 07.06.1 E16).",
+      "fail_means": "Nol bisa berarti 'tidak ada' atau 'tidak terlihat'. Tanpa probe pembanding, keduanya tak terbedakan."
+    },
+    {
+      "id": "C6",
+      "name": "NAMA_MIRIP_DIBEDAKAN",
+      "closes": ["R4"],
+      "rule": "Klaim yang menyebut entitas ber-nama-mirip wajib mengisi disambiguation: kutipan sumber yang memisahkan kedua nama itu.",
+      "fail_means": "Dua objek berbeda ditulis sebagai satu."
+    },
+    {
+      "id": "C7",
+      "name": "SNAPSHOT_TARGET_SEGAR",
+      "closes": ["R1"],
+      "rule": "Halaman target diambil ulang snapshot-nya pada sesi penulisan ini (07 v28 §二 '先查后写'), dan target_snapshot cocok dengan yang akan dikirim.",
+      "fail_means": "Menimpa versi yang sudah bergerak."
+    },
+    {
+      "id": "C8",
+      "name": "TIDAK_ADA_ATURAN_KARANGAN",
+      "closes": ["R2"],
+      "rule": "Tidak ada klaim dengan source_id bernilai 'self', 'inference', 'asumsi', 'umum', atau kosong.",
+      "fail_means": "Aturan karangan model masuk ke dokumen perusahaan."
+    },
+    {
+      "id": "C9",
+      "name": "UJI_BALIK_DIRENCANAKAN",
+      "closes": [],
+      "rule": "Untuk tulisan Confluence berbasis edits, reverse_test wajib terisi: cara membuktikan badan hasil dikurangi sisipan sama persis dengan badan sebelumnya.",
+      "fail_means": "Tidak ada cara membuktikan tidak ada yang terhapus."
+    },
+    {
+      "id": "C10",
+      "name": "PERINTAH_BAMBANG",
+      "closes": [],
+      "rule": "user_order terisi dengan kalimat perintah Bambang yang membolehkan tulisan ini.",
+      "fail_means": "Menulis tanpa perintah."
+    }
+  ]
+}
