@@ -31,6 +31,27 @@
 > balasan thread dan timestamp balasan terakhirnya sama dengan pembacaan sebelumnya; aktivitas terbaru
 > tetap **2026-09-21 13:59:29 +07** di thread `1789704362.435989`.
 
+> **Sapuan 2026-09-23 (skill dijalankan penuh, langkah 1–7)**
+> Konektor: Atlassian → site `nexmax` (cloudId abf9cc08-…) hidup; n8n → 145 workflow terdaftar, hidup.
+> CQL seluruh space sejak 2026-09-21 23:00Z mengembalikan **39 halaman**. Yang ada di ledger ini hanya **tiga**:
+> **04.10 → v20** (2026-09-22 07:22:35Z, sudah tercatat, isinya sudah dibaca penuh),
+> **建造单 → v40** (2026-09-22 07:46:03Z, tulisan kita sendiri, sudah tercatat),
+> **04.7 → v49** (2026-09-22 02:36:12Z — perubahan itu **adalah** v49, jadi angka di ledger sudah mencakupnya; tidak ada gerakan baru).
+> 36 sisanya milik alur lain: kluster PF-03／E02 (Carlson), xLoop 校验包, Grade／员工离职 建造单,
+> 04.9.3／04.9.4 (分册 alur lain), 招聘执行 Spec, 新人90天 Spec, F4／BLM.
+> **Dua belas halaman yang jadi sandaran draf Bagian 7 diverifikasi satu per satu** lewat pembacaan versi
+> langsung, bukan disimpulkan dari daftar CQL: 07.06 **v30** · 04 **v25** · 07.06.1 **v34** · 04.4 **v33** ·
+> 04.5 **v79** · 04.5.2 **v11** · 04.7 **v49** · 04.9 **v106** · 04.10 **v20** · Spec S-05 **v62** ·
+> 建造单 **v40** · Policy Engine 调用契约 (1617985562) **v2**. Semua sama dengan yang dikutip di draf —
+> **tidak ada kutipan yang berdiri di atas versi basi**.
+> Dua salinan terkendali dibandingkan dengan skrip: **identik, tidak ada 部署漂移** — CLAUDE.md 19 bulir
+> + preamble + 开发入口的冻结要求; anchor §一 4 baris/4 kolom, §五 6 baris/4 kolom, §六 15 baris/4 kolom
+> (jumlah baris di sini tidak menghitung baris header, berbeda dengan catatan sapuan 2026-09-22).
+>
+> Sumber non-Confluence pada sapuan ini:
+> **OSD-116** — **167 comment**, terbaru **c50345** (Kent, 2026-09-22 14:24 +07). Tidak ada comment baru
+> sejak kemarin; **Alden masih belum membalas c50279**.
+>
 | Halaman | pageId | Versi tercatat | Owner |
 | --- | --- | --- | --- |
 | 07｜指南 | 1704362028 | v28 | Kayden |
