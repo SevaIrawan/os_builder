@@ -1,107 +1,98 @@
 ---
 name: outbound-write-gate
-description: Gate wajib sebelum apa pun keluar ke Confluence, Jira, atau Slack. Dua pertanyaan yang dijawab skrip, bukan model - apakah aku diizinkan, dan apakah yang kutulis benar. Dibangun dari pelanggaran nyata, bukan teori.
+description: Steps 1-6 of the G-01 pipeline. Use before writing ANY draft file in docs/ or ANY Confluence / Jira / Slack content. Explains how to build the claims ledger the gate checks against the session transcript. Hooks enforce it - an outbound write without a passing ledger is blocked, and a turn cannot end with a failing draft.
 ---
 
-# G-01 — Outbound Write Gate
+# G-01 Evidence Gate (pipeline steps 1-6)
 
-**Mengikat**: setiap tulisan keluar — halaman Confluence, comment Jira, pesan Slack.
-**Tidak mengikat**: file di repo ini, dan jawaban di chat.
+**Rules and check definitions: `.claude/gates/G-01-outbound-write.json` (only there).
+Word lists: `.claude/gates/lexicon.json`.** This file explains how to satisfy them.
+
+Two questions, answered by scripts and not by me:
+1. **Am I allowed?** The owner's real messages are read from the transcript and classified
+   by fixed word lists (B1–B4).
+2. **Is every sentence true to a source I read in full, live?** Sources, versions, read
+   times, completeness, quotes and counts are taken from the real tool results in the
+   transcript (C1–C5, D1–D7, E1).
+
+Nothing I type into a ledger is evidence by itself. A ledger only points at tool calls
+(`tool_use_id`s). The script then looks at what those calls really returned.
+
+## Enforcement
+
+| Hook | What it blocks |
+|---|---|
+| `PreToolUse` (`scripts/hooks/pre_tool.py`) | Any Confluence / Jira / Slack write whose exact input is not the `payload_file` of a ledger that passes **now**. Any write through `mcp__Atlassian_Rovo__` (Backend Operations account). n8n writes without a standing WRITE order. Edits to gate files without `UNLOCK G-01` from the owner. |
+| `PostToolUse` (`post_tool.py`) | Marks the order as used (one order = one write) and records what was sent. |
+| `Stop` (`stop.py`) | Ending the turn while a changed draft fails G-01, or while a write has not been read back with every sent sentence present. |
+| `UserPromptSubmit` (`prompt.py`) | Nothing is blocked. It prints what the owner's message authorises and whether step 0 is still missing. |
+
+## Step 1: Order
+
+Do nothing yourself. `python3 scripts/order_check.py --session` shows how each owner
+message is classified. Only **WRITE** authorises an outbound write. **DRAFT** or WRITE
+authorises a draft. **READONLY / AMBIGUOUS / STOP** means **ask**, and never guess.
+Questions, "kalau…", "aku tulis…" and "kirim kesini" are READONLY on purpose.
+A write order dies when the owner sends anything other than a plain "ya / ok / lanjut",
+and after one write.
+
+## Step 2: Find every related source
+
+- For each topic term (the objects the text talks about), run a Confluence search with
+  `space = NOSM`. If a Jira issue is involved, also run `listJiraIssueComments` on it.
+  Fetch every page of every result (C2).
+- Put the call ids in `discovery.calls` and the terms in `discovery.topic_terms` (C1).
+- Every page, issue or comment the searches return is either a source or goes in
+  `discovery.excluded` with a real reason (C3). "Not relevant" alone is too short.
+
+## Step 3: Read every source to the end, live
+
+| Source | Accepted read |
+|---|---|
+| Confluence page | `mcp__Atlassian_MCP__getConfluenceContent`, `detail=full` |
+| Jira comments | `executeRead` `listJiraIssueComments` from `startAt` 0 to `isLast: true`; no `responseFields` that drop `comments.body` |
+| Jira issue | `getJiraIssue` |
+| Slack thread / n8n workflow | `slack_read_thread` / `get_workflow_details` |
+
+- If a result was saved to a file, run `python3 scripts/read_source.py <tool_use_id> --info`
+  and then every `--part k`. A slice read any other way counts as not read (C5).
+- The read must be at most 60 min old for outbound and 12 h old for drafts. No later call
+  in the transcript may show the page at another version (C4). If the page moved, read it again.
+- Repo notes, earlier drafts, summaries and memory are **not** sources.
+
+## Step 4: Ledger `docs/ledger/<write_id>.json`
+
+Schema: `ledger_schema` in the gate file. Per claim:
+- `text` is exactly the sentence(s) as they appear in the payload or draft. Every sentence
+  needs a claim, clean boilerplate, or (for Confluence edits) must be text already on the page (D1).
+- `quote` is copied from the source as read. The script finds it or refuses (D2).
+- Any number goes in the quote. A quantity ("16 条", "tujuh project", "四处") must be stated
+  as a quantity in the quote, or recounted by `counts: [{value, source_id, regex, section}]` (D3).
+- Absence wording ("belum", "tidak ada", "未", "none") that the quote itself does not
+  contain needs `absence: {pattern, searched: [2+ calls], control: {call, pattern}}` (D4).
+- Near names (e.g. `PIP 参数` / `PIP Extension 参数`) and page codes (`04.10`) are used
+  exactly as the quote or the source title has them (D5).
+- If you cannot source a sentence, write it with 🔲 and say it is unverified, or leave it out.
+- Never put a person's name next to fault wording (D7, `docs/working-rules.md`).
+
+Outbound: also save the exact tool input as `payload_file` and set `tool` and `target`.
+Draft: `kind: draft`, `target: {system: draft, path}`; the draft file is the payload.
+
+## Step 5: Gate
 
 ```
 python3 scripts/gate_check.py docs/ledger/<write_id>.json
 ```
+Exit 0 = PASS. The pre-tool hook runs it again at the moment of the call, against the
+exact input. Fix the cause, never the gate.
 
-**Exit 0 → boleh menulis. Exit 1 → dilarang.** Model tidak berhak menilai sendiri bahwa
-"sebenarnya sudah cukup". Satu-satunya jalan lewat adalah memperbaiki penyebab sampai skrip
-keluar 0.
+## Step 6: After writing
 
----
+Read the target again: full page read for Confluence, comment listing for Jira. The Stop
+hook blocks until every sent sentence is found in that read-back.
 
-## Gate ini menjawab DUA pertanyaan, dan yang pertama lebih penting
+## What this still does not cover
 
-### Pertanyaan 1 — **Apakah aku diizinkan?** (C10, C12, C13, C14)
-
-Versi pertama gate ini punya lubang yang membatalkan seluruh gunanya: kolom `user_order`
-**kuisi sendiri**. Gate yang menanyai dirinya sendiri tidak menahan apa pun.
-
-Sekarang izin **diverifikasi, bukan dideklarasikan**:
-
-| Check | Yang dipastikan |
-|---|---|
-| **C10** | `user_order` sama persis dengan satu baris di `docs/orders/orders.jsonl`. Tidak boleh diketik bebas. |
-| **C12** | Baris itu berklasifikasi **WRITE** menurut `scripts/order_check.py`. READONLY atau AMBIGU = dilarang, wajib tanya dulu. |
-| **C13** | `consumed_by` masih null. **Satu perintah = satu tulisan.** |
-| **C14** | `target` perintah sama dengan sasaran tulisan ini. |
-
-Alur perintah:
-
-```
-python3 scripts/order_log.py --add --verbatim "<kalimat Bambang apa adanya>" --target "confluence:<id>"
-python3 scripts/order_log.py --list
-python3 scripts/order_log.py --consume <order_id> --by <write_id>     # sesudah menulis
-```
-
-Klasifikasi dikerjakan daftar kata kerja tetap di `scripts/order_check.py`, bukan oleh
-penilaianku. `tulis / kirim / post / publish / balas / 提交` mengizinkan.
-`check / cek / periksa / audit / baca / analisa / buat draft / 核对` **tidak pernah** mengizinkan.
-
-**Kenapa ini ada — kejadian nyata, 2026-09-22.** Perintah Bambang:
-「Kau audit detail menyeluruh sampai habis dan tidak ada kesimpulan sesat disana」.
-Itu perintah **memeriksa**. Aku memeriksa, menemukan lima hal, lalu **menulis sendiri ke halaman
-produksi** — lahir **v39**, tanpa disuruh. Diuji ulang pada gate ini: **FAIL di C12**, exit 1.
-
-**Salah ke arah aman itu disengaja.** 「Butir 11 alihkan sekarang」 diklasifikasi READONLY
-padahal itu perintah tulis yang sah — `alihkan` tidak ada di daftar. Akibatnya aku bertanya
-dulu. Biaya salah-arah-aman: satu pertanyaan. Biaya salah-arah-sebaliknya: v39.
-**Jangan pernah melonggarkan daftar WRITE untuk mengurangi pertanyaan.**
-
-### Pertanyaan 2 — **Apakah yang kutulis benar?** (C1–C9, C11)
-
-| Kode | Pola | Kejadian nyata | Check |
-|---|---|---|---|
-| **R1** | Versi dicatat **nomornya**, isinya tak dibuka | 04.10 naik v20; nomornya kucatat, halamannya tak kubuka — isinya sudah memuat bukti layar ketujuh project, lalu kutulis ke v40 bahwa buktinya "harus dikeluarkan Schema Owner". Bukti itu sudah ada **24 menit** sebelumnya. | **C3** + **C11** |
-| **R2** | Klaim tanpa sumber | 「改选项即时生效」·「不得另写映射表」·「重复批准不会被 Jira 拦」 — tiga-tiganya karanganku | **C2**, **C8** |
-| **R3** | Angka **disimpulkan** dari rentang nomor | 「SLA 17 条」, sebenarnya **16** | **C4** |
-| **R4** | Nama mirip = satu objek | 「PIP 参数组」 vs 「PIP Extension 参数」 → masuk v40 | **C6** |
-| **R5** | Ketiadaan sebagai kesimpulan | 「切分审计 nol kemunculan」 lalu berhenti | **C5** |
-
-Sisanya: **C1** ledger ada · **C7** snapshot sasaran diambil hari ini (07 v28 §二 先查后写) ·
-**C9** uji balik direncanakan.
-
-Skrip **mendeteksi sendiri** klaim numerik dan klaim-ketiadaan lewat regex pada teks klaim.
-Klaim tidak bisa lolos hanya dengan tidak kuberi tanda — itu disengaja.
-
-Klaim yang tidak punya sumber **tidak boleh** jadi pernyataan faktual: tulis `🔲` di teksnya.
-Sejalan dengan 07｜指南 §二「标准页读法」— 🔲 adalah celah, **bukan** untuk diisi sendiri.
-
----
-
-## Urutan lengkap, tiap panah ada penjaganya
-
-```
-perintah Bambang masuk   -> order_log.py --add        (diklasifikasi mesin)
-  READONLY / AMBIGU?     -> BERHENTI, tanya dulu. Jangan lanjut.
-nosm-sync-check          -> sync_check.py             (exit 1 = 部署漂移, berhenti)
-  + emit sapuan          -> docs/ledger/_sweep-latest.json
-baca penuh yang bergerak -> read_after_move di sapuan itu
-bangun claims ledger     -> docs/ledger/<write_id>.json
-G-01                     -> gate_check.py             (exit 1 = dilarang menulis)
-tulis
-sesudahnya               -> order_log.py --consume    (perintah habis, tak bisa dipakai lagi)
-```
-
----
-
-## Lubang yang MASIH ADA — harus dikatakan, bukan disembunyikan
-
-**Tidak ada yang memaksaku menjalankan gate ini.** Semua di atas menahan *kalau* skripnya
-dijalankan. Aku masih bisa memanggil tool tulis tanpa menjalankannya sama sekali.
-
-Penutup satu-satunya adalah **hook `PreToolUse` di `.claude/settings.json`** yang memblokir
-tool tulis Confluence/Jira/Slack kecuali gate baru saja keluar 0.
-
-**Itu belum dipasang**, karena Bambang punya aturan berdiri: *"Jangan ubah setingan apapun."*
-Hook itu mengubah `settings.json`. Jadi keputusannya ada padanya, bukan padaku — dan sampai
-dia bilang pasang, gate ini bergantung pada kepatuhanku menjalankannya. Aku tidak boleh
-menggambarkannya lebih kuat dari itu.
+The `known_limits` list in the gate file: chat answers, a quote read wrongly, and word-list
+misclassification. If the hooks are not loaded, the gate only runs when I run it by hand.
+Say so when it matters. Do not describe the gate as stronger than it is.

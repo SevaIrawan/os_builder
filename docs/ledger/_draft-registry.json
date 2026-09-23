@@ -1,0 +1,10 @@
+{
+ "docs/bagian7-draft-2026-09-22.md": {
+  "sha": "39700a94c6dd",
+  "status": "legacy: written before G-01 v3, never gated; any change must pass the gate"
+ },
+ "docs/drafts/2026-09-20-osd-116-felix-spec-questions.md": {
+  "sha": "7ecb36593e13",
+  "status": "legacy: written before G-01 v3, never gated; any change must pass the gate"
+ }
+}

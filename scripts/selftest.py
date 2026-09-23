@@ -1,0 +1,327 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""Self-test for G-01. Runs in a throw-away copy of the repo with a synthetic transcript,
+so the real consumed.jsonl / draft registry are never touched.
+
+Every failure pattern from the 2026-09-20..23 sessions is replayed and must be refused;
+one clean ledger must pass. Usage: python3 scripts/selftest.py   (exit 0 = all expectations met)
+"""
+import datetime, json, os, shutil, subprocess, sys, tempfile
+HERE = os.path.dirname(os.path.abspath(__file__))
+REPO = os.path.dirname(HERE)
+sys.path.insert(0, HERE)
+import nosm_lib as N
+
+FAILS = []
+
+
+def expect(name, cond, detail=''):
+    print('%-4s %s%s' % ('ok' if cond else 'FAIL', name, ('   <- ' + detail) if (detail and not cond) else ''))
+    if not cond:
+        FAILS.append(name)
+
+
+# ------------------------------------------------------------------ 1. order classification
+CASES = [
+    ('Kau audit detail menyeluruh sampai habis dan tidak ada kesimpulan sesat disana', 'READONLY'),  # the v39 order
+    ('Tulis', 'WRITE'),
+    ('Kerjakan, tulis v34 sekarang', 'WRITE'),
+    ('Tunggu akses akun ku pulih, jangan pakai akun Backend Operations', 'STOP'),
+    ('Buat draft dulu', 'DRAFT'),
+    ('Ya', 'CONFIRM'),
+    ('Aku tidak bahas draft apapun', 'READONLY'),
+    ('Trus intinya apa? Comment ku di date 19 itu sudah benar atau sesat', 'READONLY'),
+    ('Kalau aku kirim ke ODS maka bagaimana comment yang sudah dikirim', 'READONLY'),
+    ('Kau kirim kesini dulu draft final nya', 'READONLY'),
+    ('Kirim draft Felix ke OSD-116', 'AMBIGUOUS'),
+    ('jangan tulis dulu', 'STOP'),
+    ('Check reply comment', 'READONLY'),
+    ('Butir 11 alihkan sekarang, terus check semua kutipan sumber', 'READONLY'),
+]
+for text, want in CASES:
+    got = N.classify(text)[0]
+    expect('order  %-9s %s' % (want, text[:55]), got == want, 'got %s' % got)
+
+# ------------------------------------------------------------------ 2. the nine risky sentences
+L = N.lexicon()
+RISKY = [
+    ('本行四处已过期', 'num'), ('SLA C 表 enam belas baris', 'num'), ('04.10 mendaftar 13 field S-05', 'num'),
+    ('SLA C-1～C-20（17 条）', 'num'), ('PIP 参数组 belum dibangun', 'abs'), ('Alden belum membalas c50279', 'abs'),
+    ('切分审计 tidak ditemukan di 建造单', 'abs'), ('该字段尚未建成', 'abs'),
+    ('Kepemilikan PIP 参数 menggantung, tidak masuk batch mana pun', 'abs'),
+]
+for text, kind in RISKY:
+    hit = bool(N.numeric_tokens(text, L)) if kind == 'num' else bool(N.absence_hits(text, L))
+    expect('detect %-3s %s' % (kind, text), hit)
+
+# ------------------------------------------------------------------ 3. synthetic session
+real = N.Transcript(N.find_transcript())
+sync_reads = {}
+for c in real.ordered():
+    if N.call_content_id(c) in ('1730347066', '1676804100') and N.is_full_page_read(c, L) and not c.persisted:
+        sync_reads[N.call_content_id(c)] = c.full_text()
+if len(sync_reads) < 2:
+    print('cannot build synthetic session: no inline full reads of 07.06 / 04 in the real transcript')
+    sys.exit(1)
+
+tmp = tempfile.mkdtemp(prefix='g01-')
+for item in ('scripts', '.claude', 'CLAUDE.md', 'docs/04-anchor-navigation.md', 'docs/working-rules.md'):
+    src, dst = os.path.join(REPO, item), os.path.join(tmp, item)
+    os.makedirs(os.path.dirname(dst), exist_ok=True)
+    (shutil.copytree if os.path.isdir(src) else shutil.copy)(src, dst)
+for d in ('docs/ledger', 'docs/orders', 'docs/drafts'):
+    os.makedirs(os.path.join(tmp, d), exist_ok=True)
+
+NOW = datetime.datetime.now(datetime.timezone.utc)
+
+
+class T:
+    """Builds a transcript file line by line."""
+    def __init__(self):
+        self.lines, self.n, self.t = [], 0, NOW - datetime.timedelta(minutes=50)
+
+    def tick(self):
+        self.t += datetime.timedelta(seconds=20)
+        return self.t.isoformat().replace('+00:00', 'Z')
+
+    def owner(self, text):
+        self.lines.append({'type': 'user', 'origin': {'kind': 'human'}, 'uuid': 'u%d' % len(self.lines),
+                           'promptId': 'p%d' % len(self.lines), 'timestamp': self.tick(), 'message': {'content': text}})
+
+    def call(self, name, inp, result, error=False):
+        self.n += 1
+        tid = 'toolu_T%03d' % self.n
+        self.lines.append({'type': 'assistant', 'timestamp': self.tick(),
+                           'message': {'content': [{'type': 'tool_use', 'id': tid, 'name': name, 'input': inp}]}})
+        txt = result if isinstance(result, str) else json.dumps(result, ensure_ascii=False)
+        self.lines.append({'type': 'user', 'timestamp': self.tick(),
+                           'message': {'content': [{'type': 'tool_result', 'tool_use_id': tid, 'is_error': error,
+                                                    'content': [{'type': 'text', 'text': txt}]}]}})
+        return tid
+
+    def save(self, path):
+        with open(path, 'w', encoding='utf-8') as f:
+            for d in self.lines:
+                f.write(json.dumps(d, ensure_ascii=False) + '\n')
+        return path
+
+
+def page(pid, v, title, body):
+    return {'data': {'id': pid, 'type': 'page', 'title': title, 'snapshotToken': 'v:%d' % v, 'detail': 'full',
+                     'body': {'format': 'markdown', 'value': body}, 'metadata': {'version': {'number': v}}}}
+
+
+SPEC_BODY = ('# 三、字段\n\n| 字段 | 归属 |\n| --- | --- |\n' + ''.join('| F%d | 主单 |\n' % i for i in range(1, 17)) +
+             '\n# 四、参数\n\nPIP Extension 参数 共 6 个字段，已建成。\n\nPIP 参数 共 8 个字段，归主单侧。\n')
+TARGET_BODY = '# 区三\n\n已登记字段如下。\n'
+
+
+def base_session(order='Tulis ke halaman 建造单 sekarang'):
+    t = T()
+    t.owner('Kau jalankan nosm dulu')
+    t.call('mcp__Atlassian_MCP__getConfluenceContent', {'content_id': '1730347066', 'detail': 'full', 'content_format': 'markdown'}, sync_reads['1730347066'])
+    t.call('mcp__Atlassian_MCP__getConfluenceContent', {'content_id': '1676804100', 'detail': 'full', 'content_format': 'markdown'}, sync_reads['1676804100'])
+    t.call('mcp__n8n__search_workflows', {}, {'data': [{'id': 'w1'}]})
+    t.call('mcp__Atlassian_MCP__searchConfluence', {'cql': 'space = NOSM AND type = page AND lastmodified >= "2026-09-22"'}, {'data': {'results': []}})
+    t.owner(order)
+    ids = {}
+    ids['disc'] = t.call('mcp__Atlassian_MCP__searchConfluence', {'cql': 'space = NOSM AND text ~ "PIP"'},
+                         {'data': {'results': [{'content': {'id': '5550001', 'type': 'page', 'title': '99.1｜Spec'}},
+                                               {'content': {'id': '5550009', 'type': 'page', 'title': 'other flow'}}]}})
+    ids['spec'] = t.call('mcp__Atlassian_MCP__getConfluenceContent', {'content_id': '5550001', 'detail': 'full', 'content_format': 'markdown'},
+                         page('5550001', 12, '99.1｜Spec', SPEC_BODY))
+    ids['target'] = t.call('mcp__Atlassian_MCP__getConfluenceContent', {'content_id': '7770001', 'detail': 'full', 'content_format': 'markdown'},
+                           page('7770001', 40, '建造单', TARGET_BODY))
+    ids['s1'] = t.call('mcp__Atlassian_MCP__searchConfluence', {'cql': 'space = NOSM AND text ~ "切分审计"'}, {'data': {'results': []}})
+    ids['s2'] = t.call('mcp__Atlassian_MCP__searchConfluence', {'cql': 'space = NOSM AND title ~ "切分审计"'}, {'data': {'results': []}})
+    ids['ctl'] = t.call('mcp__Atlassian_MCP__searchConfluence', {'cql': 'space = NOSM AND text ~ "PIP Extension"'},
+                        {'data': {'results': [{'content': {'id': '5550001', 'type': 'page', 'title': 'PIP Extension 参数'}}]}})
+    return t, ids
+
+
+def ledger(ids, claims, payload_text, extra=None, tool='mcp__Atlassian_MCP__updateConfluenceContent'):
+    payload = {'cloudId': 'x', 'contentId': '7770001', 'snapshotToken': 'v:40',
+               'edits': [{'name': 'insertNodeAfter', 'localId': 'abc', 'value': '<p>%s</p>' % payload_text}]}
+    lg = {'write_id': 'W-TEST', 'kind': 'outbound', 'tool': tool,
+          'target': {'system': 'confluence', 'content_id': '7770001'},
+          'payload_file': 'docs/ledger/W-TEST.payload.json',
+          'discovery': {'topic_terms': ['PIP'], 'calls': [ids['disc']], 'excluded': {'confluence:5550009': 'belongs to another flow, not S-05'}},
+          'sources': [{'source_id': 'S1', 'system': 'confluence', 'content_id': '5550001', 'read_call': ids['spec']}],
+          'claims': claims, 'boilerplate': []}
+    if extra:
+        extra(lg)
+    return lg, payload
+
+
+def run_gate(tr_lines, lg, payload, tool_input=None):
+    tp = tr_lines.save(os.path.join(tmp, 'transcript.jsonl'))
+    with open(os.path.join(tmp, lg['payload_file']), 'w', encoding='utf-8') as f:
+        json.dump(payload, f, ensure_ascii=False)
+    lp = os.path.join(tmp, 'docs', 'ledger', 'W-TEST.json')
+    with open(lp, 'w', encoding='utf-8') as f:
+        json.dump(lg, f, ensure_ascii=False)
+    r = subprocess.run([sys.executable, 'scripts/gate_check.py', lp, '--transcript', tp, '--json'], cwd=tmp, capture_output=True, text=True)
+    try:
+        out = json.loads(r.stdout)
+    except ValueError:
+        print(r.stdout, r.stderr); raise
+    return out['ok'], {row[0]: row[1] for row in out['rows']}, out
+
+
+GOOD = [{'id': 'K1', 'text': 'PIP Extension 参数共 6 个字段，已建成', 'source_id': 'S1', 'quote': 'PIP Extension 参数 共 6 个字段，已建成'}]
+GOOD_TEXT = 'PIP Extension 参数共 6 个字段，已建成。'
+
+t, ids = base_session()
+ok, rows, out = run_gate(t, *ledger(ids, GOOD, GOOD_TEXT))
+expect('clean ledger passes', ok, str([r for r in out['rows'] if not r[1]]))
+
+# v39: only a check order was given
+t, ids = base_session(order='Kau audit detail menyeluruh sampai habis dan tidak ada kesimpulan sesat disana')
+ok, rows, _ = run_gate(t, *ledger(ids, GOOD, GOOD_TEXT))
+expect('v39 replay: audit order refused (B1)', not ok and rows.get('B1') is False)
+
+# order withdrawn by a later message
+t, ids = base_session(); t.owner('Tunggu, jangan kirim dulu')
+ok, rows, _ = run_gate(t, *ledger(ids, GOOD, GOOD_TEXT))
+expect('order stopped by later message (B1)', not ok and rows.get('B1') is False)
+
+# R4 near names: says PIP 参数 is built, quoting PIP Extension 参数
+bad = [{'id': 'K1', 'text': 'PIP 参数 已建成', 'source_id': 'S1', 'quote': 'PIP Extension 参数 共 6 个字段，已建成'}]
+ok, rows, _ = run_gate(*(lambda tt: (tt[0],) + ledger(tt[1], bad, 'PIP 参数 已建成'))(base_session()))
+expect('v40 defect 1 replay: PIP 参数 vs PIP Extension 参数 (D5)', not ok and rows.get('D5') is False)
+
+# R3 inferred number: 17 rows, table has 16
+bad = [{'id': 'K1', 'text': '字段表共 17 条', 'source_id': 'S1', 'quote': '| F1 | 主单 |',
+        'counts': [{'value': 17, 'source_id': 'S1', 'regex': r'^\| F\d+ ', 'section': '# 三、字段'}]}]
+ok, rows, _ = run_gate(*(lambda tt: (tt[0],) + ledger(tt[1], bad, '字段表共 17 条'))(base_session()))
+expect('SLA 17 replay: recount says 16 (D3)', not ok and rows.get('D3') is False)
+good16 = [{'id': 'K1', 'text': '字段表共 16 条', 'source_id': 'S1', 'quote': '| F1 | 主单 |',
+           'counts': [{'value': 16, 'source_id': 'S1', 'regex': r'^\| F\d+ ', 'section': '# 三、字段'}]}]
+ok, rows, _ = run_gate(*(lambda tt: (tt[0],) + ledger(tt[1], good16, '字段表共 16 条'))(base_session()))
+expect('recounted 16 passes D3', rows.get('D3') is True)
+
+# Chinese numeral / word number not in quote
+bad = [{'id': 'K1', 'text': '本行四处已过期', 'source_id': 'S1', 'quote': 'PIP Extension 参数 共 6 个字段'}]
+ok, rows, _ = run_gate(*(lambda tt: (tt[0],) + ledger(tt[1], bad, '本行四处已过期'))(base_session()))
+expect('"四处" without a count is refused (D3)', not ok and rows.get('D3') is False)
+
+# R5 absence with no search evidence
+bad = [{'id': 'K1', 'text': '切分审计 tidak ditemukan', 'source_id': 'S1', 'quote': 'PIP Extension 参数 共 6 个字段'}]
+ok, rows, _ = run_gate(*(lambda tt: (tt[0],) + ledger(tt[1], bad, '切分审计 tidak ditemukan'))(base_session()))
+expect('absence without searches refused (D4)', not ok and rows.get('D4') is False)
+t, ids = base_session()
+okabs = [{'id': 'K1', 'text': '切分审计 tidak ditemukan', 'source_id': 'S1', 'quote': 'PIP Extension 参数 共 6 个字段',
+          'absence': {'pattern': '切分审计', 'searched': [ids['s1'], ids['s2']], 'control': {'call': ids['ctl'], 'pattern': 'PIP Extension'}}}]
+ok, rows, _ = run_gate(t, *ledger(ids, okabs, '切分审计 tidak ditemukan'))
+expect('absence with 2 searches + control passes D4', rows.get('D4') is True)
+
+# R2 sentence with no claim behind it
+ok, rows, _ = run_gate(*(lambda tt: (tt[0],) + ledger(tt[1], GOOD, GOOD_TEXT + '改选项即时生效。'))(base_session()))
+expect('unclaimed sentence refused (D1)', not ok and rows.get('D1') is False)
+
+# quote not in source
+bad = [{'id': 'K1', 'text': '不得另写映射表', 'source_id': 'S1', 'quote': '不得在件内另写映射表'}]
+ok, rows, _ = run_gate(*(lambda tt: (tt[0],) + ledger(tt[1], bad, '不得另写映射表'))(base_session()))
+expect('invented quote refused (D2)', not ok and rows.get('D2') is False)
+
+# R1 stale: a later call shows the source moved on
+t, ids = base_session()
+t.call('mcp__Atlassian_MCP__getConfluenceContent', {'content_id': '5550001', 'detail': 'summary'},
+       {'data': {'id': '5550001', 'snapshotToken': 'v:13', 'metadata': {'version': {'number': 13}}}})
+ok, rows, _ = run_gate(t, *ledger(ids, GOOD, GOOD_TEXT))
+expect('04.10 replay: version moved after the read (C4)', not ok and rows.get('C4') is False)
+
+# R6 discovery hit neither read nor excluded
+ok, rows, _ = run_gate(*(lambda tt: (tt[0],) + ledger(tt[1], GOOD, GOOD_TEXT, extra=lambda lg: lg['discovery'].update(excluded={})))(base_session()))
+expect('c50237 replay: search hit never read (C3)', not ok and rows.get('C3') is False)
+
+# partial read of a large result
+t, ids = base_session()
+big = os.path.join(tmp, 'big.txt')
+with open(big, 'w', encoding='utf-8') as f:
+    json.dump(page('5550002', 3, '99.2｜Big', 'X' * 25000 + ' PIP Extension 参数 共 6 个字段，已建成'), f, ensure_ascii=False)
+bid = t.call('mcp__Atlassian_MCP__getConfluenceContent', {'content_id': '5550002', 'detail': 'full'},
+             'Error: result exceeds maximum allowed tokens. Output has been saved to %s.\nFormat: Plain text' % big)
+def use_big(lg):
+    lg['sources'] = [{'source_id': 'S1', 'system': 'confluence', 'content_id': '5550002', 'read_call': bid}]
+    lg['discovery']['excluded']['confluence:5550001'] = 'replaced by 99.2 for this test case'
+ok, rows, _ = run_gate(t, *ledger(ids, GOOD, GOOD_TEXT, extra=use_big))
+expect('large result read partly is refused (C5)', not ok and rows.get('C5') is False)
+
+# blame
+bl = [{'id': 'K1', 'text': 'Felix 漏了 PIP Extension 参数', 'source_id': 'S1', 'quote': 'PIP Extension 参数 共 6 个字段'}]
+ok, rows, _ = run_gate(*(lambda tt: (tt[0],) + ledger(tt[1], bl, 'Felix 漏了 PIP Extension 参数'))(base_session()))
+expect('blaming a person refused (D7)', not ok and rows.get('D7') is False)
+
+# Backend Operations account
+ok, rows, _ = run_gate(*(lambda tt: (tt[0],) + ledger(tt[1], GOOD, GOOD_TEXT, tool='mcp__Atlassian_Rovo__updateConfluencePage'))(base_session()))
+expect('Backend Operations account refused (B4)', not ok and rows.get('B4') is False)
+
+# ------------------------------------------------------------------ 4. hooks
+def hook(script, payload, tp):
+    payload = dict(payload, transcript_path=tp)
+    r = subprocess.run([sys.executable, 'scripts/hooks/%s' % script], cwd=tmp, input=json.dumps(payload),
+                       capture_output=True, text=True)
+    return r.returncode, r.stderr + r.stdout
+
+t, ids = base_session()
+lg, payload = ledger(ids, GOOD, GOOD_TEXT)
+run_gate(t, lg, payload)
+tp = os.path.join(tmp, 'transcript.jsonl')
+rc, msg = hook('pre_tool.py', {'tool_name': 'mcp__Atlassian_MCP__getConfluenceContent', 'tool_input': {'content_id': '1'}}, tp)
+expect('hook: read tool allowed', rc == 0, msg)
+rc, msg = hook('pre_tool.py', {'tool_name': 'mcp__Atlassian_MCP__updateConfluenceContent', 'tool_input': payload}, tp)
+expect('hook: gated write with passing ledger allowed', rc == 0, msg)
+changed = dict(payload, snapshotToken='v:41')
+rc, msg = hook('pre_tool.py', {'tool_name': 'mcp__Atlassian_MCP__updateConfluenceContent', 'tool_input': changed}, tp)
+expect('hook: write whose input differs from the gated payload blocked', rc == 2, msg)
+rc, msg = hook('pre_tool.py', {'tool_name': 'mcp__Atlassian_MCP__addOrEditJiraIssueComment', 'tool_input': {'issueIdOrKey': 'OSD-116', 'commentBody': 'x'}}, tp)
+expect('hook: Jira comment without ledger blocked', rc == 2, msg)
+rc, msg = hook('pre_tool.py', {'tool_name': 'mcp__Atlassian_Rovo__createConfluenceFooterComment', 'tool_input': {'pageId': '1', 'body': 'x'}}, tp)
+expect('hook: Backend Operations write blocked', rc == 2, msg)
+rc, msg = hook('pre_tool.py', {'tool_name': 'Edit', 'tool_input': {'file_path': os.path.join(tmp, '.claude/gates/lexicon.json')}}, tp)
+expect('hook: editing gate files blocked without UNLOCK', rc == 2, msg)
+rc, msg = hook('pre_tool.py', {'tool_name': 'Bash', 'tool_input': {'command': "sed -i 's/a/b/' scripts/gate_check.py"}}, tp)
+expect('hook: bash edit of gate script blocked', rc == 2, msg)
+rc, msg = hook('pre_tool.py', {'tool_name': 'Bash', 'tool_input': {'command': 'python3 scripts/gate_check.py docs/ledger/W-TEST.json'}}, tp)
+expect('hook: running the gate allowed', rc == 0, msg)
+rc, msg = hook('pre_tool.py', {'tool_name': 'mcp__Atlassian_MCP__updateConfluenceContent', 'tool_input': dict(payload, dryRun=True)}, tp)
+expect('hook: dry run allowed', rc == 0, msg)
+
+# post + stop: write recorded, read-back demanded
+rc, _ = hook('post_tool.py', {'tool_name': 'mcp__Atlassian_MCP__updateConfluenceContent', 'tool_input': payload, 'tool_response': {'data': {'ok': True}}}, tp)
+rc, msg = hook('stop.py', {}, tp)
+expect('stop: blocked until the write is read back', rc == 2 and 'read back' in msg, msg)
+ok, rows, _ = run_gate(t, lg, payload)
+expect('gate: same order cannot be used twice (B2)', rows.get('B2') is False)
+t.call('mcp__Atlassian_MCP__updateConfluenceContent', payload, {'data': {'ok': True}})
+t.call('mcp__Atlassian_MCP__getConfluenceContent', {'content_id': '7770001', 'detail': 'full', 'content_format': 'markdown'},
+       page('7770001', 41, '建造单', TARGET_BODY))
+t.save(tp)
+rc, msg = hook('stop.py', {}, tp)
+expect('stop: read-back that lacks the sent text still blocks', rc == 2 and 'missing' in msg, msg)
+t.call('mcp__Atlassian_MCP__getConfluenceContent', {'content_id': '7770001', 'detail': 'full', 'content_format': 'markdown'},
+       page('7770001', 41, '建造单', TARGET_BODY + '\n' + GOOD_TEXT))
+t.save(tp)
+rc, msg = hook('stop.py', {}, tp)
+expect('stop: passes after read-back contains the sent text', rc == 0, msg)
+
+# drafts
+with open(os.path.join(tmp, 'docs/drafts/x-draft.md'), 'w', encoding='utf-8') as f:
+    f.write('PIP 参数 已建成。\n')
+rc, msg = hook('stop.py', {}, tp)
+expect('stop: changed draft without ledger blocked', rc == 2 and 'x-draft.md' in msg, msg)
+t.owner('Buat draft dulu'); t.save(tp)
+with open(os.path.join(tmp, 'docs/drafts/x-draft.md'), 'w', encoding='utf-8') as f:
+    f.write(GOOD_TEXT + '\n')
+dl = {'write_id': 'D-TEST', 'kind': 'draft', 'target': {'system': 'draft', 'path': 'docs/drafts/x-draft.md'},
+      'discovery': lg['discovery'], 'sources': lg['sources'], 'claims': GOOD, 'boilerplate': []}
+with open(os.path.join(tmp, 'docs/ledger/D-TEST.json'), 'w', encoding='utf-8') as f:
+    json.dump(dl, f, ensure_ascii=False)
+rc, msg = hook('stop.py', {}, tp)
+expect('stop: draft with passing ledger accepted', rc == 0, msg)
+
+shutil.rmtree(tmp, ignore_errors=True)
+print('-' * 60)
+print('SELFTEST: %s' % ('ALL EXPECTATIONS MET' if not FAILS else 'FAILED: %d' % len(FAILS)))
+sys.exit(1 if FAILS else 0)

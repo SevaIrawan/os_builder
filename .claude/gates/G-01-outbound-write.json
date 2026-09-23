@@ -1,172 +1,93 @@
 {
   "gate_id": "G-01",
-  "name": "Outbound Write Gate",
-  "version": "2.0",
-  "created": "2026-09-23",
-  "created_because": "Pola kegagalan berulang pada sesi 2026-09-20..23: klaim ditulis tanpa sumber, versi dicatat tapi isinya tidak dibuka, angka disimpulkan bukan dihitung, nama mirip dianggap sama, ketiadaan dilaporkan sebagai kesimpulan.",
-  "binds_to": [
-    "setiap tulisan keluar ke Confluence (updateConfluenceContent / createConfluenceContent / comment)",
-    "setiap comment atau edit di Jira",
-    "setiap pesan Slack"
-  ],
-  "does_not_bind": [
-    "file di dalam repo ini",
-    "jawaban di chat"
-  ],
-  "verdict_rule": "PASS hanya jika SEMUA check berstatus PASS. Satu FAIL = dilarang menulis. Tidak ada override oleh model; hanya Bambang yang boleh membatalkan gate, dan pembatalan itu harus tertulis di ledger sebagai user_override.",
-  "root_causes_closed": {
-    "R1": "Versi bergerak dicatat nomornya, isinya tidak dibuka. (Cacat v40 #2: 04.10 naik ke v20, kucatat nomornya, tak kubuka; isinya sudah memuat bukti 7 project.)",
-    "R2": "Klaim ditulis tanpa sumber yang bisa dikutip. ('改选项即时生效', '不得另写映射表', '重复批准不会被 Jira 拦')",
-    "R3": "Angka disimpulkan dari rentang penomoran, bukan dihitung. ('SLA 17 条' padahal 16 baris)",
-    "R4": "Dua nama mirip dianggap satu. ('PIP 参数组' vs 'PIP Extension 参数' -> cacat v40 #1)",
-    "R5": "Ketiadaan dilaporkan sebagai kesimpulan tanpa menyebut tempat yang sudah dicari. ('切分审计 nol kemunculan' lalu berhenti)",
-    "R6": "Sumber terkait tidak didaftar dulu sebelum menulis, sehingga c50237 baru terbaca setelah klaim salah terlanjur keluar.",
-    "R7": "Perintah 'periksa' kuperlakukan sebagai izin 'tulis'. (2026-09-22 v39: perintahnya 'Kau audit detail menyeluruh sampai habis', lalu kutulis sendiri ke halaman tanpa disuruh.)",
-    "R8": "Izin menulis kudeklarasikan sendiri di kolom bebas, jadi gate menanyai dirinya sendiri dan tidak menahan apa pun."
+  "name": "Evidence gate for drafts and outbound writes",
+  "version": "3.0",
+  "updated": "2026-09-23",
+  "single_source": "This file is the ONLY place the rules are written. SKILL.md files point here and do not restate them. Word lists live in lexicon.json next to this file.",
+
+  "binds": {
+    "outbound": "Every tool call that writes to Confluence, Jira or Slack (any mcp__Atlassian_MCP__ / mcp__Atlassian_Rovo__ / mcp__Slack__ tool that is not on the read-only list in lexicon.json). Enforced by the PreToolUse hook scripts/hooks/pre_tool.py.",
+    "draft": "Every file matching lexicon.json draft_path_patterns (docs/drafts/, docs/**/*draft*, docs/outbound/) that changed since it last passed. Enforced by the Stop hook scripts/hooks/stop.py: the turn cannot end while a changed draft fails.",
+    "n8n": "n8n write tools need a standing WRITE order (checks B1, B4) but no claims ledger.",
+    "not_bound": "Chat answers and research notes. No script can check them; see 'known_limits'."
   },
-  "checks": [
-    {
-      "id": "C1",
-      "name": "LEDGER_ADA",
-      "closes": [
-        "R6"
-      ],
-      "rule": "Ada file ledger JSON untuk tulisan ini, berisi satu baris per klaim.",
-      "fail_means": "Tidak boleh menulis apa pun sebelum klaimnya didaftar satu per satu."
-    },
-    {
-      "id": "C2",
-      "name": "SETIAP_KLAIM_BERSUMBER",
-      "closes": [
-        "R2"
-      ],
-      "rule": "Setiap klaim punya source_id + version + quote verbatim dari sumber itu. Klaim tanpa sumber HARUS bertanda placeholder (isi teksnya memuat U+1F532) dan tidak boleh berbentuk pernyataan faktual.",
-      "fail_means": "Klaim karangan sendiri. Buang atau ubah jadi placeholder."
-    },
-    {
-      "id": "C3",
-      "name": "SUMBER_DIBACA_LIVE",
-      "closes": [
-        "R1"
-      ],
-      "rule": "Setiap source_id unik punya live_version hasil pembacaan pada sesi penulisan ini, dan live_version HARUS sama dengan version yang dipakai klaim. read_scope wajib 'full' untuk sumber yang jadi dasar klaim faktual; 'summary' hanya sah untuk klaim tentang nomor versi itu sendiri.",
-      "fail_means": "Kutipan berdiri di atas versi yang belum dibuka isinya."
-    },
-    {
-      "id": "C4",
-      "name": "ANGKA_DIHITUNG_MESIN",
-      "closes": [
-        "R3"
-      ],
-      "rule": "Setiap klaim yang memuat angka jumlah wajib punya count_cmd (perintah yang dijalankan) dan count_output (hasilnya).",
-      "fail_means": "Angka hasil terkaan."
-    },
-    {
-      "id": "C5",
-      "name": "KETIADAAN_PUNYA_HIMPUNAN_CARI",
-      "closes": [
-        "R5"
-      ],
-      "rule": "Klaim yang menyatakan sesuatu tidak ada / belum ada / nol wajib punya searched[] berisi minimal 2 tempat yang benar-benar dibuka, plus control_probe: satu pencarian pembanding yang TERBUKTI mengembalikan hasil (disiplin 07.06.1 E16).",
-      "fail_means": "Nol bisa berarti 'tidak ada' atau 'tidak terlihat'. Tanpa probe pembanding, keduanya tak terbedakan."
-    },
-    {
-      "id": "C6",
-      "name": "NAMA_MIRIP_DIBEDAKAN",
-      "closes": [
-        "R4"
-      ],
-      "rule": "Klaim yang menyebut entitas ber-nama-mirip wajib mengisi disambiguation: kutipan sumber yang memisahkan kedua nama itu.",
-      "fail_means": "Dua objek berbeda ditulis sebagai satu."
-    },
-    {
-      "id": "C7",
-      "name": "SNAPSHOT_TARGET_SEGAR",
-      "closes": [
-        "R1"
-      ],
-      "rule": "Halaman target diambil ulang snapshot-nya pada sesi penulisan ini (07 v28 §二 '先查后写'), dan target_snapshot cocok dengan yang akan dikirim.",
-      "fail_means": "Menimpa versi yang sudah bergerak."
-    },
-    {
-      "id": "C8",
-      "name": "TIDAK_ADA_ATURAN_KARANGAN",
-      "closes": [
-        "R2"
-      ],
-      "rule": "Tidak ada klaim dengan source_id bernilai 'self', 'inference', 'asumsi', 'umum', atau kosong.",
-      "fail_means": "Aturan karangan model masuk ke dokumen perusahaan."
-    },
-    {
-      "id": "C9",
-      "name": "UJI_BALIK_DIRENCANAKAN",
-      "closes": [],
-      "rule": "Untuk tulisan Confluence berbasis edits, reverse_test wajib terisi: cara membuktikan badan hasil dikurangi sisipan sama persis dengan badan sebelumnya.",
-      "fail_means": "Tidak ada cara membuktikan tidak ada yang terhapus."
-    },
-    {
-      "id": "C11",
-      "name": "HALAMAN_BERGERAK_SUDAH_DIBACA",
-      "closes": [
-        "R1"
-      ],
-      "rule": "Wajib ada docs/ledger/_sweep-latest.json dengan swept_at = hari ini. Untuk setiap source_id tulisan ini yang tercatat bergerak pada sapuan itu, read_after_move HARUS true beserta how + read_at.",
-      "fail_means": "Halaman yang baru bergerak dipakai sebagai sumber padahal isinya belum dibuka setelah bergerak. Inilah persis jalur cacat v40: nosm-sync-check lulus, nomor versi tercatat benar, isinya tidak pernah dibuka."
-    },
-    {
-      "id": "C10",
-      "name": "PERINTAH_TERDAFTAR",
-      "closes": [
-        "R8"
-      ],
-      "rule": "user_order HARUS sama persis dengan field verbatim salah satu baris di docs/orders/orders.jsonl. Tidak boleh diketik bebas di ledger.",
-      "fail_means": "Izin yang dikarang sendiri."
-    },
-    {
-      "id": "C12",
-      "name": "PERINTAH_MENGIZINKAN_TULIS",
-      "closes": [
-        "R7"
-      ],
-      "rule": "Baris perintah itu harus berklasifikasi WRITE menurut scripts/order_check.py. READONLY atau AMBIGU = dilarang menulis, wajib tanya Bambang dulu.",
-      "fail_means": "Perintah memeriksa dipakai sebagai izin menulis. Inilah v39."
-    },
-    {
-      "id": "C13",
-      "name": "PERINTAH_BELUM_DIPAKAI",
-      "closes": [
-        "R7"
-      ],
-      "rule": "consumed_by baris itu harus null. Satu perintah = satu tulisan.",
-      "fail_means": "Perintah lama dipakai ulang untuk tulisan baru."
-    },
-    {
-      "id": "C14",
-      "name": "PERINTAH_SESUAI_SASARAN",
-      "closes": [
-        "R7"
-      ],
-      "rule": "target baris perintah harus sama dengan <system>:<content_id> tulisan ini.",
-      "fail_means": "Perintah untuk sasaran lain dipakai di sini."
-    }
+
+  "pipeline": [
+    {"step": 0, "name": "Session start", "do": "Run skill nosm-sync-check: connectors, controlled copies (scripts/sync_check.py), space-wide sweep.", "proved_by": ["A1", "A2", "A3"]},
+    {"step": 1, "name": "Order", "do": "Nothing to do: the owner's messages are classified from the transcript by scripts/order_check.py rules. READONLY / AMBIGUOUS / STOP means ask, do not write.", "proved_by": ["B1", "B2", "B3", "B4"]},
+    {"step": 2, "name": "Find every related source", "do": "Search the whole NOSM space (and the Jira issue's comments) for each topic term. Every hit is either read in full or excluded with a reason.", "proved_by": ["C1", "C2", "C3"]},
+    {"step": 3, "name": "Read every source to the end, live", "do": "Confluence: getConfluenceContent detail=full. Jira: listJiraIssueComments until isLast, without dropping comments.body. A result saved to a file is read with scripts/read_source.py, every part.", "proved_by": ["C4", "C5"]},
+    {"step": 4, "name": "Write the claims ledger", "do": "docs/ledger/<write_id>.json: one claim per sentence, each with source_id + verbatim quote; counts[] for numbers not stated in the quote; absence{} for 'not / none / 未 / belum' not stated in the quote; unverifiable sentences carry the 🔲 marker.", "proved_by": ["D1", "D2", "D3", "D4", "D5", "D6", "D7"]},
+    {"step": 5, "name": "Run the gate", "do": "python3 scripts/gate_check.py docs/ledger/<write_id>.json -> exit 0 required. The hook re-runs it at the moment of writing; a PASS printed earlier is not reused.", "proved_by": ["P0", "P1", "E1"]},
+    {"step": 6, "name": "Write, then read back", "do": "After a successful write, read the target again (Confluence full read / Jira comment listing). The Stop hook blocks until every sentence of the payload is found in the read-back. The order is marked used automatically.", "proved_by": ["R1"]}
   ],
-  "artifacts": {
-    "sweep_ledger": "docs/ledger/_sweep-latest.json",
-    "sweep_schema": {
-      "swept_at": "YYYY-MM-DD",
-      "window_from": "...",
-      "moved": [
-        {
-          "source_id": "...",
-          "ref": "pageId",
-          "from": "vN",
-          "to": "vM",
-          "read_after_move": true,
-          "how": "full page read | diff vN->vM",
-          "read_at": "ISO8601",
-          "changed": "ringkas apa yang berubah"
-        }
-      ]
-    }
-  }
+
+  "checks": [
+    {"id": "A1", "name": "CONNECTORS_LIVE", "rule": "Within 12 h: one successful Atlassian call and one successful n8n search_workflows call in the transcript."},
+    {"id": "A2", "name": "CONTROLLED_COPIES_IN_SYNC", "rule": "scripts/sync_check.py passes on full reads of 07.06 and 04 taken from the transcript, at most 12 h old."},
+    {"id": "A3", "name": "SPACE_SWEEP_RUN", "rule": "Within 12 h: a successful Confluence search whose CQL contains NOSM and lastmodified."},
+
+    {"id": "B1", "name": "ORDER_STANDING", "rule": "The latest owner message classified WRITE (outbound) or WRITE/DRAFT (draft) exists. Outbound: every later owner message is a plain CONFIRM. Draft: no later STOP."},
+    {"id": "B2", "name": "ORDER_UNUSED", "rule": "Outbound: the order is not recorded as used in docs/orders/consumed.jsonl (one order = one write). The PostToolUse hook records it."},
+    {"id": "B3", "name": "ORDER_MATCHES_TARGET", "rule": "If the order names page ids or issue keys, the target must be one of them."},
+    {"id": "B4", "name": "NOT_BACKEND_OPS_ACCOUNT", "rule": "No write through mcp__Atlassian_Rovo__ (Backend Operations account). Owner instruction 2026-09-22."},
+
+    {"id": "P0", "name": "PAYLOAD_IS_WHAT_WAS_GATED", "rule": "The tool input is byte-identical (canonical JSON) to the ledger's payload_file; for a draft, the file itself is the payload."},
+    {"id": "P1", "name": "TARGET_IS_WHAT_WAS_GATED", "rule": "The tool call's page / issue / channel equals the ledger target."},
+
+    {"id": "C1", "name": "DISCOVERY_DONE", "rule": "discovery.calls are real, successful search calls within the source window; every topic_term appears in some query; at least one is a space=NOSM Confluence search."},
+    {"id": "C2", "name": "DISCOVERY_PAGINATED", "rule": "No search result that says more pages exist (hasNextPage / isLast=false / next link / total > returned) is left without its later pages."},
+    {"id": "C3", "name": "DISCOVERY_COVERED", "rule": "Every page, issue and comment the searches returned is a source or is in discovery.excluded with a reason of at least 15 characters."},
+    {"id": "C4", "name": "SOURCES_READ_LIVE", "rule": "Each source points at real read calls of the right tool and object, successful, within 60 min (outbound) / 12 h (draft); Confluence reads are detail=full and no later call shows a different version. Repo notes and memory are never sources."},
+    {"id": "C5", "name": "SOURCES_READ_TO_END", "rule": "A result saved to a file counts as read only if every read_source.py part printed its END marker. Jira comments: pages from startAt 0 to isLast with no gap."},
+
+    {"id": "D1", "name": "EVERY_SENTENCE_CLAIMED", "rule": "Every sentence of the payload / draft is a claim sentence, a boilerplate sentence, or (Confluence edits) text already on the page as last read."},
+    {"id": "D2", "name": "QUOTES_VERBATIM", "rule": "Each non-🔲 claim names a verified source and a quote of >= 6 characters found verbatim in that source's text as read."},
+    {"id": "D3", "name": "NUMBERS_QUOTED_OR_RECOUNTED", "rule": "Every number in a claim (digits, Chinese numerals, Indonesian/English words) appears in the quote; a quantity (number + unit) must appear in the quote as a quantity or be recounted here by counts[{value, source_id, regex, section?}]."},
+    {"id": "D4", "name": "ABSENCE_PROVEN", "rule": "A claim with absence wording not present in its own quote needs absence{pattern, searched:[>=2 calls], control:{call, pattern}}: the pattern is absent from every searched result, the control pattern is present in the control result, same tool."},
+    {"id": "D5", "name": "NAMES_EXACT", "rule": "A near-name term (lexicon near_name_groups) used in a claim must appear in the quote exactly; a page code (04.10, 04.9.1) must be a source's title code or appear in the quote."},
+    {"id": "D6", "name": "BOILERPLATE_CARRIES_NO_FACT", "rule": "Boilerplate has no absence wording and no numbers except structural labels."},
+    {"id": "D7", "name": "NO_BLAME", "rule": "No sentence names a person together with fault wording (owner instruction 2026-09-21, docs/working-rules.md)."},
+
+    {"id": "E1", "name": "TARGET_READ_BEFORE_WRITE", "rule": "Confluence edit: a full read of the target within the window and its latest seen version equals the edit's snapshotToken. Jira comment: the issue's comments read to isLast within the window."},
+
+    {"id": "R1", "name": "READ_BACK_AFTER_WRITE", "rule": "Stop hook: after a successful outbound write, a later read of the target must contain every payload sentence."},
+
+    {"id": "L0", "name": "LEDGER_VALID", "rule": "ledger.kind is outbound or draft."}
+  ],
+
+  "ledger_schema": {
+    "write_id": "W-YYYY-MM-DD-NN",
+    "kind": "outbound | draft",
+    "target": "{system: confluence, content_id} | {system: jira_comment, issue} | {system: slack, channel} | {system: draft, path}",
+    "tool": "outbound only: the exact tool name",
+    "payload_file": "outbound only: docs/ledger/<write_id>.payload.json = the exact tool input",
+    "discovery": "{topic_terms: [..], calls: [tool_use_id..], excluded: {'confluence:<id>' | 'jira:<KEY>' | 'jira_comments:<KEY>' | 'jira_comment:<KEY>:<id>': reason}}",
+    "sources": "[{source_id, system: confluence|jira_comments|jira_issue|slack_thread|n8n_workflow, content_id|issue|channel+ts|workflow_id, read_call | read_calls}]",
+    "claims": "[{id, text, source_id, quote, counts?: [{value, source_id, regex, section?}], absence?: {pattern, searched: [..], control: {call, pattern}}}]",
+    "boilerplate": "[headings / labels that state no fact]"
+  },
+
+  "overrides": {
+    "OVERRIDE G-01": "Only the owner can type it. When the owner's latest message contains it, the hook lets one blocked outbound write through and logs it.",
+    "UNLOCK G-01": "Only the owner can type it. Needed in the owner's latest message before any change to the gate files (lexicon.json protected_paths)."
+  },
+
+  "root_causes": {
+    "R1_version_noted_not_read": "04.10 moved v19->v20; the number was recorded, the page was not opened; v40 then asked for evidence that v20 already contained. Closed by C4/C5/E1 (reads are taken from the transcript, not recorded by hand).",
+    "R2_claim_without_source": "Rules written that no page states. Closed by D1/D2.",
+    "R3_number_inferred": "'SLA 17 条' - actually 16 rows. Closed by D3.",
+    "R4_near_names_merged": "'PIP 参数' written as built because 'PIP Extension 参数' was built. Closed by D5.",
+    "R5_absence_as_conclusion": "'no 切分审计 found' and stopped. Closed by D4.",
+    "R6_sources_not_enumerated": "c50237 read only after the wrong claim was out. Closed by C1/C2/C3.",
+    "R7_check_order_used_as_write_order": "v39: 'Kau audit detail menyeluruh sampai habis' treated as permission to write. Closed by B1.",
+    "R8_self_declared_evidence": "Gate v2 accepted read_scope, read_at, count_output and the order text as typed by the model; one sweep entry carried a read_at hours in the future. Closed by taking every one of them from the transcript."
+  },
+
+  "known_limits": [
+    "Chat answers are not checked by any script.",
+    "A quote proves the words exist in the source, not that the claim reads them correctly.",
+    "Order classification is a word list: a real order may be refused (safe), and an insult containing 'tulis' was classified WRITE in the session replay (unsafe, but it still needs the full evidence gate and is used up after one write).",
+    "Hooks are loaded by Claude Code from .claude/settings.json; if the harness does not load them, nothing is enforced and the gate depends on being run by hand."
+  ]
 }
