@@ -1,0 +1,196 @@
+{
+ "write_id": "W-2026-09-23-04",
+ "kind": "outbound",
+ "target": {
+  "system": "jira_comment",
+  "issue": "OSD-116"
+ },
+ "tool": "mcp__Atlassian_MCP__addOrEditJiraIssueComment",
+ "payload_file": "docs/ledger/W-2026-09-23-04.payload.json",
+ "discovery": {
+  "topic_terms": [
+   "缺位",
+   "通道二",
+   "SUPERVISOR_MISSING"
+  ],
+  "calls": [
+   "toolu_019LnyPe5MZvJiTpkme52srG",
+   "toolu_01975t6MrcDTqhpkhxowc4om",
+   "toolu_012f6z69C8RsM79CQAgFeGeB",
+   "toolu_018YzGB2XzvzKCzMZ3Fc1z5i",
+   "toolu_01K1DCDenCkV8iE6T8oZatEw"
+  ],
+  "excluded": {
+   "confluence:2096463922": "Our own S-05 build sheet: it summarises these same rules; the draft quotes the Spec and 04.4.2 directly instead of the build sheet's summary",
+   "confluence:2047148201": "S-19 Spec: another flow's own reading of the supervisor lookup; the draft asks Felix for S-05's own reading and cites nothing from S-19",
+   "confluence:1765015618": "04.9.3 resignation workflow detail book: 04.9 §一 reading rule limits consumers to their own book; channel two's rule is quoted from the resignation Spec itself",
+   "confluence:1742766267": "Grade build sheet: another flow's build record; no sentence of this draft cites or depends on it",
+   "confluence:1693089805": "04.9 workflow register: lists workflows only; no sentence of this draft cites or depends on it",
+   "confluence:2063400992": "Recruitment Spec: another flow; its absent-supervisor wording is unrelated to the resignation hand-over asked about here",
+   "confluence:2075394050": "S-02 new-hire Spec: another flow; its absent-supervisor wording is not cited and does not bear on the resignation hand-over asked about",
+   "confluence:1761443890": "F0B leadership baseline card: strategy module page, unrelated to the absent-supervisor rule of this flow",
+   "confluence:1691254793": "04.7 route table: read in full earlier today (v49); its S-05 rows restate the Spec rule and no sentence here cites it",
+   "confluence:1743716419": "Resignation build sheet: read in full earlier today (v62); it records no absent-supervisor rule and no sentence here cites it",
+   "confluence:1695744021": "07.03 design guide: read in full today (v58); only asks designers who covers an absent owner, not cited here",
+   "confluence:1690927120": "04.6 n8n rules: read in full today (v20); its absence wording is the platform-owner proxy rule, not cited here",
+   "confluence:1704362028": "07 guide home: read in full today (v28); no absent-supervisor rule, not cited here",
+   "confluence:1730347066": "07.06 build guide: read in full today (v30); no absent-supervisor rule, not cited here"
+  }
+ },
+ "sources": [
+  {
+   "source_id": "S2",
+   "system": "confluence",
+   "content_id": "1711276058",
+   "read_call": "toolu_01SB2BYoNunsYhotfrhKFy1Z"
+  },
+  {
+   "source_id": "S3",
+   "system": "confluence",
+   "content_id": "2036858900",
+   "read_call": "toolu_018dKvFDprbf3ZqzP87o5dTT"
+  },
+  {
+   "source_id": "S4",
+   "system": "confluence",
+   "content_id": "1751547935",
+   "read_call": "toolu_01Jv4SNawWnhoGwGhKP5FESQ"
+  },
+  {
+   "source_id": "S6",
+   "system": "jira_comments",
+   "issue": "OSD-116",
+   "read_calls": [
+    "toolu_018YzGB2XzvzKCzMZ3Fc1z5i",
+    "toolu_01K1DCDenCkV8iE6T8oZatEw"
+   ]
+  }
+ ],
+ "claims": [
+  {
+   "id": "K1",
+   "text": "The resignation Spec names @Kent as its flow owner: 「流程 Owner：Kent」.",
+   "source_id": "S2",
+   "quote": "流程 Owner：Kent"
+  },
+  {
+   "id": "K2",
+   "text": "Felix's comment c49317 (2026-09-03) set the interim path:",
+   "source_id": "S6",
+   "quote": "c49317 | Felix_HR | 2026-09-03T13:02:56.082+0700"
+  },
+  {
+   "id": "K3",
+   "text": "「目前人工经通道二提交的方式会保留为建设期的过渡方案」.",
+   "source_id": "S6",
+   "quote": "目前人工经通道二提交的方式会保留为建设期的过渡方案"
+  },
+  {
+   "id": "K4",
+   "text": "The manager submission channel accepts a submission only from the employee's direct supervisor: 「提交人须为离职员工的直属上级」.",
+   "source_id": "S2",
+   "quote": "提交人须为离职员工的直属上级"
+  },
+  {
+   "id": "K5",
+   "text": "Any other submitter is stopped and no case is created: 「阻止提交、不生成主单」.",
+   "source_id": "S2",
+   "quote": "阻止提交、不生成主单"
+  },
+  {
+   "id": "K6",
+   "text": "In this flow's target design the system itself opens the resignation case: 「系统自动在「员工离职Spec」建立一张离职主单」.",
+   "source_id": "S3",
+   "quote": "系统自动在「员工离职Spec」建立一张离职主单"
+  },
+  {
+   "id": "K7",
+   "text": "People only fill in the remaining details afterwards: 「离职单已自动建立，通知其在规定时限内补齐最后工作日等信息」.",
+   "source_id": "S3",
+   "quote": "离职单已自动建立，通知其在规定时限内补齐最后工作日等信息"
+  },
+  {
+   "id": "K8",
+   "text": "Those details come from the direct supervisor, or from HR Ops & Data when the supervisor is absent: 「缺位由HR Ops & Data代为补充」.",
+   "source_id": "S3",
+   "quote": "缺位由HR Ops & Data代为补充"
+  },
+  {
+   "id": "K9",
+   "text": "During the interim manual path, who submits the resignation case when the supervisor is absent, given 「缺位由HR Ops & Data代为补充」?",
+   "source_id": "S3",
+   "quote": "缺位由HR Ops & Data代为补充"
+  },
+  {
+   "id": "K10",
+   "text": "This flow's Spec already routes the case to HR Ops & Data at submission: 「缺位由 HR Ops & Data 代为受理提交」.",
+   "source_id": "S3",
+   "quote": "缺位由 HR Ops & Data 代为受理提交"
+  },
+  {
+   "id": "K11",
+   "text": "The shared supervisor lookup only reports reporting-line facts and leaves the decision to each flow: 「只回答汇报线事实，不做资格判定」.",
+   "source_id": "S4",
+   "quote": "只回答汇报线事实，不做资格判定"
+  },
+  {
+   "id": "K12",
+   "text": "It reports these situations separately:",
+   "source_id": "S4",
+   "quote": "空值是档案没填、Inactive 是人已停用，两者的修法不同"
+  },
+  {
+   "id": "K13",
+   "text": "(a) the employee's record lists no direct supervisor",
+   "source_id": "S4",
+   "quote": "上司字段为空"
+  },
+  {
+   "id": "K14",
+   "text": "(b) the listed supervisor's status is anything other than Active",
+   "source_id": "S4",
+   "quote": "非 Active 即无效"
+  },
+  {
+   "id": "K15",
+   "text": "(c) the listed supervisor's status is left blank",
+   "source_id": "S4",
+   "quote": "上司 Talent Status 为空"
+  },
+  {
+   "id": "K16",
+   "text": "(d) the employee's own record cannot be found",
+   "source_id": "S4",
+   "quote": "主体查无 NTP 档案"
+  },
+  {
+   "id": "K17",
+   "text": "Kayden's comment c49740 (2026-09-10) says the general rule will be set on a standards page:",
+   "source_id": "S6",
+   "quote": "c49740 | Kayden Lee | 2026-09-10T12:57:48.581+0700"
+  },
+  {
+   "id": "K18",
+   "text": "「通用规则归制度页另定」.",
+   "source_id": "S6",
+   "quote": "通用规则归制度页另定"
+  },
+  {
+   "id": "K19",
+   "text": "For this flow, which of (a) to (d) count as 「缺位由HR Ops & Data承接」, and which should go to HR to correct the record first?",
+   "source_id": "S3",
+   "quote": "缺位由HR Ops & Data承接"
+  }
+ ],
+ "boilerplate": [
+  "【Spec question → @Felix_HR @Kent, cc @Kayden Lee】",
+  "Interim hand-over",
+  "A. HR Ops & Data may submit through the manager submission channel for these cases.",
+  "B. HR first corrects the employee's record so that a direct supervisor is listed, and that supervisor submits.",
+  "C. Another arrangement — please describe.",
+  "Which situations count",
+  "Please also say whether to decide this now for this flow or wait for the general rule.",
+  "Your answers will be copied into the build sheet as given.",
+  "—— Bambang"
+ ]
+}
