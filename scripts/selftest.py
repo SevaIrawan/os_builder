@@ -329,6 +329,35 @@ with open(os.path.join(tmp, 'docs/ledger/D-TEST.json'), 'w', encoding='utf-8') a
 rc, msg = hook('stop.py', {}, tp)
 expect('stop: draft with passing ledger accepted', rc == 0, msg)
 
+# gap found 2026-09-23: git commit -a committed a gate file without naming it
+def git(*a):
+    subprocess.run(['git', '-c', 'user.email=t@t', '-c', 'user.name=t'] + list(a), cwd=tmp, capture_output=True, check=True)
+git('init', '-q'); git('add', '-A'); git('commit', '-q', '-m', 'base')
+def bash_hook(cmd, tpath=tp):
+    return hook('pre_tool.py', {'tool_name': 'Bash', 'tool_input': {'command': cmd}}, tpath)
+rc, msg = bash_hook('git commit -a -m x')
+expect('git gap: commit -a allowed while no gate file is changed', rc == 0, msg)
+with open(os.path.join(tmp, 'docs/ledger/_draft-registry.json'), 'a', encoding='utf-8') as f:
+    f.write('\n')
+with open(os.path.join(tmp, 'docs/drafts/x-draft.md'), 'a', encoding='utf-8') as f:
+    f.write('\n')
+for cmd in ['git commit -a -m x', 'git commit -am x', 'git commit --all -F msg.txt', 'git add -A', 'git add .',
+            'git add docs/ledger', 'git add -u && git commit -m x', 'git stash', 'git checkout -- .',
+            'git reset --hard', 'git -C . commit -a -m x', 'sh -c "git commit -a -m x"', 'cd . && git commit -a -m x']:
+    rc, msg = bash_hook(cmd)
+    expect('git gap: blocked  %s' % cmd, rc == 2 and 'G-01' in msg, msg)
+for cmd in ['git add docs/drafts/x-draft.md && git commit -F msg.txt', 'git status --short', 'git diff',
+            'git log --oneline -3', 'git push -u origin b']:
+    rc, msg = bash_hook(cmd)
+    expect('git gap: allowed  %s' % cmd, rc == 0, msg)
+git('add', 'docs/ledger/_draft-registry.json')
+rc, msg = bash_hook('git commit -m x')
+expect('git gap: plain commit blocked when a gate file is already staged', rc == 2, msg)
+t.owner('UNLOCK G-01 commit the registry'); tpu = t.save(os.path.join(tmp, 'transcript-unlock.jsonl'))
+rc, msg = bash_hook('git commit -a -m x', tpu)
+expect('git gap: allowed after UNLOCK G-01', rc == 0, msg)
+t.lines.pop(); t.save(tp)
+
 # defect 4: a Jira issue key is an identifier, not a number to be found in the quote
 toks = N.numeric_tokens('OSD-116 c50345 记：共 13 个字段', L)
 expect('defect 4: OSD-116 read as an issue key', any(t['kind'] == 'issue_key' and t['value'] == 'OSD-116' for t in toks), str(toks))

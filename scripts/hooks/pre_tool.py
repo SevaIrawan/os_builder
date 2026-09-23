@@ -4,17 +4,124 @@
   1. any outbound write (Confluence / Jira / Slack) that has no ledger passing G-01 for exactly this input;
   2. any write through the Backend Operations account (mcp__Atlassian_Rovo__*);
   3. n8n writes without a standing WRITE order;
-  4. edits to the gate's own files (lexicon.json protected_paths) unless the owner's latest message says UNLOCK G-01.
+  4. edits to the gate's own files (lexicon.json protected_paths) unless the owner's latest message says UNLOCK G-01,
+     including git commands that stage, commit, restore or discard them without naming them (git commit -a, git add .).
 Exit 0 = allow. Exit 2 = block (stderr is shown to Claude)."""
-import json, os, re, sys
+import json, os, re, shlex, subprocess, sys
 from _common import N, read_input, transcript, deny, latest_owner_text, is_gated_tool, ledgers
 import gate_check
 
 SAFE_BASH = re.compile(r'^\s*(python3\s+scripts/(gate_check|order_check|read_source|sync_check|selftest)\.py\b|cat\s|head\s|tail\s|grep\s|rg\s|wc\s|ls\b|git\s+(diff|log|show|status)\b|sed\s+-n\s)')
 
+# git subcommands that cannot move a working-tree or index change into history or throw it away
+GIT_READONLY = {'status', 'diff', 'log', 'show', 'fetch', 'push', 'ls-files', 'ls-tree', 'rev-parse', 'blame',
+                'grep', 'shortlog', 'describe', 'cat-file', 'branch', 'remote', 'help', 'version'}
+GIT_GLOBAL_WITH_ARG = {'-C', '-c', '--git-dir', '--work-tree', '--namespace', '--exec-path', '--config-env'}
+GIT_ALL_FLAGS = {'-a', '--all', '-A', '-u', '--update', '--include', '-i', '-p', '--patch', '--interactive'}
+
 
 def protected_hit(text, L):
     return [p for p in L['protected_paths'] if p in text]
+
+
+def is_protected(path, L):
+    return any(path == p or (p.endswith('/') and path.startswith(p)) for p in L['protected_paths'])
+
+
+def git_lines(*args):
+    try:
+        r = subprocess.run(['git'] + list(args), cwd=N.ROOT, capture_output=True, text=True, timeout=20)
+    except (OSError, subprocess.SubprocessError):
+        return None
+    return r.stdout.splitlines() if r.returncode == 0 else None
+
+
+def dirty_protected(L):
+    """Protected paths that differ from HEAD (staged, unstaged or untracked). None = git state unreadable."""
+    staged = git_lines('diff', '--cached', '--name-only')
+    unstaged = git_lines('diff', '--name-only')
+    untracked = git_lines('ls-files', '--others', '--exclude-standard')
+    if staged is None or unstaged is None or untracked is None:
+        return None, None
+    return (sorted({p for p in staged + unstaged + untracked if is_protected(p, L)}),
+            sorted(p for p in staged if is_protected(p, L)))
+
+
+def git_calls(cmd):
+    """Each git invocation in a shell command as (subcommand, args). None = the command could not be parsed."""
+    out = []
+    for seg in re.split(r'&&|\|\||[;|\n&()`]|\$\(', cmd):
+        try:
+            toks = shlex.split(seg)
+        except ValueError:
+            return None
+        for t in toks:                      # sh -c "git commit -a", eval '...'
+            if re.search(r'\s', t) and re.search(r'\bgit\b', t):
+                inner = git_calls(t)
+                if inner is None:
+                    return None
+                out.extend(inner)
+        i = next((k for k, t in enumerate(toks) if t == 'git' or t.endswith('/git')), None)
+        if i is None:
+            continue
+        rest = toks[i + 1:]
+        while rest and rest[0].startswith('-'):
+            opt = rest.pop(0)
+            if opt in GIT_GLOBAL_WITH_ARG and rest:
+                rest.pop(0)
+        out.append((rest[0] if rest else '', rest[1:]))
+    return out
+
+
+def covers(spec, path):
+    s = spec[2:] if spec.startswith(':/') else spec
+    s = s.rstrip('/')
+    if s in ('', '.', '*', ':'):
+        return True
+    if any(c in s for c in '*?['):
+        import fnmatch
+        return fnmatch.fnmatch(path, s) or fnmatch.fnmatch(path, s + '/*')
+    return path == s or path.startswith(s + '/')
+
+
+def git_touches_protected(cmd, L):
+    """Why this command would stage / commit / restore / discard a protected path, or '' when it cannot."""
+    calls = git_calls(cmd)
+    if calls is None:
+        return 'the command could not be parsed' if re.search(r'\bgit\b', cmd) else ''
+    calls = [(s, a) for s, a in calls if s not in GIT_READONLY]
+    if not calls:
+        return ''
+    dirty, staged = dirty_protected(L)
+    if dirty is None:
+        return 'git state could not be read'
+    if not dirty:
+        return ''
+    for sub, args in calls:
+        opts = [a for a in args if a.startswith('-')]
+        specs = [a for a in args if not a.startswith('-') and a != '--']
+        if sub == 'commit':
+            specs = [a for k, a in enumerate(args) if not a.startswith('-') and a != '--'
+                     and not (k and args[k - 1] in ('-m', '-F', '--message', '--file', '-C', '-c', '--author', '--date', '--fixup', '--squash'))]
+            if any(o in GIT_ALL_FLAGS or re.match(r'^-[a-zA-Z]*a', o) for o in opts):
+                return 'git commit -a / --all would commit %s' % dirty
+            if staged:
+                return 'git commit would commit the staged gate files %s' % staged
+            if any(covers(s, p) for s in specs for p in dirty):
+                return 'git commit pathspec covers %s' % dirty
+            continue
+        if sub == 'add':
+            if any(o in GIT_ALL_FLAGS for o in opts) or not specs:
+                return 'git add %s would stage %s' % (' '.join(opts), dirty)
+            if any(covers(s, p) for s in specs for p in dirty):
+                return 'git add pathspec covers %s' % dirty
+            continue
+        if sub in ('checkout', 'restore', 'rm', 'mv') and specs:
+            if any(covers(s, p) for s in specs for p in dirty):
+                return 'git %s pathspec covers %s' % (sub, dirty)
+            continue
+        return 'git %s runs while gate files have uncommitted changes %s' % (sub or '(alias?)', dirty)
+    return ''
 
 
 def main():
@@ -43,6 +150,12 @@ def main():
             if L['order_words']['unlock_token'] not in latest_owner_text(tr):
                 deny('G-01: this command touches gate files %s. Needs "%s" in the owner\'s latest message.'
                      % (hits, L['order_words']['unlock_token']))
+        why = git_touches_protected(cmd, L)
+        if why:
+            tr = transcript(inp)
+            if L['order_words']['unlock_token'] not in latest_owner_text(tr):
+                deny('G-01: %s. Gate files are committed, restored or discarded only with "%s" in the owner\'s latest message. '
+                     'Stage your own files by exact path instead.' % (why, L['order_words']['unlock_token']))
         return 0
 
     if not is_gated_tool(name, L):

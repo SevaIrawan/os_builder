@@ -77,3 +77,13 @@ Self-test: 59/59 lulus, termasuk lima uji baru untuk ketiga cacat.
 - "S-05" dan "C-12" tidak dianggap nomor issue.
 - Self-test: 63/63 lulus, termasuk empat uji baru.
 - Draft koreksi v40 (D-2026-09-23-02) tetap PASS.
+
+## Menutup celah `git commit -a` (perintah Bambang: "UNLOCK G-01 tutup celah git commit -a itu")
+
+- Celahnya: hook hanya memeriksa nama file yang tertulis di perintah Bash. `git commit -a` (commit be9c345) memasukkan `docs/ledger/_draft-registry.json` ke commit tanpa menyebut nama file itu, jadi lolos.
+- Perbaikan di `scripts/hooks/pre_tool.py`: untuk setiap perintah git yang bisa memasukkan, mengembalikan, atau membuang perubahan (add, commit, stash, checkout, restore, reset, clean, rm, mv, pull, merge, dan lain-lain), hook membaca `git status` langsung. Kalau ada file gate yang berubah dan perintah itu akan menyentuhnya, perintah diblokir kecuali pesan terakhir owner memuat "UNLOCK G-01".
+- Yang diblokir: `git commit -a` / `-am` / `--all`, `git add -A` / `.` / `-u` / folder yang mencakup file gate, `git commit` biasa jika file gate sudah di-stage, `git stash`, `git checkout -- .`, `git reset --hard`, `git -C . commit -a`, `sh -c "git commit -a"`, `cd . && git commit -a`.
+- Yang tetap boleh: `git add <path file sendiri> && git commit -F ...`, `git status`, `git diff`, `git log`, `git push`.
+- Akibatnya: `_draft-registry.json` ditulis ulang oleh gate setiap kali draft PASS, jadi meng-commit file itu sekarang butuh "UNLOCK G-01".
+- Sisa batas (dicatat di `known_limits` G-01): program non-git yang menulis file gate tanpa nama path-nya muncul di perintah tidak terdeteksi.
+- Self-test: 84/84 lulus (63 lama + 21 uji git baru).
