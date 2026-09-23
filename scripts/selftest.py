@@ -339,6 +339,10 @@ def bash_hook(cmd, tpath=tp):
     return hook('pre_tool.py', {'tool_name': 'Bash', 'tool_input': {'command': cmd}}, tpath)
 rc, msg = bash_hook('git commit -a -m x')
 expect('git gap: commit -a allowed while no gate file is changed', rc == 0, msg)
+for cmd in ['git commit -q -m "Record live test (foreground and background writes put back)"',
+            'git commit -m "unbalanced quote']:
+    rc, msg = bash_hook(cmd)
+    expect('too strict: allowed while no gate file is changed  %s' % cmd[:40], rc == 0, msg)
 t.owner('UNLOCK G-01 commit the registry'); tpu = t.save(os.path.join(tmp, 'transcript-unlock.jsonl'))
 t.lines.pop(); t.save(tp)
 with open(os.path.join(tmp, 'docs/ledger/_draft-registry.json'), 'a', encoding='utf-8') as f:
@@ -349,10 +353,14 @@ rc, msg = bash_hook('git status', tpu)                # owner-approved change of
 expect('guard: gate-file change under UNLOCK is sealed, not put back', rc == 0, msg)
 for cmd in ['git commit -a -m x', 'git commit -am x', 'git commit --all -F msg.txt', 'git add -A', 'git add .',
             'git add docs/ledger', 'git add -u && git commit -m x', 'git stash', 'git checkout -- .',
-            'git reset --hard', 'git -C . commit -a -m x', 'sh -c "git commit -a -m x"', 'cd . && git commit -a -m x']:
+            'git reset --hard', 'git -C . commit -a -m x', 'sh -c "git commit -a -m x"', 'cd . && git commit -a -m x',
+            'git commit -m "unbalanced quote', 'echo `git stash`', 'echo $(git commit -a -m x)',
+            '(git commit -a -m "a (b) c")', 'git status\ngit commit -a -m x']:
     rc, msg = bash_hook(cmd)
     expect('git gap: blocked  %s' % cmd, rc == 2 and 'G-01' in msg, msg)
-for cmd in ['git add docs/drafts/x-draft.md && git commit -F msg.txt', 'git status --short', 'git diff',
+for cmd in ['git add docs/drafts/x-draft.md && git commit -F msg.txt',
+            'git add docs/drafts/x-draft.md && git commit -q -m "Record test (foreground; background | put back)"',
+            'git status --short', 'git diff',
             'git log --oneline -3', 'git push -u origin b']:
     rc, msg = bash_hook(cmd)
     expect('git gap: allowed  %s' % cmd, rc == 0, msg)

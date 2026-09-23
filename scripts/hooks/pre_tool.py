@@ -48,14 +48,39 @@ def dirty_protected(L):
             sorted(p for p in staged if is_protected(p, L)))
 
 
+SHELL_OPERATORS = {'&&', '||', ';', '|', '&', '(', ')', ';;', '|&'}
+
+
+def shell_segments(cmd):
+    """Split a shell command into simple commands, respecting quotes (a '(' inside a commit message is text).
+    None = unbalanced quotes."""
+    lex = shlex.shlex(cmd.replace('\n', ' ; '), posix=True, punctuation_chars=True)
+    lex.whitespace_split = True
+    try:
+        toks = list(lex)
+    except ValueError:
+        return None
+    segs, cur = [], []
+    for t in toks:
+        if t in SHELL_OPERATORS or (t and set(t) <= set('&|;()')):
+            if cur:
+                segs.append(cur)
+            cur = []
+        else:
+            cur.append(t)
+    if cur:
+        segs.append(cur)
+    return segs
+
+
 def git_calls(cmd):
     """Each git invocation in a shell command as (subcommand, args). None = the command could not be parsed."""
     out = []
-    for seg in re.split(r'&&|\|\||[;|\n&()`]|\$\(', cmd):
-        try:
-            toks = shlex.split(seg)
-        except ValueError:
-            return None
+    segs = shell_segments(cmd)
+    if segs is None:
+        return None
+    for toks in segs:
+        toks = [t.strip('`') for t in toks]   # `git stash` in backticks
         for t in toks:                      # sh -c "git commit -a", eval '...'
             if re.search(r'\s', t) and re.search(r'\bgit\b', t):
                 inner = git_calls(t)
@@ -87,17 +112,20 @@ def covers(spec, path):
 
 def git_touches_protected(cmd, L):
     """Why this command would stage / commit / restore / discard a protected path, or '' when it cannot."""
-    calls = git_calls(cmd)
-    if calls is None:
-        return 'the command could not be parsed' if re.search(r'\bgit\b', cmd) else ''
-    calls = [(s, a) for s, a in calls if s not in GIT_READONLY]
-    if not calls:
+    if not re.search(r'\bgit\b', cmd):
         return ''
+    calls = git_calls(cmd)
+    if calls is not None:
+        calls = [(s, a) for s, a in calls if s not in GIT_READONLY]
+        if not calls:
+            return ''
     dirty, staged = dirty_protected(L)
     if dirty is None:
         return 'git state could not be read'
-    if not dirty:
+    if not dirty:                       # no gate file differs from HEAD: no git command can carry or drop one
         return ''
+    if calls is None:
+        return 'the command could not be parsed while gate files have uncommitted changes %s' % dirty
     for sub, args in calls:
         opts = [a for a in args if a.startswith('-')]
         specs = [a for a in args if not a.startswith('-') and a != '--']

@@ -120,3 +120,14 @@ Dijalankan di repo asli, tanpa UNLOCK G-01 di pesan terakhir owner. Alat uji: pr
   - Sesudahnya: hash kembali `bb3628c9…`, `git status` bersih.
 - Kesimpulan: kedua jalur (sesudah perintah, dan di akhir giliran) bekerja di sesi nyata. Uji 2 juga memperlihatkan batas (a) di `known_limits`: perubahan sempat ada dari saat job latar menulis sampai Stop hook mengembalikannya. Perubahan dibatalkan, bukan dicegah.
 - Temuan sampingan saat mencatat hasil ini: perintah `git commit -m "..."` yang pesannya memuat tanda kurung ditolak dengan alasan "could not be parsed", padahal tidak ada file gate yang berubah. Pemeriksaan git menolak perintah yang tidak bisa diurai sebelum mengecek apakah ada file gate yang berubah. Aman, tapi terlalu ketat. Memperbaikinya perlu UNLOCK G-01.
+
+## Perbaikan pemeriksaan git yang terlalu ketat (perintah Bambang: "UNLOCK G-01 perbaiki pemeriksaan git yang terlalu ketat itu")
+
+- Penyebab 1: perintah dipotong di setiap `(`, `)`, `;`, `|`, `&` sebelum tanda kutip dibaca, jadi tanda kurung di dalam pesan commit memecah kutipan dan perintah dianggap tidak bisa diurai.
+  - Perbaikan: perintah sekarang diurai dengan memperhatikan tanda kutip (`shlex` dengan `punctuation_chars`). Tanda kurung di dalam kutipan dibaca sebagai teks, di luar kutipan sebagai pemisah perintah. Backtick dan `$( )` tetap dibaca sebagai perintah git.
+- Penyebab 2: perintah yang tidak bisa diurai ditolak sebelum dicek apakah ada file gate yang berubah.
+  - Perbaikan: `git status` dicek dulu. Kalau tidak ada file gate yang berbeda dari HEAD, perintah git apa pun diizinkan, karena tidak ada file gate yang bisa terbawa atau terbuang. Perintah yang tidak bisa diurai hanya ditolak kalau ada file gate yang berubah.
+- Self-test: 103/103 lulus (95 lama + 8 uji baru):
+  - boleh saat bersih: pesan dengan tanda kurung, kutipan tidak seimbang;
+  - boleh saat ada file gate berubah: `git add <file sendiri> && git commit -m "... (…; … | …)"`;
+  - tetap diblokir saat ada file gate berubah: kutipan tidak seimbang, `` `git stash` ``, `$(git commit -a)`, `(git commit -a -m "a (b) c")`, dua perintah dipisah baris baru.
