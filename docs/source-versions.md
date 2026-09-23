@@ -52,6 +52,19 @@
 > **OSD-116** — **167 comment**, terbaru **c50345** (Kent, 2026-09-22 14:24 +07). Tidak ada comment baru
 > sejak kemarin; **Alden masih belum membalas c50279**.
 >
+> **Sweep 2026-09-23 01:28Z (nosm-sync-check, new pipeline step 0)**
+> Connectors: n8n `search_workflows` ok, 145 workflows (toolu_01YaS4pEWrbm6MhLAwEXYgtv); Atlassian reads ok.
+> Controlled copies: `scripts/sync_check.py` exit 0 against 07.06 **v30** (toolu_01ENbiNLkvZwrNhWvkMo2Y8u) and
+> 04 **v25** (toolu_012dq8SmGsksRKsVvCUHfRj8): 19/19 bullets, preamble and 冻结要求 same; tables 4/4, 6/6, 15/15.
+> CQL `space = NOSM AND type = page AND lastmodified >= "2026-09-22"` (toolu_01KgZyvQVcL9QRZDh7vUxiXx):
+> totalSize **32**, one result page. Newest lastModified in the result: 2026-09-22T10:16:33Z (Grade 建造单).
+> Three of the 32 are in this ledger, each checked with `listConfluenceContentVersions`:
+> 建造单 **v40** 2026-09-22T07:46:03Z (toolu_019FLBs6HWxkRX9A5bhjLwXz) · 04.10 **v20** 2026-09-22T07:22:35Z
+> (toolu_01FuzFhLmUtty1W4wnd5tY2t) · 04.7 **v49** 2026-09-22T02:36:12Z (toolu_0161dBQtzKYqcjexGgTZ8aW6).
+> All three equal the versions already recorded. No diff to read.
+> The other 29 pages are not in this ledger.
+> OSD-116 comments and #nos-bo were not part of this run.
+
 | Halaman | pageId | Versi tercatat | Owner |
 | --- | --- | --- | --- |
 | 07｜指南 | 1704362028 | v28 | Kayden |
