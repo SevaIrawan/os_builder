@@ -47,18 +47,20 @@ so both of those rules are actually executed, not just written down.
    Compare its 一/五/六 tables (action routing, SSOT registration targets, 04.x subpage
    map — including each row's Owner and 当前状态) against `docs/04-anchor-navigation.md`.
 
-5. **Compare mechanically, not by eye.** Steps 3 and 4 are done with a script, never by
-   reading the two texts side by side:
-   - Extract the bullets / table rows from both sides, strip markdown links to their text,
-     strip `**`, backticks, backslashes and all whitespace, then compare the lists for
-     **exact equality**.
-   - **Compare the header rows too, and assert the column count matches.** A dropped
-     column is invisible when you only compare the columns the local copy happens to have
-     — this is exactly how the missing 「责任边界」 and 「放行条件」 columns survived an
-     earlier "in sync" report (2026-09-21).
-   - Assert the row count matches on both sides before comparing content; a missing row
-     is drift, not a formatting difference.
-   - Report the script's verdict, not an impression.
+5. **Compare mechanically, not by eye — and not by a script you retype each time.**
+   Save the two live sources to the scratchpad, then run the committed comparator:
+
+   ```
+   python3 scripts/sync_check.py --skill-src <07.06 §八> --nav-src <04 三张表>
+   ```
+
+   The nav source file marks each table with `## TBL-A` (§一 动作路由), `## TBL-B`
+   (§五 登记集), `## TBL-C` (§六 子页地图). The script compares **header rows and column
+   counts as well as row content**, and exits 1 on any drift. **Report the script's exit
+   code and output, not an impression.** A dropped column is invisible when you only
+   compare the columns the local copy happens to have — that is exactly how the missing
+   「责任边界」 and 「放行条件」 columns survived an earlier "in sync" report (2026-09-21),
+   and it is why this comparison is no longer written fresh each run.
 
 6. **Source version sweep.** The two files above are not the only thing that goes stale.
    - Read `docs/source-versions.md` — the ledger of every Confluence page we consume,
@@ -74,6 +76,17 @@ so both of those rules are actually executed, not just written down.
      naming 「SUBMIT 行」 once meant a completely different row than the one assumed.)
    - Update `docs/source-versions.md` and record the substantive deltas in the reading
      notes. A version number alone is not an update; what changed is.
+
+   - **Emit the sweep as a machine-readable artifact**: write
+     `docs/ledger/_sweep-latest.json` with `swept_at`, `window_from`, and one `moved[]`
+     entry per ledger page that moved — `from`, `to`, `read_after_move`, `how`, `read_at`,
+     `changed`. Anything you did not verify goes in as 🔲 with the reason, never as a guess.
+   - **Why an artifact and not a sentence**: on 2026-09-22 this skill PASSED, 04.10 was
+     correctly recorded as v19→v20, and the write that followed was still defective —
+     because the number was recorded and the page was never opened. Prose telling the model
+     to "read the diff" did not bind it. The artifact does: gate **G-01 check C11** reads
+     this file and refuses any outbound write whose source moved with
+     `read_after_move: false`. Recording a version number is no longer enough to proceed.
 
 7. **Report outcome — say exactly what was checked.**
    - Report steps 2–5 and step 6 as **two separate results**. Never let "the two controlled

@@ -31,7 +31,7 @@ dan dua di antaranya sudah terlanjur mendarat di halaman produksi (建造单 v40
 
 | Kode | Pola | Kejadian nyata |
 |---|---|---|
-| **R1** | Versi bergerak dicatat **nomornya**, isinya tidak dibuka | 04.10 naik ke v20; nomornya kucatat, halamannya tak kubuka. Isinya sudah memuat bukti layar untuk ketujuh project — lalu kutulis ke v40 bahwa buktinya "harus dikeluarkan Schema Owner". Bukti itu sudah ada 24 menit sebelum aku menulis. |
+| **R1** | Versi bergerak dicatat **nomornya**, isinya tidak dibuka | 04.10 naik ke v20; nomornya kucatat, halamannya tak kubuka. Isinya sudah memuat bukti layar untuk ketujuh project — lalu kutulis ke v40 bahwa buktinya "harus dikeluarkan Schema Owner". Bukti itu sudah ada 24 menit sebelum aku menulis. Ditutup **dua lapis**: C3 (wajib baca penuh hari ini) dan C11 (halaman yang bergerak pada sapuan wajib sudah dibaca setelah bergerak). |
 | **R2** | Klaim ditulis **tanpa sumber yang bisa dikutip** | 「改选项即时生效」·「不得在件内另写映射表」·「重复批准不会被 Jira 拦」 — tiga-tiganya karanganku, nol sumber, nol uji. |
 | **R3** | Angka **disimpulkan** dari rentang penomoran, bukan dihitung | Kutulis 「SLA C-1～C-20（17 条）」. Dihitung baris demi baris: **16**. Penomoran melompat. |
 | **R4** | Dua nama mirip dianggap satu objek | 「PIP 参数组」(8 field, sisi induk) vs 「PIP Extension 参数」(6 field, sisi sub) — kutulis "sudah dibangun" untuk yang salah. Mendarat di v40. |
@@ -96,6 +96,12 @@ Tiap FAIL menyebut klaim mana dan kurang apa. Perbaiki penyebabnya, jalankan lag
   Nol bisa berarti "tidak ada" atau "tidak terlihat"; keduanya tak terbedakan tanpa probe
   (07.06.1 **E16**).
 - **C4** — angka apa pun yang berbentuk jumlah harus punya perintah hitung dan keluarannya.
+- **C11 sapuan** — `docs/ledger/_sweep-latest.json` harus ada, `swept_at` harus hari ini, dan
+  setiap sumber tulisan ini yang tercatat bergerak harus `read_after_move: true` beserta
+  `how` + `read_at`. Artefak itu diproduksi oleh `nosm-sync-check` langkah 6.
+  **Inilah sambungan mekanis antara kedua skill.** Tanpa C11, `nosm-sync-check` bisa lulus
+  (nomor versi tercatat benar) sementara tulisannya tetap cacat — persis yang terjadi
+  pada 2026-09-22.
 
 ---
 
@@ -108,5 +114,16 @@ Keduanya tidak saling menggantikan, dan ini bukan pembagian teoretis: pada 2026-
 `nosm-sync-check` lulus — 04.10 tercatat naik ke v20 dengan benar — **dan tulisannya tetap cacat**,
 karena nomor versi tercatat sementara isinya tidak pernah dibuka. G-01 adalah yang menangkap itu.
 
-Urutannya: `nosm-sync-check` dulu (tahu apa yang bergerak) → baca sumber yang bergerak sampai habis
-→ bangun ledger → G-01 → baru menulis.
+Urutannya, dan tiap panah punya penjaga:
+
+```
+nosm-sync-check          -> scripts/sync_check.py   (exit 1 = 部署漂移, berhenti)
+  + emit sapuan          -> docs/ledger/_sweep-latest.json
+baca penuh yang bergerak -> dicatat read_after_move di sapuan itu
+bangun claims ledger     -> docs/ledger/<write_id>.json
+G-01                     -> scripts/gate_check.py   (exit 1 = dilarang menulis)
+tulis
+```
+
+Dua skrip itu yang memutuskan, bukan penilaianku. Kalau salah satu keluar 1, tidak ada
+tulisan yang keluar — tanpa kecuali, dan tanpa "sebenarnya sudah cukup".

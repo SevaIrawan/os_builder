@@ -96,6 +96,25 @@ def main(path):
     # C10
     add('C10', bool((L.get('user_order') or '').strip()), 'perintah: %r' % (L.get('user_order') or '')[:60])
 
+    # C11 — halaman yang bergerak pada sapuan terakhir wajib sudah dibaca isinya
+    c11bad = []
+    try:
+        sw = load('docs/ledger/_sweep-latest.json')
+    except Exception as e:
+        sw = None
+        c11bad.append('docs/ledger/_sweep-latest.json tidak terbaca (%s)' % e.__class__.__name__)
+    if sw is not None:
+        if sw.get('swept_at', '')[:10] != today:
+            c11bad.append('swept_at=%s, bukan hari ini (%s)' % (sw.get('swept_at'), today))
+        moved = {m['source_id']: m for m in sw.get('moved', [])}
+        for sid in sorted(used - {''}):
+            m = moved.get(sid)
+            if m and not m.get('read_after_move'):
+                c11bad.append('%s bergerak %s->%s tapi read_after_move=false' % (sid, m.get('from'), m.get('to')))
+            if m and m.get('read_after_move') and not (m.get('how') and m.get('read_at')):
+                c11bad.append('%s: read_after_move=true tanpa how/read_at' % sid)
+    add('C11', not c11bad, '; '.join(c11bad) or 'semua sumber yang bergerak sudah dibaca setelah bergerak')
+
     gate = load('.claude/gates/G-01-outbound-write.json')
     names = {c['id']: c['name'] for c in gate['checks']}
     print('=' * 66)
