@@ -38,3 +38,8 @@ Perintah Bambang: "Jalankan keduanya", yaitu uji blokir langsung dan uji ujung k
 3. **B1 untuk draft menerima perintah draft lama.** Draft ini diizinkan oleh "Buat draft dulu" (2026-09-22 08:40), padahal perintah itu untuk draft Bagian 7, bukan draft ini. Usulan: perintah draft kedaluwarsa setelah N jam, atau harus menyebut sasaran.
 
 Perbaikan ketiganya butuh "UNLOCK G-01" dari Bambang.
+
+## Uji hook akhir giliran (Stop)
+
+- Saat giliran hendak diakhiri, hook Stop **memblokir** karena draft uji gagal G-01 (D2). Terbukti bekerja secara langsung.
+- Sesudahnya file draft uji dihapus dari repo. Isinya tetap tersimpan di commit 3b83035. Ledger D-2026-09-23-01.json disimpan sebagai bukti.
