@@ -136,7 +136,9 @@ class Transcript:
 # --------------------------------------------------------------------------- text
 
 TAG_BLOCK_RE = re.compile(r'</?(p|div|li|ul|ol|tr|table|thead|tbody|h[1-6]|br|blockquote|pre|td|th)\b[^>]*>', re.I)
-TAG_RE = re.compile(r'<[^>]+>')
+# Only real tags: '<' followed by a letter or '/letter'. A literal '<' in text (e.g. "次数<2")
+# must never be eaten - 2026-09-23 live test: text between '<' and '>' vanished from D1/D2.
+TAG_RE = re.compile(r'</?[A-Za-z][^<>]*>')
 MDLINK_RE = re.compile(r'\[([^\]]*)\]\([^)]*\)')
 
 
@@ -318,6 +320,10 @@ def numeric_tokens(text, L, include_all_cn=False):
     t3 = re.sub(L['page_code_pattern'], lambda m: ' ' * len(m.group(0)), t2)
     # arabic numerals
     for m in re.finditer(r'\d+', t3):
+        if m.start() > 0 and t3[m.start() - 1] in 'vV':
+            # a version number (v40) is an identifier, never a quantity
+            out.append({'raw': 'v' + m.group(0), 'value': int(m.group(0)), 'count': False, 'kind': 'version'})
+            continue
         after = t3[m.end():m.end() + 12].lstrip()
         after_l = after.lower()
         is_count = any(after.startswith(u) for u in units_cn) or \

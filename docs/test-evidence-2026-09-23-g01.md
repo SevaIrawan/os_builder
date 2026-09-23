@@ -43,3 +43,11 @@ Perbaikan ketiganya butuh "UNLOCK G-01" dari Bambang.
 
 - Saat giliran hendak diakhiri, hook Stop **memblokir** karena draft uji gagal G-01 (D2). Terbukti bekerja secara langsung.
 - Sesudahnya file draft uji dihapus dari repo. Isinya tetap tersimpan di commit 3b83035. Ledger D-2026-09-23-01.json disimpan sebagai bukti.
+
+## Perbaikan ketiga cacat (perintah Bambang: "UNLOCK G-01 perbaiki ketiga cacat itu")
+
+1. Pola tag sekarang `</?[A-Za-z][^<>]*>`. Karakter `<` harfiah tidak lagi memakan teks. Pada kasus nyata, kutipan K2/K3 sekarang ditemukan di Spec v62.
+2. Angka yang didahului `v` sekarang dibaca sebagai nomor versi, bukan jumlah. "v40 区三" tidak lagi dianggap jumlah, sedangkan "共 40 区" tetap tertangkap.
+3. Izin draft kedaluwarsa setelah `windows_minutes.draft_order_age` (720 menit). "Buat draft dulu" berumur 1018 menit sekarang ditolak dengan pesan "ask the owner".
+
+Self-test: 59/59 lulus, termasuk lima uji baru untuk ketiga cacat.

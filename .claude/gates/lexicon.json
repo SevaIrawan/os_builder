@@ -75,5 +75,5 @@
   "protected_paths": [".claude/settings.json", ".claude/gates/", ".claude/skills/", "scripts/hooks/", "scripts/nosm_lib.py", "scripts/gate_check.py", "scripts/order_check.py", "scripts/read_source.py", "scripts/sync_check.py", "docs/orders/consumed.jsonl", "docs/ledger/_draft-registry.json"],
   "draft_path_patterns": ["^docs/drafts/", "^docs/(?!ledger/|orders/).*draft[^/]*$", "^docs/(?!ledger/|orders/).*draf[^/]*$", "^docs/outbound/"],
 
-  "windows_minutes": {"outbound_source_age": 60, "draft_source_age": 720}
+  "windows_minutes": {"outbound_source_age": 60, "draft_source_age": 720, "draft_order_age": 720}
 }

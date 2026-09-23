@@ -27,7 +27,7 @@
     {"id": "A2", "name": "CONTROLLED_COPIES_IN_SYNC", "rule": "scripts/sync_check.py passes on full reads of 07.06 and 04 taken from the transcript, at most 12 h old."},
     {"id": "A3", "name": "SPACE_SWEEP_RUN", "rule": "Within 12 h: a successful Confluence search whose CQL contains NOSM and lastmodified."},
 
-    {"id": "B1", "name": "ORDER_STANDING", "rule": "The latest owner message classified WRITE (outbound) or WRITE/DRAFT (draft) exists. Outbound: every later owner message is a plain CONFIRM. Draft: no later STOP."},
+    {"id": "B1", "name": "ORDER_STANDING", "rule": "The latest owner message classified WRITE (outbound) or WRITE/DRAFT (draft) exists. Outbound: every later owner message is a plain CONFIRM. Draft: no later STOP, and the order is at most windows_minutes.draft_order_age old (an order for earlier work does not authorise a new draft)."},
     {"id": "B2", "name": "ORDER_UNUSED", "rule": "Outbound: the order is not recorded as used in docs/orders/consumed.jsonl (one order = one write). The PostToolUse hook records it."},
     {"id": "B3", "name": "ORDER_MATCHES_TARGET", "rule": "If the order names page ids or issue keys, the target must be one of them."},
     {"id": "B4", "name": "NOT_BACKEND_OPS_ACCOUNT", "rule": "No write through mcp__Atlassian_Rovo__ (Backend Operations account). Owner instruction 2026-09-22."},

@@ -54,6 +54,14 @@ for text, kind in RISKY:
     hit = bool(N.numeric_tokens(text, L)) if kind == 'num' else bool(N.absence_hits(text, L))
     expect('detect %-3s %s' % (kind, text), hit)
 
+# ------------------------------------------------------------------ 2b. defects found by the 2026-09-23 live test
+segs = [s for s, _ in N.segments('打回次数 <2 时可再打回。PIP 参数组已全部建成。延长期 >1 次不允许。')]
+expect('defect 1: literal < > no longer hides a sentence from D1', any('PIP 参数组已全部建成' in s for s in segs), str(segs))
+expect('defect 1: real tags still stripped', N.norm('<p data-x="1">abc</p><br/>') == 'abc')
+toks = N.numeric_tokens('建造单 v40 区三原句', L)
+expect('defect 2: v40 is a version, not a quantity', toks and not any(t['count'] for t in toks), str(toks))
+expect('defect 2: a real quantity is still caught', any(t['count'] for t in N.numeric_tokens('共 40 区', L)))
+
 # ------------------------------------------------------------------ 3. synthetic session
 real = N.Transcript(N.find_transcript())
 sync_reads = {}
@@ -320,6 +328,22 @@ with open(os.path.join(tmp, 'docs/ledger/D-TEST.json'), 'w', encoding='utf-8') a
     json.dump(dl, f, ensure_ascii=False)
 rc, msg = hook('stop.py', {}, tp)
 expect('stop: draft with passing ledger accepted', rc == 0, msg)
+
+# defect 3: a draft order from earlier work must not authorise a new draft
+t, ids = base_session(order='Kau check dulu semua sumber')
+old = (NOW - datetime.timedelta(hours=17)).isoformat().replace('+00:00', 'Z')
+t.lines.insert(0, {'type': 'user', 'origin': {'kind': 'human'}, 'uuid': 'old', 'promptId': 'old', 'timestamp': old,
+                   'message': {'content': 'Buat draft dulu'}})
+tp2 = t.save(os.path.join(tmp, 'transcript-old-order.jsonl'))
+with open(os.path.join(tmp, 'docs/drafts/y-draft.md'), 'w', encoding='utf-8') as f:
+    f.write(GOOD_TEXT + '\n')
+dl2 = dict(dl, write_id='D-OLD', target={'system': 'draft', 'path': 'docs/drafts/y-draft.md'})
+with open(os.path.join(tmp, 'docs/ledger/D-OLD.json'), 'w', encoding='utf-8') as f:
+    json.dump(dl2, f, ensure_ascii=False)
+r = subprocess.run([sys.executable, 'scripts/gate_check.py', 'docs/ledger/D-OLD.json', '--transcript', tp2, '--json'],
+                   cwd=tmp, capture_output=True, text=True)
+rows = {row[0]: row for row in json.loads(r.stdout)['rows']}
+expect('defect 3: 17 h old draft order refused (B1)', rows['B1'][1] is False, rows['B1'][2])
 
 shutil.rmtree(tmp, ignore_errors=True)
 print('-' * 60)

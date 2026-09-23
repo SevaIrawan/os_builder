@@ -47,8 +47,11 @@ def consumed_orders():
     return out
 
 
-def find_order(tr, kind, L):
-    """The standing order for this kind of write, or (None, reason)."""
+def find_order(tr, kind, L, now=None):
+    """The standing order for this kind of write, or (None, reason).
+    A draft order expires after windows_minutes.draft_order_age: 2026-09-23 live test showed a
+    'Buat draft dulu' given the day before for another draft being accepted for a new draft."""
+    now = now or N.now_utc()
     allowed = ('WRITE',) if kind == 'outbound' else ('WRITE', 'DRAFT')
     idx = None
     for i in range(len(tr.prompts) - 1, -1, -1):
@@ -58,6 +61,11 @@ def find_order(tr, kind, L):
     if idx is None:
         return None, 'no owner message in this session is classified %s' % '/'.join(allowed)
     order = tr.prompts[idx]
+    if kind == 'draft':
+        limit = L['windows_minutes']['draft_order_age']
+        if age_min(order['ts'], now) > limit:
+            return None, 'latest draft/write order "%s" is %.0f min old (limit %d) - it belongs to earlier work; ask the owner' % (
+                order['text'][:60], age_min(order['ts'], now), limit)
     later = tr.prompts[idx + 1:]
     for p in later:
         cls, _ = N.classify(p['text'], L)
@@ -213,7 +221,7 @@ def evaluate(ledger, tr, now=None, tool_name=None, tool_input=None, L=None):
     R.add('A3', sweep, 'space-wide lastmodified sweep within 12 h: %s' % (sweep[-1].id if sweep else 'NONE'))
 
     # ---------------- B: authorization
-    order, why = find_order(tr, kind, L)
+    order, why = find_order(tr, kind, L, now)
     R.add('B1', order is not None, ('order: "%s" (%s)' % (order['text'][:80], order['ts'])) if order else why)
     if kind == 'outbound':
         R.add('B2', order is not None and order['uuid'] not in consumed_orders(),
