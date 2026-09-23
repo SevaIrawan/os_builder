@@ -385,6 +385,12 @@ def evaluate(ledger, tr, now=None, tool_name=None, tool_input=None, L=None):
         qv, qc = N.quote_values(quote, L), N.quote_count_values(quote, L)
         counts = k.get('counts') or []
         for tok in N.numeric_tokens(text, L):
+            if tok['kind'] == 'issue_key':
+                # an issue key is an identifier: it must be a source this ledger read, or be quoted
+                if N.norm(tok['value']) in qn or any(str(m.get('id')) == tok['value'] for m in src_meta.values()):
+                    continue
+                nnbad.append('%s: mentions issue %s without reading it or quoting it' % (k.get('id'), tok['value']))
+                continue
             if tok['kind'] in ('date', 'page_code'):
                 if N.norm(tok['value']) in qn or any(str(m.get('ts', '')).startswith(tok['value']) for m in src_meta.values()):
                     continue

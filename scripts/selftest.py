@@ -329,6 +329,23 @@ with open(os.path.join(tmp, 'docs/ledger/D-TEST.json'), 'w', encoding='utf-8') a
 rc, msg = hook('stop.py', {}, tp)
 expect('stop: draft with passing ledger accepted', rc == 0, msg)
 
+# defect 4: a Jira issue key is an identifier, not a number to be found in the quote
+toks = N.numeric_tokens('OSD-116 c50345 记：共 13 个字段', L)
+expect('defect 4: OSD-116 read as an issue key', any(t['kind'] == 'issue_key' and t['value'] == 'OSD-116' for t in toks), str(toks))
+expect('defect 4: S-05 / C-12 are not issue keys', not any(t['kind'] == 'issue_key' for t in N.numeric_tokens('S-05 与 C-12', L)))
+t, ids = base_session()
+cm = t.call('mcp__Atlassian_MCP__executeRead', {'name': 'listJiraIssueComments', 'inputs': {'issueIdOrKey': 'OSD-116', 'startAt': 0}},
+            {'data': {'startAt': 0, 'isLast': True, 'total': 1,
+                      'comments': [{'id': '50345', 'author': {'displayName': 'Kent'}, 'body': 'PIP Extension 参数 共 6 个字段，已建成'}]}})
+def add_jira(lg):
+    lg['sources'].append({'source_id': 'S7', 'system': 'jira_comments', 'issue': 'OSD-116', 'read_calls': [cm]})
+ok_claim = [{'id': 'K1', 'text': 'OSD-116 记：PIP Extension 参数共 6 个字段，已建成', 'source_id': 'S7', 'quote': 'PIP Extension 参数 共 6 个字段，已建成'}]
+ok, rows, out = run_gate(t, *ledger(ids, ok_claim, 'OSD-116 记：PIP Extension 参数共 6 个字段，已建成', extra=add_jira))
+expect('defect 4: issue key of a source read in full passes D3/D5', rows.get('D3') is True and rows.get('D5') is True, str([r for r in out['rows'] if not r[1]]))
+bad_claim = [{'id': 'K1', 'text': 'NSE-9999 记：PIP Extension 参数共 6 个字段，已建成', 'source_id': 'S1', 'quote': 'PIP Extension 参数 共 6 个字段，已建成'}]
+ok, rows, _ = run_gate(*(lambda tt: (tt[0],) + ledger(tt[1], bad_claim, 'NSE-9999 记：PIP Extension 参数共 6 个字段，已建成'))(base_session()))
+expect('defect 4: issue never read nor quoted is refused (D5)', rows.get('D5') is False)
+
 # defect 3: a draft order from earlier work must not authorise a new draft
 t, ids = base_session(order='Kau check dulu semua sumber')
 old = (NOW - datetime.timedelta(hours=17)).isoformat().replace('+00:00', 'Z')

@@ -69,3 +69,11 @@ Self-test: 59/59 lulus, termasuk lima uji baru untuk ketiga cacat.
   - 04.8 v21
   - OSD-116, 167 komentar, 25/25 bagian
 - Pencarian: tiga CQL dan dua halaman listing komentar; 172 hit, semuanya dibaca.
+
+## Perbaikan cacat keempat (perintah Bambang: "UNLOCK G-01 perbaiki cacat keempat itu")
+
+- Nomor issue Jira (pola `[A-Z][A-Z0-9]+-\d+`, misalnya OSD-116 atau NSE-1126) sekarang dibaca sebagai identitas, bukan angka.
+- Aturannya: issue yang disebut dalam klaim harus berupa sumber yang dibaca penuh di ledger, atau tertulis di kutipan. Kalau tidak, D5 menolak.
+- "S-05" dan "C-12" tidak dianggap nomor issue.
+- Self-test: 63/63 lulus, termasuk empat uji baru.
+- Draft koreksi v40 (D-2026-09-23-02) tetap PASS.

@@ -301,6 +301,9 @@ def _mask_ignored(text, L):
     return text
 
 
+ISSUE_KEY_RE = r'(?<![A-Za-z0-9])[A-Z][A-Z0-9]+-\d+(?![\d])'
+
+
 def numeric_tokens(text, L, include_all_cn=False):
     """Every number stated in text: [{'raw', 'value', 'count': bool}].
     count=True when the number is followed by a counting unit (a quantity claim)."""
@@ -314,6 +317,10 @@ def numeric_tokens(text, L, include_all_cn=False):
     for m in re.finditer(r'\d{4}-\d{2}-\d{2}(?:[T ][\d:.]+Z?)?', t):
         out.append({'raw': m.group(0), 'value': m.group(0), 'count': False, 'kind': 'date'})
     t2 = re.sub(r'\d{4}-\d{2}-\d{2}(?:[T ][\d:.]+Z?)?', lambda m: ' ' * len(m.group(0)), t)
+    # Jira issue keys (OSD-116, NSE-1126): identifiers, never quantities (2026-09-23 defect 4)
+    for m in re.finditer(ISSUE_KEY_RE, t2):
+        out.append({'raw': m.group(0), 'value': m.group(0), 'count': False, 'kind': 'issue_key'})
+    t2 = re.sub(ISSUE_KEY_RE, lambda m: ' ' * len(m.group(0)), t2)
     # page codes 04.10 etc: strings
     for m in re.finditer(L['page_code_pattern'], t2):
         out.append({'raw': m.group(0), 'value': m.group(0), 'count': False, 'kind': 'page_code'})
