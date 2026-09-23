@@ -161,3 +161,20 @@ Tahap 2, satu baris kosong ditambahkan di akhir `lexicon.json` atas perintah "UN
   - lolos saat ada file gate berubah: `git stash list`, `git stash show`, `git status --short; git stash list | wc -l`, `... ; echo "git exit=$?"`, `git commit -m "fix the git gap (stash list)"` setelah `git add` file sendiri;
   - tetap diblokir saat ada file gate berubah: `git stash push`, `git stash pop`, `git commit -m "msg $(git stash)"`, `bash -c 'git add -A'`, `eval "git commit -a -m x"`, `` echo "`git stash`" ``.
 - Belum diuji langsung di sesi nyata, karena uji langsung butuh file gate yang berubah dan pesan tanpa UNLOCK, dan baris uji sudah dibuang.
+
+## Uji langsung perbaikan dua blokir (perintah Bambang: "Jalankan uji git sekarang")
+
+Satu baris kosong ditambahkan lagi di akhir `lexicon.json` atas perintah "UNLOCK G-01 buat perubahan kecil di lexicon untuk uji itu" (tidak di-commit), lalu diuji tanpa UNLOCK:
+- Lolos, 4/4:
+  - `git stash list | wc -l`, jawaban `0`
+  - `git stash show`, "No stash entries found."
+  - `git add <draft sendiri> && git commit --dry-run -m "Live test (a; b | c)"; echo "git exit=$?"`, git menjawab "no changes added", `git exit=1`
+  - `git commit --dry-run -m "fix the git gap (stash list)"`
+- Diblokir, 5/5:
+  - `git stash push`: "git stash runs while gate files have uncommitted changes"
+  - `bash -c 'git add -A --dry-run'`: "would stage"
+  - `eval "git commit -a --dry-run -m x"`: "git commit -a / --all would commit"
+  - `git commit --dry-run -m "msg $(git stash)"`: "git stash runs…"
+  - `git commit -a --dry-run`: "git commit -a / --all would commit"
+- Sesudahnya: baris uji masih ada, tidak ada yang masuk stash atau ter-stage (`.git/refs/` hanya `heads`, `remotes`, `tags`).
+- Baris uji lalu dibuang atas perintah "UNLOCK G-01 buang baris uji, catat hasil uji, commit dan push"; `lexicon.json` kembali sama dengan versi terakhir yang di-commit.
