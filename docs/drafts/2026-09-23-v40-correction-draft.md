@@ -4,6 +4,10 @@
 
 建造单 v40 的区三原句：「本区「已知必建」中的 PIP 参数组、Show Cause 与 Warning 记录组自此转为已建」
 
+c50234（Kent，2026-09-19）原文：「c50234 | Kent | 2026-09-19T15:41:53.005+0700」
+
+该留言原句：「Sub-ticket fields (PIP parameter set, Show Cause / Warning record sets) → you build」
+
 c50345（Kent，2026-09-22）字段交接原文：「S-05 execution-card / sub-ticket fields ×13 are built and registered in 04.10 §三 (v20)」
 
 以下两句出自 c50237（Bambang，2026-09-19）：「c50237 | Bambang | 2026-09-19T18:01:04.800+0700」

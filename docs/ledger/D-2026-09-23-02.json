@@ -71,6 +71,18 @@
    "quote": "本区「已知必建」中的 **PIP 参数组、Show Cause 与 Warning 记录组自此转为已建**"
   },
   {
+   "id": "K12",
+   "text": "c50234（Kent，2026-09-19）原文：「c50234 | Kent | 2026-09-19T15:41:53.005+0700」",
+   "source_id": "S6",
+   "quote": "c50234 | Kent | 2026-09-19T15:41:53.005+0700"
+  },
+  {
+   "id": "K13",
+   "text": "该留言原句：「Sub-ticket fields (PIP parameter set, Show Cause / Warning record sets) → you build」",
+   "source_id": "S6",
+   "quote": "Sub-ticket fields (PIP parameter set, Show Cause / Warning record sets) → you build"
+  },
+  {
    "id": "K2",
    "text": "c50345（Kent，2026-09-22）字段交接原文：「S-05 execution-card / sub-ticket fields ×13 are built and registered in 04.10 §三 (v20)」",
    "source_id": "S6",
