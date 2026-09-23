@@ -8,8 +8,8 @@
   "status": "legacy: written before G-01 v3, never gated; any change must pass the gate"
  },
  "docs/drafts/2026-09-23-v40-correction-draft.md": {
-  "passed_at": "2026-09-23T01:45:51.054773+00:00",
-  "sha": "e747705b9e15",
+  "passed_at": "2026-09-23T01:55:57.925188+00:00",
+  "sha": "b650d5a60f27",
   "write_id": "D-2026-09-23-02"
  }
 }
