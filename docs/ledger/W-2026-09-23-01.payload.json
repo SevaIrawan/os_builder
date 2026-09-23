@@ -1,0 +1,12 @@
+{
+ "cloudId": "nexmax.atlassian.net",
+ "contentId": "2096463922",
+ "snapshotToken": "v:40",
+ "edits": [
+  {
+   "name": "insertNodeAfter",
+   "localId": "d60d1c617fdf",
+   "value": "<p>【订正｜原文保留不删】上文「验证边界」所述证据，04.10 v20 Check-in Record 行已记：「屏-tab API 回读 2026-09-22：on-screen 全 7 项目 True」。该行同记：「HR/BO createmeta OK（FIN/CRM/FOZ/WP/XLP default 屏字段超200·createmeta 首页截断·以屏成员实证为准）」。04.10 页首记：「Owner：Kent（Schema Owner）」。上文「自此转为已建」一语，应以 c50345 为准：「S-05 execution-card / sub-ticket fields ×13 are built and registered in 04.10 §三 (v20)」。该交接另记：「#4 verified by screen-membership across all 7 projects」。上文所列 PIP Outstanding Items，04.10 v20 标为「PIP Extension 参数组（6 字段之一·仅一次·续用原 Case）」。Spec v62 增补区 A 表「PIP Extension参数」字段包括尚未达标事项、当前差距、延长期目标、延长周期、新到期日期及 Check-in 安排。Spec v62 增补区 A 表「PIP 参数」字段包括改善问题、改善目标、衡量标准、PIP 周期、开始日期、到期日期、负责跟进人及 Check-in 安排。c50237（Bambang，2026-09-19）：「c50237 | Bambang | 2026-09-19T18:01:04.800+0700」。该留言主单侧标题为「Master-ticket side — @Alden / V1 (26 items → 35 fields)」。其下所列：「Show Cause回复截止日期 (date, system) · 纪律记录有效期 (2 fields) · HR 确认处置工具 (select, 6) · Warning 等级／结果 (select, 3) · PIP 参数 (8 fields: 改善问题 · 改善目标 · 衡量标准 · PIP 周期 · 开始日期 · 到期日期 · 负责跟进人 · Check-in 安排)」。c50234（Kent，2026-09-19）：「c50234 | Kent | 2026-09-19T15:41:53.005+0700」。该留言原句：「Sub-ticket fields (PIP parameter set, Show Cause / Warning record sets) → you build」。</p>"
+  }
+ ]
+}

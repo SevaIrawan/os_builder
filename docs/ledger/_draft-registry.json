@@ -7,6 +7,11 @@
   "sha": "7ecb36593e13",
   "status": "legacy: written before G-01 v3, never gated; any change must pass the gate"
  },
+ "docs/drafts/2026-09-23-v40-correction-block.md": {
+  "passed_at": "2026-09-23T02:47:13.614725+00:00",
+  "sha": "6c2c1e7439f5",
+  "write_id": "D-2026-09-23-03"
+ },
  "docs/drafts/2026-09-23-v40-correction-draft.md": {
   "passed_at": "2026-09-23T01:55:57.925188+00:00",
   "sha": "b650d5a60f27",

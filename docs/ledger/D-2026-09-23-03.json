@@ -1,0 +1,140 @@
+{
+ "write_id": "D-2026-09-23-03",
+ "kind": "draft",
+ "target": {
+  "system": "draft",
+  "path": "docs/drafts/2026-09-23-v40-correction-block.md"
+ },
+ "discovery": {
+  "topic_terms": [
+   "PIP Extension",
+   "Show Cause",
+   "PIP 参数",
+   "纪律记录有效期",
+   "OSD-116"
+  ],
+  "calls": [
+   "toolu_01BMbb1zZS3w7MPC52pWhvi4",
+   "toolu_01A5FdHGBeSQTFdSy8g1eJxg",
+   "toolu_01RFFeRANiYS7DygnTRVwCQ4",
+   "toolu_01LHib1FbJ4try8wXpS3iLB3",
+   "toolu_014YGQc1wSwUTpsbDq26eQ7g"
+  ],
+  "excluded": {
+   "confluence:1691254793": "04.7 route table: search hit on the topic terms, but no sentence of this correction block cites or depends on it",
+   "confluence:1690140756": "04.8 registry: search hit on the topic terms, but no sentence of this correction block cites or depends on it"
+  }
+ },
+ "sources": [
+  {
+   "source_id": "S1",
+   "system": "confluence",
+   "content_id": "2096463922",
+   "read_call": "toolu_01MT7Mhe3pv1JoBb3WkFB2eY"
+  },
+  {
+   "source_id": "S2",
+   "system": "confluence",
+   "content_id": "1738735636",
+   "read_call": "toolu_01XXFJnVXoRWZKfEaaRaf1H6"
+  },
+  {
+   "source_id": "S3",
+   "system": "confluence",
+   "content_id": "2036858900",
+   "read_call": "toolu_01P9j32wG5SdpkHBFKfs5wuJ"
+  },
+  {
+   "source_id": "S6",
+   "system": "jira_comments",
+   "issue": "OSD-116",
+   "read_calls": [
+    "toolu_01LHib1FbJ4try8wXpS3iLB3",
+    "toolu_014YGQc1wSwUTpsbDq26eQ7g"
+   ]
+  }
+ ],
+ "claims": [
+  {
+   "id": "K1",
+   "text": "上文「验证边界」所述证据，04.10 v20 Check-in Record 行已记：「屏-tab API 回读 2026-09-22：on-screen 全 7 项目 True」。",
+   "source_id": "S2",
+   "quote": "屏-tab API 回读 2026-09-22：on-screen 全 7 项目 True"
+  },
+  {
+   "id": "K2",
+   "text": "该行同记：「HR/BO createmeta OK（FIN/CRM/FOZ/WP/XLP default 屏字段超200·createmeta 首页截断·以屏成员实证为准）」。",
+   "source_id": "S2",
+   "quote": "HR/BO createmeta OK（FIN/CRM/FOZ/WP/XLP default 屏字段超200·createmeta 首页截断·以屏成员实证为准）"
+  },
+  {
+   "id": "K3",
+   "text": "04.10 页首记：「Owner：Kent（Schema Owner）」。",
+   "source_id": "S2",
+   "quote": "Owner**：Kent（Schema Owner）"
+  },
+  {
+   "id": "K5",
+   "text": "上文「自此转为已建」一语，应以 c50345 为准：「S-05 execution-card / sub-ticket fields ×13 are built and registered in 04.10 §三 (v20)」。",
+   "source_id": "S6",
+   "quote": "c50345 | Kent | 2026-09-22T14:24:28.148+0700 | parent=None [Handoff → @Bambang, cc @Alden] S-05 execution-card / sub-ticket fields ×13 are built and registered in 04.10 §三 (v20)"
+  },
+  {
+   "id": "K4",
+   "text": "该交接另记：「#4 verified by screen-membership across all 7 projects」。",
+   "source_id": "S6",
+   "quote": "#4 verified by screen-membership across all 7 projects"
+  },
+  {
+   "id": "K6",
+   "text": "上文所列 PIP Outstanding Items，04.10 v20 标为「PIP Extension 参数组（6 字段之一·仅一次·续用原 Case）」。",
+   "source_id": "S2",
+   "quote": "PIP Outstanding Items | customfield\\_18248（textarea） | Kent | HR｜S-05 N17 PIP 延长-尚未达标事项 | 生效 | 多行文本 | HR（Sub-ticket 屏） | createmeta(HR/Sub-ticket 14316) 回读 2026-09-22 OK | [OSD-116](https://nexmax.atlassian.net/browse/OSD-116)（c50290/c50283） | 2026-09-22 | PIP Extension 参数组（6 字段之一·仅一次·续用原 Case）"
+  },
+  {
+   "id": "K7",
+   "text": "Spec v62 增补区 A 表「PIP Extension参数」字段包括尚未达标事项、当前差距、延长期目标、延长周期、新到期日期及 Check-in 安排。",
+   "source_id": "S3",
+   "quote": "| PIP Extension参数 | N17 | N16、N17 | 填写（仅限一次） | 是（Extension路径） | 包括尚未达标事项、当前差距、延长期目标、延长周期、新到期日期及 Check-in 安排"
+  },
+  {
+   "id": "K8",
+   "text": "Spec v62 增补区 A 表「PIP 参数」字段包括改善问题、改善目标、衡量标准、PIP 周期、开始日期、到期日期、负责跟进人及 Check-in 安排。",
+   "source_id": "S3",
+   "quote": "| PIP 参数 | N07／N14（PIP判定的同一时刻设定） | N15、N16、N17 | HR正式设置；N07正常判定PIP时设定，或N14复核不成立后重新判定为PIP时设定；Direct Supervisor可提供资料或建议，非正式参数设置人 | 是（PIP路径） | 包括改善问题、改善目标、衡量标准、PIP 周期、开始日期、到期日期、负责跟进人及 Check-in 安排"
+  },
+  {
+   "id": "K9",
+   "text": "c50237（Bambang，2026-09-19）：「c50237 | Bambang | 2026-09-19T18:01:04.800+0700」",
+   "source_id": "S6",
+   "quote": "c50237 | Bambang | 2026-09-19T18:01:04.800+0700"
+  },
+  {
+   "id": "K9b",
+   "text": "该留言主单侧标题为「Master-ticket side — @Alden / V1 (26 items → 35 fields)」。",
+   "source_id": "S6",
+   "quote": "Master-ticket side — @Alden / V1 (26 items → 35 fields)"
+  },
+  {
+   "id": "K10",
+   "text": "其下所列：「Show Cause回复截止日期 (date, system) · 纪律记录有效期 (2 fields) · HR 确认处置工具 (select, 6) · Warning 等级／结果 (select, 3) · PIP 参数 (8 fields: 改善问题 · 改善目标 · 衡量标准 · PIP 周期 · 开始日期 · 到期日期 · 负责跟进人 · Check-in 安排)」。",
+   "source_id": "S6",
+   "quote": "Show Cause回复截止日期 (date, system) · 纪律记录有效期 (2 fields) · HR 确认处置工具 (select, 6) · Warning 等级／结果 (select, 3) · PIP 参数 (8 fields: 改善问题 · 改善目标 · 衡量标准 · PIP 周期 · 开始日期 · 到期日期 · 负责跟进人 · Check-in 安排)"
+  },
+  {
+   "id": "K11",
+   "text": "c50234（Kent，2026-09-19）：「c50234 | Kent | 2026-09-19T15:41:53.005+0700」",
+   "source_id": "S6",
+   "quote": "c50234 | Kent | 2026-09-19T15:41:53.005+0700"
+  },
+  {
+   "id": "K11b",
+   "text": "该留言原句：「Sub-ticket fields (PIP parameter set, Show Cause / Warning record sets) → you build」。",
+   "source_id": "S6",
+   "quote": "Sub-ticket fields (PIP parameter set, Show Cause / Warning record sets) → you build"
+  }
+ ],
+ "boilerplate": [
+  "【订正｜原文保留不删】"
+ ]
+}
