@@ -1,0 +1,148 @@
+{
+ "write_id": "W-2026-09-24-04",
+ "kind": "outbound",
+ "target": {
+  "system": "jira_comment",
+  "issue": "NSE-1137"
+ },
+ "tool": "mcp__Atlassian_MCP__addOrEditJiraIssueComment",
+ "payload_file": "docs/ledger/W-2026-09-24-04.payload.json",
+ "discovery": {
+  "topic_terms": [
+   "ToIGnEJmksSPhC85"
+  ],
+  "calls": [
+   "toolu_01PQCgPiGx7hzcUUngoUWXPr"
+  ],
+  "excluded": {}
+ },
+ "sources": [
+  {
+   "source_id": "S4",
+   "system": "jira_comments",
+   "issue": "NSE-1137",
+   "read_calls": [
+    "toolu_015Ne5zdEX3kF4rrLLDv4Qqs",
+    "toolu_01YRkLZih5x9tnvzy28TrjA3",
+    "toolu_01BtG1xQ2VmC4AMjPvPz3KgJ"
+   ]
+  },
+  {
+   "source_id": "S5",
+   "system": "jira_comments",
+   "issue": "OSD-116",
+   "read_calls": [
+    "toolu_01EtMyDU3awvfasKqoQUSNan",
+    "toolu_01TqEz3ytH7xqFvQb1JETSyL"
+   ]
+  },
+  {
+   "source_id": "S6",
+   "system": "confluence",
+   "content_id": "2036858900",
+   "read_call": "toolu_01Q22Sn42hi9wZoXdF22dybv"
+  },
+  {
+   "source_id": "S7",
+   "system": "n8n_workflow",
+   "workflow_id": "ToIGnEJmksSPhC85",
+   "read_call": "toolu_01FWJRQ8tTTnksNiwEPfegJz"
+  },
+  {
+   "source_id": "S9",
+   "system": "n8n_workflow",
+   "workflow_id": "qa01CkZBQfx8eLsK",
+   "read_call": "toolu_01FTfZwrr6yJve8pKaAMonoU"
+  },
+  {
+   "source_id": "S10",
+   "system": "confluence",
+   "content_id": "1711276058",
+   "read_call": "toolu_01NVh7LVc8sx6GdXYStwMgCa"
+  }
+ ],
+ "claims": [
+  {
+   "id": "K1",
+   "text": "Wired: \"Call Resignation Upstream Trigger Entry\" now points to `qa01CkZBQfx8eLsK`.",
+   "source_id": "S7",
+   "quote": "\"workflowId\":{\"__rl\":true,\"mode\":\"id\",\"value\":\"qa01CkZBQfx8eLsK\"}"
+  },
+  {
+   "id": "K2",
+   "text": "It sends the fields under your names: upstreamSource, upstreamCaseKey, employeeAccountId, dismissalCategoryId, judgmentRef.",
+   "source_id": "S7",
+   "quote": "\"upstreamCaseKey\":\"={{ $json.caseKey }}\",\"upstreamSource\":\"S-05 N20\""
+  },
+  {
+   "id": "K3",
+   "text": "`upstreamSource` is set to `S-05 N20` for now",
+   "source_id": "S7",
+   "quote": "\"upstreamSource\":\"S-05 N20\""
+  },
+  {
+   "id": "K4",
+   "text": "your audit comment prints it into 「由 … 的 … 触发」, so please confirm the value.",
+   "source_id": "S9",
+   "quote": "' 的 ' + f.upstreamSource + ' 触发"
+  },
+  {
+   "id": "K5",
+   "text": "N20 stops unless the entry returns `ok:true` with an `issueKey`.",
+   "source_id": "S7",
+   "quote": "throw new Error('N20: resignation upstream entry did not accept case '"
+  },
+  {
+   "id": "K6",
+   "text": "`created:false` with an `issueKey` counts as success, as you described.",
+   "source_id": "S4",
+   "quote": "means the idempotency guard hit on"
+  },
+  {
+   "id": "K7",
+   "text": "Our own Trigger link step is switched off.",
+   "source_id": "S7",
+   "quote": "\"position\":[1920,144],\"disabled\":true"
+  },
+  {
+   "id": "K8",
+   "text": "Per the resignation Spec row 系统触发入口, your entry builds the link in the same rule that creates the ticket, so doing it on both sides would duplicate it.",
+   "source_id": "S10",
+   "quote": "同一条规则内建 Trigger link（上游主单 triggers 离职主单"
+  },
+  {
+   "id": "K9",
+   "text": "Please check this on your side: \"Link Trigger\" sets `inwardIssue` = the new resignation ticket and `outwardIssue` = the upstream case.",
+   "source_id": "S9",
+   "quote": "inwardIssue: { key: $('Create Resignation Ticket').item.json.key }, outwardIssue: { key: $('Build Ticket Fields').item.json.upstreamCaseKey }"
+  },
+  {
+   "id": "K10",
+   "text": "Kent's contract reads 「S-05 triggers resignation」 — could you confirm which side Jira shows as \"triggers\" with this order?",
+   "source_id": "S5",
+   "quote": "Trigger link 10075, S-05 triggers resignation, main-to-main"
+  },
+  {
+   "id": "K11",
+   "text": "On the employee name: in the S-05 Spec, N20 says the resignation ticket takes the name from NTP: 「员工姓名/工号/部门等基础信息由系统自动带入（NTP）」.",
+   "source_id": "S6",
+   "quote": "N20 解雇自动开单与交接 | 自动化 | 系统 | N14或N17判定=解雇 | 自动化——系统自动在「员工离职Spec」建立一张离职主单，并与本S-05 Case建立正式Jira Issue Link（Triggers link，主单对主单，04.2第三节，并写入审计comment记录触发时间/来源Case编号/判定依据类型）；离职单中员工姓名/工号/部门等基础信息由系统自动带入（NTP）"
+  },
+  {
+   "id": "K12",
+   "text": "That matches the NTP lookup you offered as the fallback.",
+   "source_id": "S4",
+   "quote": "If not I will resolve it from NTP"
+  },
+  {
+   "id": "K13",
+   "text": "Adding a name to the handover would change the contract in the resignation Spec, which is Kent's call rather than ours.",
+   "source_id": "S10",
+   "quote": "流程 Owner：Kent｜更新触发条件：业务规则变更由流程 Owner 发起修订"
+  }
+ ],
+ "boilerplate": [
+  "Reply → @Geri, cc @Kent @Alden",
+  "—— Bambang"
+ ]
+}

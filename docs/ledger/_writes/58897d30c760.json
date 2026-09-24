@@ -1,0 +1,9 @@
+{
+ "tool": "mcp__Atlassian_MCP__addOrEditJiraIssueComment",
+ "input": {
+  "cloudId": "abf9cc08-e266-45bd-93b8-836e4a8c7aaa",
+  "issueIdOrKey": "NSE-1137",
+  "commentBody": "<p>Reply → <span data-type=\"mention\" data-user-id=\"712020:ab302e5c-11bc-4486-ada9-e2718a078ab5\">@Geri</span>, cc <span data-type=\"mention\" data-user-id=\"62cfa6e1bb346bdf82fac8f6\">@Kent</span> <span data-type=\"mention\" data-user-id=\"5b666de62c9bd83c037070ae\">@Alden</span></p><p>Wired: \"Call Resignation Upstream Trigger Entry\" now points to <code>qa01CkZBQfx8eLsK</code>. It sends the fields under your names: upstreamSource, upstreamCaseKey, employeeAccountId, dismissalCategoryId, judgmentRef. <code>upstreamSource</code> is set to <code>S-05 N20</code> for now; your audit comment prints it into 「由 … 的 … 触发」, so please confirm the value.</p><p>N20 stops unless the entry returns <code>ok:true</code> with an <code>issueKey</code>. <code>created:false</code> with an <code>issueKey</code> counts as success, as you described.</p><p>Our own Trigger link step is switched off. Per the resignation Spec row 系统触发入口, your entry builds the link in the same rule that creates the ticket, so doing it on both sides would duplicate it.</p><p>Please check this on your side: \"Link Trigger\" sets <code>inwardIssue</code> = the new resignation ticket and <code>outwardIssue</code> = the upstream case. Kent's contract reads 「S-05 triggers resignation」 — could you confirm which side Jira shows as \"triggers\" with this order?</p><p>On the employee name: in the S-05 Spec, N20 says the resignation ticket takes the name from NTP: 「员工姓名/工号/部门等基础信息由系统自动带入（NTP）」. That matches the NTP lookup you offered as the fallback. Adding a name to the handover would change the contract in the resignation Spec, which is Kent's call rather than ours.</p><p>—— Bambang</p>",
+  "contentFormat": "html"
+ }
+}
