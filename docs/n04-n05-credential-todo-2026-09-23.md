@@ -94,19 +94,42 @@ marker internal.
 **Belum di-set**: `settings.errorWorkflow` (nos-ops alert on failure) — sama seperti N04/N05,
 ini menunggu keputusan platform, belum saya paksa set sendiri.
 
-## Menunggu 04.3 selesai revisi — dampak ke N07 / Abort Case (OSD-116 c50442)
+## Abort Case (id 11) permission ke HR Ops & Data + N07 kriteria (OSD-116 c50442/c50445)
 
-**Sumber**: Kayden Lee, OSD-116 comment c50442, 2026-09-24T12:30:26+0700, balasan ke Alden
-soal 04.3 §六 (撤回类 vs 失效类 pada 中止/Abort Case). Baris yang menyebut Bambang, dikutip
-persis: *"@Bambang 待 04.3 改完，Abort Case 转态权限配给 HR Ops & Data 角色组，N07 确认重复
+**Sumber awal**: Kayden Lee, OSD-116 c50442, 2026-09-24T12:30:26+0700 — baris untuk Bambang,
+dikutip persis: *"@Bambang 待 04.3 改完，Abort Case 转态权限配给 HR Ops & Data 角色组，N07 确认重复
 同口径。"*
 
-**Yang perlu dikerjakan nanti, setelah 04.3 selesai direvisi (Kayden bilang "Kayden 侧已派人"
-untuk revisi itu, belum ada versi baru per komentar ini)**:
-1. Kasih hak transisi "Abort Case" ke role group **HR Ops & Data**.
-2. Pastikan **N07** (pengecekan duplikat) pakai kriteria yang sama dengan 失效类 yang baru
-   ditetapkan di 04.3 (khususnya nilai "Duplicate Case" yang menurut Kayden ditandai 失效类
-   di tabel A Felix, S-05 sendiri tidak perlu diubah/direview ulang).
+**04.3 §六 sudah selesai direvisi dan lolos recheck** — Kayden Lee, OSD-116 c50445,
+2026-09-24T12:48:09+0700: sekarang **04.3 v35** (变更日志 C-320; v34 sempat jadi versi
+placeholder kecelakaan tulis, dikoreksi ke v35 dalam task yang sama, riwayat versi tetap
+ada jejak). Baris tugas untuk Bambang, dikutip persis: *"@Bambang：Abort Case（id 11）转态权限
+配给 HR Ops & Data 角色组；N07「确认重复」同口径。执行顺序请写死：先把主单转「已取消」，再取消未关
+子单——反过来先关子单，模式五会抢先把主单判成「已完成」。建造单登记依据 04.3 v35 §六。"*
 
-**Status**: belum dikerjakan, sengaja ditunda — 04.3 belum selesai direvisi per komentar
-ini. Jangan mulai sebelum ada konfirmasi versi baru 04.3.
+**Rincian tugas**:
+1. Beri hak transisi **"Abort Case" (transition id 11)** ke role group **HR Ops & Data**
+   (proyek S-05 = SSCSD).
+2. **N07** (belum dibangun — masih tertahan di Pattern-9) harus pakai kriteria 失效类 yang
+   sama saat "确认重复" — S-05 sendiri Spec-nya tidak berubah/tidak direview ulang, Felix
+   yang menandai "Duplicate Case" dan "员工已离职或案件失效" sebagai 失效类 di tabel A.
+3. **Urutan eksekusi wajib** (ditulis eksplisit oleh Kayden agar tidak kebalik): main ticket
+   ditransisi ke "已取消" dulu, baru sub-tiket yang belum tertutup di-cancel — kalau dibalik
+   (sub-tiket ditutup dulu), mode lima (04.4) bisa keburu tandai main ticket "已完成".
+4. Pencatatan di建造单 (build ticket) dilakukan berdasar 04.3 v35 §六.
+
+**Status — dicek 2026-09-24**: kedua sub-tugas TIDAK bisa dieksekusi via API yang tersedia
+saat ini.
+- Sub-tugas 1 (hak transisi): dicek via Atlassian `discover` — tidak ada operasi untuk
+  mengubah kondisi/izin transisi workflow Jira (transition permission/condition) di
+  toolset ini. Yang ada cuma `transitionJiraIssue` (jalankan transisi di satu issue, bukan
+  atur siapa yang boleh) dan Confluence content permissions — tidak ada yang menyentuh Jira
+  workflow scheme. Ini perubahan Jira Project Settings → Workflows → edit transition
+  condition, harus dikerjakan manual dari Jira admin console (pola sama seperti masalah
+  kredensial N05/N20: aksi admin-UI, bukan API).
+- Sub-tugas 2 (N07 kriteria): N07 belum dibangun (masih tertahan Pattern-9), belum ada
+  tempat untuk menerapkan kriteria ini.
+
+**Rencana lanjut**: Bambang buka Jira admin (Project Settings → SSCSD → Workflows), cari
+transition id 11 "Abort Case", tambah condition "User is in project role: HR Ops & Data".
+Sub-tugas 2 menyusul saat N07 mulai dibangun.
