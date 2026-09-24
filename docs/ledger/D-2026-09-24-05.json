@@ -11,21 +11,24 @@
   "excluded": {}
  },
  "sources": [
-  {"source_id": "S2", "system": "n8n_workflow", "workflow_id": "ToIGnEJmksSPhC85", "read_call": "toolu_015yDKp6jVZHQD9r4TmCg9zv"},
   {"source_id": "S4", "system": "jira_comments", "issue": "NSE-1137", "read_calls": ["toolu_01H9APeEtN3NCQZ5XWVQMiFv", "toolu_01LjVcjTnuXXH2UvP5sVKp79", "toolu_01NhGPUSN4rZjq1d3MxujAAS"]},
-  {"source_id": "S6", "system": "confluence", "content_id": "2036858900", "read_call": "toolu_01LggZJU5S9tPrHbzEhYDrCh"}
+  {"source_id": "S6", "system": "confluence", "content_id": "2036858900", "read_call": "toolu_01LggZJU5S9tPrHbzEhYDrCh"},
+  {"source_id": "S7", "system": "n8n_workflow", "workflow_id": "ToIGnEJmksSPhC85", "read_call": "toolu_01QNowTanUcrjfBAhZUMYb2b"},
+  {"source_id": "S9", "system": "n8n_workflow", "workflow_id": "qa01CkZBQfx8eLsK", "read_call": "toolu_01LQUczK5MGoXRRVGqbUrGvu"}
  ],
  "claims": [
   {"id": "P1", "text": "🔲Reply → @Geri, re c50494/c50495"},
-  {"id": "K1", "text": "Got it — wiring N20's placeholder to `qa01CkZBQfx8eLsK` now that it exists.", "source_id": "S4", "quote": "wire N20 to qa01CkZBQfx8eLsK"},
+  {"id": "K1", "text": "Done — \"Call Resignation Upstream Trigger Entry\" now points to `qa01CkZBQfx8eLsK`.", "source_id": "S7", "quote": "\"value\": \"qa01CkZBQfx8eLsK\""},
+  {"id": "P2", "text": "🔲Read back: that is the only change, N20 is still inactive."},
   {"id": "K2", "text": "Understood it stays a no-op (`ok:false`) until it's published through Alden's gate", "source_id": "S4", "quote": "It creates nothing until it is published through Alden's gate"},
   {"id": "K3", "text": "N20 will only call it for real after that.", "source_id": "S4", "quote": "and N20 cannot call it before then either"},
-  {"id": "P2", "text": "🔲On `dismissalCategoryId`: N20's current mapping only produces two of the five cf18199 values — 纪律违规→15846, PIP未改善→15847 — per Kent's original handover contract (c50381), since S-05 is only the first upstream source."},
-  {"id": "P3", "text": "🔲The other three per Spec v2.9 A table (Kent c49103 ②, 04.9.3): 岗位裁撤·组织重组→15848, 试用期不通过→15849, 其他→15850 — none of those are S-05 judgment types, so still not a gap on S-05's side."},
-  {"id": "P6", "text": "🔲On the employee name field: S-05 does carry one."},
-  {"id": "K8", "text": "Spec A table field 员工姓名／工号（主体标识）, collected at N01/N03, sourced from NTP, consumed by every downstream node, and it's literally the second segment of the main ticket's title.", "source_id": "S6", "quote": "员工姓名／工号（主体标识） | N01（事件入口）／N03（人为入口） | 全流程各节点 | 系统带出（NTP） | 是 | 本次 Case 对应的员工主体，由系统根据 NTP 员工资料自动带出，用于识别员工及关联其历史 S-05 Case，构成主单标题第二段"},
-  {"id": "K9", "text": "I'll add it to N20 as the sixth field, read off the case ticket — cheaper than a fresh NTP lookup on your side.", "source_id": "S2", "quote": "纪律与绩效改进处置｜N20｜解雇自动开单与交接"},
-  {"id": "K6", "text": "—— Bambang", "source_id": "S4", "quote": "Bambang"}
+  {"id": "P3", "text": "🔲On `dismissalCategoryId`: N20's current mapping only produces two of the five cf18199 values — 纪律违规→15846, PIP未改善→15847 — per Kent's original handover contract (c50381), since S-05 is only the first upstream source."},
+  {"id": "P4", "text": "🔲The other three per Spec v2.9 A table (Kent c49103 ②, 04.9.3): 岗位裁撤·组织重组→15848, 试用期不通过→15849, 其他→15850 — none of those are S-05 judgment types, so still not a gap on S-05's side."},
+  {"id": "P5", "text": "🔲On the employee name field: S-05 does carry one."},
+  {"id": "K4", "text": "Spec A table field 员工姓名／工号（主体标识）, collected at N01/N03, sourced from NTP, consumed by every downstream node, and it's literally the second segment of the main ticket's title.", "source_id": "S6", "quote": "员工姓名／工号（主体标识） | N01（事件入口）／N03（人为入口） | 全流程各节点 | 系统带出（NTP） | 是 | 本次 Case 对应的员工主体，由系统根据 NTP 员工资料自动带出，用于识别员工及关联其历史 S-05 Case，构成主单标题第二段"},
+  {"id": "K5", "text": "Your Build Ticket Fields already reads `t.subjectName`, but the Upstream Called trigger doesn't declare it as an input.", "source_id": "S9", "quote": "String(t.subjectName || '')"},
+  {"id": "K6", "text": "Once you add `subjectName` there, I'll pass it from N20.", "source_id": "S7", "quote": "纪律与绩效改进处置｜N20｜解雇自动开单与交接"},
+  {"id": "K7", "text": "—— Bambang", "source_id": "S4", "quote": "Bambang"}
  ],
  "boilerplate": []
 }
