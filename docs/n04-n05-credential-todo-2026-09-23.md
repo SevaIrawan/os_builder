@@ -6,7 +6,10 @@
 
 ## N05｜重复案件与历史记录检查 (`LJwiAZFfnuq6tmju`)
 
-**Masalah**: node **"Write Duplicate Marker Comment (internal)"** (`n8n-nodes-base.httpRequest`,
+**Update 2026-09-24**: credential sudah terpasang secara manual dan berhasil tersimpan, jadi
+dianggap selesai. Tinggal syarat lain (dry-run, errorWorkflow, approval Alden) sebelum bisa aktif.
+
+**Masalah (riwayat)**: node **"Write Duplicate Marker Comment (internal)"** (`n8n-nodes-base.httpRequest`,
 POST ke `/rest/api/3/issue/{issueKey}/comment`) belum punya kredensial terpasang.
 `authentication: predefinedCredentialType`, `nodeCredentialType: jiraSoftwareCloudApi`,
 tapi field `credentials` di parameter node masih kosong (dicek via `get_workflow_details`
@@ -72,7 +75,11 @@ judgmentType ke option id (纪律违规→15846, PIP未改善→15847, sesuai ko
 panggil entry Geri (placeholder) → bikin Trigger Link (issueLink type 10075) → tulis comment
 marker internal.
 
-**Kredensial — kena masalah yang SAMA PERSIS dengan N05, sudah diduga sebelum bangun**:
+**Update 2026-09-24**: kedua node httpRequest di bawah juga sudah terpasang secara manual dan
+berhasil tersimpan, jadi dianggap selesai. Sisa blocker N20 murni di placeholder workflowId
+"Call Resignation Upstream Trigger Entry", bukan lagi soal kredensial.
+
+**Kredensial — kena masalah yang SAMA PERSIS dengan N05, sudah diduga sebelum bangun (riwayat)**:
 - Node "Read S-05 Case Comments" (Jira native, `issueComment.getAll`) — kredensial Bot_SSC
   **otomatis kepasang** oleh n8n waktu create (`autoAssignedCredentials` di response).
 - Dua node `httpRequest` ("Create Trigger Link", "Write Triggered Marker Comment") —
