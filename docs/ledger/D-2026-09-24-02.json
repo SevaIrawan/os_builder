@@ -1,0 +1,44 @@
+{
+ "write_id": "D-2026-09-24-02",
+ "kind": "draft",
+ "target": {
+  "system": "draft",
+  "path": "docs/drafts/2026-09-24-geri-c50387-n20-reply-draft.md"
+ },
+ "discovery": {
+  "topic_terms": ["N20判定解雇"],
+  "calls": ["toolu_01DzzgiC36GCeQyFbr4sPpWJ"],
+  "excluded": {}
+ },
+ "sources": [
+  {
+   "source_id": "S1",
+   "system": "confluence",
+   "content_id": "2036858900",
+   "read_call": "toolu_01MxdeundpjddFdQy3LtrBHx"
+  },
+  {
+   "source_id": "N4",
+   "system": "n8n_workflow",
+   "workflow_id": "UBLsvYaSlCI3pLWs",
+   "read_call": "toolu_014QFSXi6j1jSTkqf1HXZqzv"
+  },
+  {
+   "source_id": "N5",
+   "system": "n8n_workflow",
+   "workflow_id": "LJwiAZFfnuq6tmju",
+   "read_call": "toolu_01NhoCh9G3nRMCfMumPdf6K5"
+  }
+ ],
+ "claims": [
+  {"id": "EK1", "text": "Yes, the shape fits N20 — basis (Spec, N20): 「N20判定解雇后自动建立离职单并完成Issue Link关联，初始值写入已建单并关联」, which lines up with success, whether it was freshly created, the issueKey for the link, and a reason on failure.", "source_id": "S1", "quote": "N20判定解雇后自动建立离职单并完成Issue Link关联，初始值写入已建单并关联"},
+  {"id": "EK2", "text": "What's built already: 「纪律与绩效改进处置｜N04｜路由分发」.", "source_id": "N4", "quote": "纪律与绩效改进处置｜N04｜路由分发"},
+  {"id": "EK3", "text": "And 「纪律与绩效改进处置｜N05｜重复案件与历史记录检查」.", "source_id": "N5", "quote": "纪律与绩效改进处置｜N05｜重复案件与历史记录检查"},
+  {"id": "EK4", "text": "I'll build N20 once this shape is confirmed, and post the id here.", "source_id": "S1", "quote": "N20判定解雇后自动建立离职单并完成Issue Link关联，初始值写入已建单并关联"}
+ ],
+ "boilerplate": [
+  "Reply → @Geri",
+  "No workflow id yet.",
+  "—— Bambang"
+ ]
+}
