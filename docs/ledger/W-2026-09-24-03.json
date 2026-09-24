@@ -1,0 +1,31 @@
+{
+ "write_id": "W-2026-09-24-03",
+ "kind": "outbound",
+ "target": {
+  "system": "jira_comment",
+  "issue": "OSD-116"
+ },
+ "tool": "mcp__Atlassian_MCP__addOrEditJiraIssueComment",
+ "payload_file": "docs/ledger/W-2026-09-24-03.payload.json",
+ "discovery": {
+  "topic_terms": ["Pattern-9 consolidated request"],
+  "calls": ["toolu_01KZQ5QSLBqFkQRYGKvFCP4V"],
+  "excluded": {}
+ },
+ "sources": [
+  {
+   "source_id": "S3",
+   "system": "jira_comments",
+   "issue": "OSD-116",
+   "read_calls": ["toolu_01MFozJnvr5Lh6i4zpvEKaNV", "toolu_01LBoWFzLn2WS2sThCHnzj2j"]
+  }
+ ],
+ "claims": [
+  {"id": "EK1", "text": "Checking in on the Pattern-9 request.", "source_id": "S3", "quote": "【Pattern-9 consolidated request → @Alden, cc @Kent】"},
+  {"id": "EK2", "text": "That's comment c50279 — any update on this?", "source_id": "S3", "quote": "c50279 | Bambang | 2026-09-21T15:17:14.976+0700 | parent=None"}
+ ],
+ "boilerplate": [
+  "Follow-up → @Alden, cc @Kent",
+  "—— Bambang"
+ ]
+}
