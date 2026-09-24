@@ -1,0 +1,163 @@
+{
+ "tool": "mcp__Atlassian_MCP__updateConfluenceContent",
+ "input": {
+  "cloudId": "abf9cc08-e266-45bd-93b8-836e4a8c7aaa",
+  "contentId": "2096463922",
+  "snapshotToken": "v:45",
+  "edits": [
+   {
+    "name": "deleteNode",
+    "localId": "d3facd533e80"
+   },
+   {
+    "name": "deleteNode",
+    "localId": "bb0078babad4"
+   },
+   {
+    "name": "deleteNode",
+    "localId": "7fb8dbd3e8ed"
+   },
+   {
+    "name": "deleteNode",
+    "localId": "99dd67ea04f2"
+   },
+   {
+    "name": "deleteNode",
+    "localId": "36daedef0f0b"
+   },
+   {
+    "name": "deleteNode",
+    "localId": "6dd221b1eee5"
+   },
+   {
+    "name": "deleteNode",
+    "localId": "26a840bcfe49"
+   },
+   {
+    "name": "deleteNode",
+    "localId": "3ffef6721561"
+   },
+   {
+    "name": "deleteNode",
+    "localId": "fece34d51084"
+   },
+   {
+    "name": "deleteNode",
+    "localId": "13b3805f2415"
+   },
+   {
+    "name": "deleteNode",
+    "localId": "9b2f33a455d5"
+   },
+   {
+    "name": "deleteNode",
+    "localId": "4fd8a16cf98d"
+   },
+   {
+    "name": "deleteNode",
+    "localId": "4e92b88602ea"
+   },
+   {
+    "name": "deleteNode",
+    "localId": "8bc7fe403261"
+   },
+   {
+    "name": "deleteNode",
+    "localId": "846d96638bd5"
+   },
+   {
+    "name": "deleteNode",
+    "localId": "18ba6d18ef61"
+   },
+   {
+    "name": "deleteNode",
+    "localId": "9f71078fb34a"
+   },
+   {
+    "name": "insertNodeAfter",
+    "localId": "a99c1693d3d4",
+    "value": "<p>【2026-09-24 订正｜原文保留不删】上段「共 34 行」为 2026-09-24 追加行之前的计数。</p>"
+   },
+   {
+    "name": "insertNodeAfter",
+    "localId": "a99c1693d3d4",
+    "value": "<p>现逐行机读本表「状态」列所得：共 41 行。</p>"
+   },
+   {
+    "name": "insertNodeAfter",
+    "localId": "a99c1693d3d4",
+    "value": "<p>其中阻塞中 6 行。</p>"
+   },
+   {
+    "name": "insertNodeAfter",
+    "localId": "a99c1693d3d4",
+    "value": "<p>待办 31 行。</p>"
+   },
+   {
+    "name": "insertNodeAfter",
+    "localId": "a99c1693d3d4",
+    "value": "<p>已解封 4 行。</p>"
+   },
+   {
+    "name": "insertNodeAfter",
+    "localId": "a99c1693d3d4",
+    "value": "<p>待办之中「建造侧提出·双签未表态」12 行。</p>"
+   },
+   {
+    "name": "insertNodeAfter",
+    "localId": "a99c1693d3d4",
+    "value": "<p>上段原文保留，以便前后对照。</p>"
+   },
+   {
+    "name": "insertNodeAfter",
+    "localId": "a99c1693d3d4",
+    "value": "<p>【2026-09-24 补｜原文保留不删】既有行「员工离职 Spec 系统触发接收入口」：入口已由 Geri 建为骨架。入口 ID <code>qa01CkZBQfx8eLsK</code>。Geri 原文「It creates nothing until it is published through Alden's gate」。本行状态不变。</p>"
+   },
+   {
+    "name": "insertNodeAfter",
+    "localId": "a99c1693d3d4",
+    "value": "<p>【2026-09-24 补｜原文保留不删】建设备注「上下级解析」段中「须经白话对齐向 Felix 确认本流程口径」一句已不适用。Kent 于 OSD-116 原文：「no longer applies — any resolution failure = stop + alert」。</p>"
+   },
+   {
+    "name": "insertNodeAfter",
+    "localId": "a99c1693d3d4",
+    "value": "<p>【2026-09-24 补】直属上级缺位规则：Kayden 撤回「直属上级缺位时由 HR Ops &amp; Data 代为受理提交，代提交的案件首层审核自动升至 Head of HR」一句。Felix 原文：「S-05 Spec 已完成对应修订，页面现 v67（内部版本 v28）」。本页凡引用旧缺位处理逻辑者，以 Spec v67 为准。</p>"
+   },
+   {
+    "name": "insertNodeAfter",
+    "localId": "472eb29d9ffa",
+    "value": "<tr><td><p>Abort Case（id 11）转态权限配给 HR Ops &amp; Data 角色组，N07「确认重复」同口径</p></td><td><p>建造侧（经 Jira admin console）</p></td><td><p>执行顺序依 Kayden 原文：「先把主单转「已取消」，再取消未关子单」</p></td><td><p>「反过来先关子单，模式五会抢先把主单判成「已完成」」</p></td><td><p>待办</p></td></tr>"
+   },
+   {
+    "name": "insertNodeAfter",
+    "localId": "472eb29d9ffa",
+    "value": "<tr><td><p>离职侧「系统触发入口」<code>qa01CkZBQfx8eLsK</code> 发布</p></td><td><p>Geri（入口）＋Alden（发布放行）</p></td><td><p>入口经 Alden 放行发布，且「待资料补齐」状态口径已定</p></td><td><p>Geri 原文「N20 cannot call it before then either」</p></td><td><p>阻塞中</p></td></tr>"
+   },
+   {
+    "name": "insertNodeAfter",
+    "localId": "472eb29d9ffa",
+    "value": "<tr><td><p>upstreamSource 取值待 Geri 确认</p></td><td><p>Geri</p></td><td><p>Geri 答复后回读两侧一致</p></td><td><p>该值写入离职侧审计备注「由 {key} 的 {upstreamSource} 触发」</p></td><td><p>待办</p></td></tr>"
+   },
+   {
+    "name": "insertNodeAfter",
+    "localId": "472eb29d9ffa",
+    "value": "<tr><td><p>离职侧入口 Trigger link 的 inwardIssue／outwardIssue 方向待 Geri 核对</p></td><td><p>Geri</p></td><td><p>Geri 答复后回读一致</p></td><td><p>Kent 契约原文「S-05 triggers resignation」</p></td><td><p>待办</p></td></tr>"
+   },
+   {
+    "name": "insertNodeAfter",
+    "localId": "472eb29d9ffa",
+    "value": "<tr><td><p>本件后续须建：D-10 通知 Direct Supervisor、经 B6 解析直属上级、挂 errorWorkflow</p></td><td><p>建造侧</p></td><td><p>逐项建成并回读</p></td><td><p>Spec 本节点要求：「若系统无法解析出该员工的 Direct Supervisor，系统拦截并告警，转 HR 修正档案后重新解析」</p></td><td><p>待办</p></td></tr>"
+   },
+   {
+    "name": "insertNodeAfter",
+    "localId": "472eb29d9ffa",
+    "value": "<tr><td><p>Spec 增补区 A 表「离职单关联状态」由 N20／N21 系统写入</p></td><td><p>建造侧</p></td><td><p>字段写入建成并回读</p></td><td><p>该字段记录「该Case交接进员工离职流程的进度」</p></td><td><p>待办</p></td></tr>"
+   },
+   {
+    "name": "insertNodeAfter",
+    "localId": "472eb29d9ffa",
+    "value": "<tr><td><p>本件与本页暗号接口契约表「先认领后动作」约束的适用</p></td><td><p>建造侧</p></td><td><p>明确本件侧是否补齐并登记</p></td><td><p>本件重复判定方式与本页约束不一致</p></td><td><p>待办（建造侧提出·双签未表态）</p></td></tr>"
+   }
+  ]
+ }
+}
