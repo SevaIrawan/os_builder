@@ -25,6 +25,20 @@ def file_sha(p):
         return N.text_sha(f.read())
 
 
+def readback_text(c, system):
+    """What a read-back shows. For Confluence the page read also carries the version message
+    (metadata.version.message), which a write's versionMessage lands in; it is not part of
+    N.readable(), so it is added here."""
+    txt = N.readable(c)
+    if system == 'confluence':
+        j = c.json()
+        data = j.get('data', j) if isinstance(j, dict) else {}
+        msg = (((data.get('metadata') or {}).get('version') or {}).get('message')) if isinstance(data, dict) else None
+        if msg:
+            txt += '\n' + msg
+    return txt
+
+
 def load_registry():
     try:
         with open(REGISTRY, encoding='utf-8') as f:
@@ -104,7 +118,7 @@ def main():
                     reads.append(c)
             if not reads:
                 problems.append('write to %s at %s has not been read back. Read the target again in full.' % (e['target'], e['at'])); continue
-            text = N.norm('\n'.join(N.readable(c) for c in reads))
+            text = N.norm('\n'.join(readback_text(c, system) for c in reads))
             missing = [raw[:60] for raw, n in segs if n not in text]
             if missing and not override:
                 problems.append('read-back of %s is missing %d sentence(s) that were sent: %s' % (e['target'], len(missing), missing[:5]))
