@@ -64,6 +64,34 @@
 > All three equal the versions already recorded. No diff to read.
 > The other 29 pages are not in this ledger.
 > OSD-116 comments and #nos-bo were not part of this run.
+>
+> **Sweep 2026-09-24 (nosm-sync-check, full run)**
+> Connectors: Atlassian reads ok (cloudId abf9cc08-…); n8n `search_workflows` ok.
+> Controlled copies: `scripts/sync_check.py` exit 0 against 07.06 **v30** (toolu_019qfms4R9oLjgWv7dJtK8Gv) and
+> 04 **v25** (toolu_01EHcBcjMUEXU6Ktf1zuSYMX): 19/19 bullets, preamble and 冻结要求 same; tables 4/4, 6/6, 15/15.
+> No deployment drift.
+> CQL `space = NOSM AND type = page AND lastmodified >= "2026-09-23"`: totalSize **34**, both pages read
+> (25 + 9, cursor-paginated). Six of the 34 are in this ledger; each checked with `listConfluenceContentVersions`:
+> **07.06.1 → v37** (was v34, 2026-09-23T10:56:17Z, "E5 补适用范围…") — full current body already read via
+> getConfluencePage, no drift risk (07.06.1 is a reference page, not one of the two controlled copies).
+> **04.9 → v109** (was v106, 2026-09-23T14:38:30Z, "索引：员工离职 N2 已发布 674e5e5e，Call N3 启用（c50402）") —
+> n8n Workflow SSOT index entry for the resignation N2 publish; not S-05-specific.
+> **04.11 → v4** (was v2, 2026-09-23T10:48:34Z, "N10 测试期落点改 nos-governance…") — Slack channel registry,
+> test-channel addition; not S-05-specific.
+> **04.5.3 → v14** (was v13, 2026-09-23T10:47:59Z, "§二 测试白名单加丙 #nos-governance…") — Sandbox/test
+> strategy page, same test-channel addition; not S-05-specific.
+> **04.7 → v50** (was v49, 2026-09-23T08:50:16Z) — diffed v49→v50: one row added,
+> `RT-HR-RESIGNATION-UPSTREAM-TRIGGER`, registering the upstream-trigger entry Kent assigned to Geri+Bambang
+> (OSD-116 c50382) as a Candidate Route, naming S-05 N20 as its first caller and flagging
+> "HR Ops & Data 成员来源：🔲 过渡期固定名单建设前登记（Geri）" — this is the same open item as NSE-1137
+> c50387 ⑦, now also tracked in 04.7. No conflict with anything Bambang has stated.
+> **纪律与绩效改进处置｜建造单 (S-05 建造单) → v43** (was v40, 2026-09-23T04:02:11Z) — diffed v40→v43:
+> three additive "【补登/订正｜原文保留不删】" blocks quoting c49317 (Felix), c50237/c50234 (Bambang/Kent field
+> split) and c50345 (Kent, 13 execution-card fields) verbatim into the build sheet; no deletions, no semantic
+> change, nothing new beyond what these sources already said.
+> The other 28 pages are not in this ledger (F1/PF-03/E02 cluster, xLoop packets, Grade/员工离职/OS 开发流
+> 建造单, 04.9.3/04.9.4/04.9.5, 员工离职｜流程 Spec, HR｜盘点与切分).
+> OSD-116 comments and #nos-bo were not re-swept this run (handled separately, see prior turns).
 
 | Halaman | pageId | Versi tercatat | Owner |
 | --- | --- | --- | --- |
@@ -73,7 +101,7 @@
 | 07.04｜结构审计指南 | 1744896004 | v27 | Kayden |
 | 07.05｜对齐指南 | — | v5 | Kayden |
 | 07.06｜建设指南 (sumber CLAUDE.md §八) | 1730347066 | **v30** | Alden |
-| 07.06.1｜开发规则与避坑指南 | 1712226375 | **v34** | Alden |
+| 07.06.1｜开发规则与避坑指南 | 1712226375 | **v37** | Alden |
 | 04｜总纲 (sumber anchor) | 1676804100 | **v25** | Kayden |
 | 04.0｜词汇表 | 1676640265 | v26 | Kayden |
 | 04.1｜Project 判定 | 1676738564 | v46 | Kayden |
@@ -87,20 +115,20 @@
 | 04.5｜Spec 与建造单规范 | 1678573617 | v79 | Kayden |
 | 04.5.1｜Spec 模板 | 1685979182 | v19 | Kayden |
 | 04.5.2｜建造单模板 | 1729626775 | v11 | Alden |
-| 04.5.3｜Sandbox 与测试 | 1729626578 | v13 | Alden |
+| 04.5.3｜Sandbox 与测试 | 1729626578 | **v14** | Alden |
 | 04.6｜n8n 使用规范 | 1690927120 | v20 | Alden |
-| 04.7｜Router SSOT | 1691254793 | **v49** | Alden |
+| 04.7｜Router SSOT | 1691254793 | **v50** | Alden |
 | 04.8｜Registry SSOT | 1690140756 | **v21** | Alden |
-| 04.9｜n8n Workflow SSOT | 1693089805 | **v106** | Alden |
+| 04.9｜n8n Workflow SSOT | 1693089805 | **v109** | Alden |
 | 04.9.1｜详情：平台 | 1764622422 | **v19** | Alden |
 | 04.10｜Jira 共享配置治理 | 1738735636 | **v20** | Kent |
-| 04.11｜Slack Channel 登记表 | 1764524046 | v2 | Alden |
+| 04.11｜Slack Channel 登记表 | 1764524046 | **v4** | Alden |
 | 04.12｜机读标记总清单 | 2091876367 | v5 | Kent |
 | Notify 子流程调用契约 | 1603633175 | v13 | Alden |
 | OS 开发流｜流程 Spec | 1729200354 | v39 | Kayden／Kent |
 | HR｜盘点与切分 | — | v38 | Felix |
 | 纪律与绩效改进处置｜流程 Spec (S-05) | 2036858900 | **v62** (冻结基线 v61) | Felix |
-| 纪律与绩效改进处置｜建造单 | 2096463922 | **v40** | Bambang (BO) |
+| 纪律与绩效改进处置｜建造单 | 2096463922 | **v43** | Bambang (BO) |
 
 **Tebal** = bergerak pada sapuan 2026-09-21 dan sudah dibaca diff-nya (lihat
 `docs/reading-notes-2026-09-21.md` bagian VERSION SWEEP).
