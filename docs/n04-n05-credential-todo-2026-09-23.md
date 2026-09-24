@@ -93,3 +93,20 @@ marker internal.
 
 **Belum di-set**: `settings.errorWorkflow` (nos-ops alert on failure) — sama seperti N04/N05,
 ini menunggu keputusan platform, belum saya paksa set sendiri.
+
+## Menunggu 04.3 selesai revisi — dampak ke N07 / Abort Case (OSD-116 c50442)
+
+**Sumber**: Kayden Lee, OSD-116 comment c50442, 2026-09-24T12:30:26+0700, balasan ke Alden
+soal 04.3 §六 (撤回类 vs 失效类 pada 中止/Abort Case). Baris yang menyebut Bambang, dikutip
+persis: *"@Bambang 待 04.3 改完，Abort Case 转态权限配给 HR Ops & Data 角色组，N07 确认重复
+同口径。"*
+
+**Yang perlu dikerjakan nanti, setelah 04.3 selesai direvisi (Kayden bilang "Kayden 侧已派人"
+untuk revisi itu, belum ada versi baru per komentar ini)**:
+1. Kasih hak transisi "Abort Case" ke role group **HR Ops & Data**.
+2. Pastikan **N07** (pengecekan duplikat) pakai kriteria yang sama dengan 失效类 yang baru
+   ditetapkan di 04.3 (khususnya nilai "Duplicate Case" yang menurut Kayden ditandai 失效类
+   di tabel A Felix, S-05 sendiri tidak perlu diubah/direview ulang).
+
+**Status**: belum dikerjakan, sengaja ditunda — 04.3 belum selesai direvisi per komentar
+ini. Jangan mulai sebelum ada konfirmasi versi baru 04.3.
