@@ -92,6 +92,36 @@
 > The other 28 pages are not in this ledger (F1/PF-03/E02 cluster, xLoop packets, Grade/员工离职/OS 开发流
 > 建造单, 04.9.3/04.9.4/04.9.5, 员工离职｜流程 Spec, HR｜盘点与切分).
 > OSD-116 comments and #nos-bo were not re-swept this run (handled separately, see prior turns).
+>
+> **Sweep 2026-09-24 14:35Z (nosm-sync-check, re-run after 12 h window expired)**
+> Connectors: n8n `search_workflows` ok (count 153); Atlassian reads ok.
+> Controlled copies: `sync_check.py` against 07.06 **v30** (toolu_01SosMx2N8kSrsBcFZfsk1Hh) and
+> 04 **v25** (toolu_01Fb3vLRs4zwnKEbUNh3Gjkn): 19/19 bullets, preamble and 冻结要求 same; tables 4/4, 6/6, 15/15.
+> VERDICT: no deployment drift.
+> CQL `space = NOSM AND type = page AND lastmodified >= "2026-09-24"`: totalSize **42**, one result page.
+> Six of the 42 are in this ledger; each checked with `listConfluenceContentVersions` and diffed:
+> **04.3 → v35** (was v33; v34 05:35Z placeholder, v35 05:40Z) — §六 three changes (Kayden OSD-116 c50442/c50445):
+> 主单执行中止 allowed executors add 「该 Spec 增补区 B 登记的处置角色组（如 S-05 的 HR Ops & Data）」; the 模式五
+> mutual-exclusion sentence gets a 「失效类中止」 exception; new 撤回类／失效类 split, each Spec must tag its 取消原因
+> values. Directly relevant to S-05 Abort Case (id 11) and N07 确认重复; c50445 also fixes the order: main ticket
+> to 已取消 first, then cancel open sub-tickets.
+> **S-05 Spec → v67** (was v62; v63–v67 all 2026-09-24, Felix) — diffed v62→v67 (34 added / 33 removed lines, 17 hunks):
+> (a) the 「缺位由 HR Ops & Data 承接／代提交」 wording is replaced everywhere by 「系统无法解析 Direct Supervisor →
+> 拦截并告警，转 HR 修正档案后重新提交／解析」 (Kayden c50461, Alden c50468, Kent c50472), touching N03/N07/N16/N17/N20/N21,
+> A/B/C/D tables, 投影图自检 and ⑤; (b) A 表 取消原因 values tagged 失效类／撤回类 (c50445). Felix c50486 says this is a
+> 建设期注记 without re-audit; Kayden's explicit exemption in c50442/c50445 covers the 取消原因 tagging. Frozen baseline
+> recorded in the build sheet is still v61.
+> **04.7 → v51** (was v50) — only the RT-HR-RESIGNATION-UPSTREAM-TRIGGER row: N13 absence wording synced to v3.7
+> (HR Ops & Data takeover and interim list removed). S-05 rows unchanged.
+> **04.5.3 → v15** (was v14) — §二 new exception 「收件人就是主体」 (five conditions) and §三 double-marker item 2 pointer.
+> Test policy page, affects how a builder may self-test notifications to the subject.
+> **04.9 → v114** (was v109) — index rows for resignation N2/N3 (first real run), OS 开发流 时效件 and C-0 retirement,
+> Grade N7/N8/N10 scan, 守护层三, N2; 04.9.4 block count 10→16. No S-05 row (S-05 still has no 04.9 registration).
+> **HR｜盘点与切分 → v40** (was v38) — S-01 terminal point, S-02 链中 with new S-02→S-07 edge, S-07 third entry;
+> no S-05 row change.
+> 纪律与绩效改进处置｜建造单 is not in the 42 results: still **v43** (matches today's full read).
+> The other 36 pages are not in this ledger (F1/F2/PF-03/E02 cluster, xLoop, NXP SOP, Grade/员工离职/OS 开发流/目标与绩效
+> 建造单, 04.9.3/04.9.4/04.9.5, 员工离职｜流程 Spec, 新人90天框架 Spec, 招聘执行 Spec).
 
 | Halaman | pageId | Versi tercatat | Owner |
 | --- | --- | --- | --- |
@@ -106,7 +136,7 @@
 | 04.0｜词汇表 | 1676640265 | v26 | Kayden |
 | 04.1｜Project 判定 | 1676738564 | v46 | Kayden |
 | 04.2｜单据体系 | 1676607500 | **v40** | Kayden |
-| 04.3｜状态与 Workflow | 1676771343 | v33 | Kayden |
+| 04.3｜状态与 Workflow | 1676771343 | **v35** | Kayden |
 | 04.4｜自动化配置模式库 | 1677066244 | **v33** | Alden |
 | 04.4.1｜模式九 | 1729888419 | v13 | Alden |
 | 04.4.2｜B6 契约 | — | v12 | Alden |
@@ -115,19 +145,19 @@
 | 04.5｜Spec 与建造单规范 | 1678573617 | v79 | Kayden |
 | 04.5.1｜Spec 模板 | 1685979182 | v19 | Kayden |
 | 04.5.2｜建造单模板 | 1729626775 | v11 | Alden |
-| 04.5.3｜Sandbox 与测试 | 1729626578 | **v14** | Alden |
+| 04.5.3｜Sandbox 与测试 | 1729626578 | **v15** | Alden |
 | 04.6｜n8n 使用规范 | 1690927120 | v20 | Alden |
-| 04.7｜Router SSOT | 1691254793 | **v50** | Alden |
+| 04.7｜Router SSOT | 1691254793 | **v51** | Alden |
 | 04.8｜Registry SSOT | 1690140756 | **v21** | Alden |
-| 04.9｜n8n Workflow SSOT | 1693089805 | **v109** | Alden |
+| 04.9｜n8n Workflow SSOT | 1693089805 | **v114** | Alden |
 | 04.9.1｜详情：平台 | 1764622422 | **v19** | Alden |
 | 04.10｜Jira 共享配置治理 | 1738735636 | **v20** | Kent |
 | 04.11｜Slack Channel 登记表 | 1764524046 | **v4** | Alden |
 | 04.12｜机读标记总清单 | 2091876367 | v5 | Kent |
 | Notify 子流程调用契约 | 1603633175 | v13 | Alden |
 | OS 开发流｜流程 Spec | 1729200354 | v39 | Kayden／Kent |
-| HR｜盘点与切分 | — | v38 | Felix |
-| 纪律与绩效改进处置｜流程 Spec (S-05) | 2036858900 | **v62** (冻结基线 v61) | Felix |
+| HR｜盘点与切分 | 1745158181 | **v40** | Felix |
+| 纪律与绩效改进处置｜流程 Spec (S-05) | 2036858900 | **v67** (冻结基线 v61) | Felix |
 | 纪律与绩效改进处置｜建造单 | 2096463922 | **v43** | Bambang (BO) |
 
 **Tebal** = bergerak pada sapuan 2026-09-21 dan sudah dibaca diff-nya (lihat
