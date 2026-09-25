@@ -12,7 +12,7 @@ from _common import N, read_input, transcript, deny, latest_owner_text, is_gated
 import _guard
 import gate_check
 
-SAFE_BASH = re.compile(r'^\s*(python3\s+scripts/(gate_check|order_check|read_source|sync_check|selftest)\.py\b|cat\s|head\s|tail\s|grep\s|rg\s|wc\s|ls\b|git\s+(diff|log|show|status)\b|sed\s+-n\s)')
+SAFE_BASH = re.compile(r'^\s*(python3\s+scripts/(gate_check|order_check|read_source|sync_check|selftest|g02_selftest)\.py\b|cat\s|head\s|tail\s|grep\s|rg\s|wc\s|ls\b|git\s+(diff|log|show|status)\b|sed\s+-n\s)')
 
 # git subcommands that cannot move a working-tree or index change into history or throw it away
 GIT_READONLY = {'status', 'diff', 'log', 'show', 'fetch', 'push', 'ls-files', 'ls-tree', 'rev-parse', 'blame',
@@ -213,11 +213,15 @@ def main():
         deny('G-01 B4: %s writes as the Backend Operations account. Forbidden by the owner (2026-09-22). '
              'Use the mcp__Atlassian_MCP__ tool (owner\'s account).' % name)
 
-    # ---- 3. n8n: order only
+    # ---- 3. n8n: a standing order (G-01 B1), then the build discipline (G-02, .claude/gates/G-02-n8n-build.json)
     if name.startswith('mcp__n8n__'):
         order, why = gate_check.find_order(tr, 'outbound', L)
         if not order and not override:
             deny('G-01 B1: n8n write %s without a standing WRITE order. %s' % (name, why))
+        import g02
+        probs = g02.check_pre(name, ti, tr, L)
+        if probs and g02.cfg()['override_token'] not in latest_owner_text(tr):
+            deny('G-02 blocked %s (rules: .claude/gates/G-02-n8n-build.json):\n- %s' % (name, '\n- '.join(probs)))
         return 0
 
     # ---- 1. content writes: a ledger for exactly this input must pass now

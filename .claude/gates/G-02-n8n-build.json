@@ -1,0 +1,79 @@
+{
+  "id": "G-02",
+  "name": "n8n build discipline",
+  "owner_decision": "Bambang 2026-09-25: build G-02, P5 strict (a). Only the owner can change this file (UNLOCK G-01).",
+  "effective_from": "2026-09-25T03:00:00Z",
+  "override_token": "OVERRIDE G-02",
+  "read_max_age_min": 720,
+
+  "required_reads": [
+    {"page": "1704362028", "name": "07｜指南", "why": "CLAUDE.md skill bullet 1: read 07 §二/§三 before every build"},
+    {"page": "1730347066", "name": "07.06｜建设指南", "why": "CLAUDE.md skill bullet 1: read 07.06 in full before every build"},
+    {"page": "1712226375", "name": "07.06.1｜开发规则与避坑指南", "why": "CLAUDE.md skill bullet 2: read the 07.06.1 entries for this task before acting"},
+    {"page": "1676804100", "name": "04｜总纲", "why": "07 §二 锚点导向"},
+    {"page": "1677066244", "name": "04.4｜自动化配置模式库", "why": "04.4 §十 naming, 模式四/五/七"},
+    {"page": "1690927120", "name": "04.6｜n8n 使用规范", "why": "04.6 §3.5 retry/guards, §3.6 release order, §3.9 folders"},
+    {"page": "1693089805", "name": "04.9｜n8n Workflow 登记表", "why": "04.9 §一 三位一体, 先登记后启用"}
+  ],
+
+  "flows": [
+    {
+      "id": "S-05",
+      "name_prefix": "纪律与绩效改进处置｜",
+      "spec": "2036858900",
+      "build_sheet": "2096463922",
+      "feature": "OSD-116",
+      "registry_main": "1693089805",
+      "registry_volume": null,
+      "folder_id": null,
+      "open_question": "04.9 volume for S-05 and the n8n folder for S-05 are not decided (04.9 Owner Alden; folders need the n8n UI). Until both are set here, P6/P8 block every new S-05 workflow."
+    }
+  ],
+
+  "error_workflow_id": "VUIgv9Ujj1KEoIne",
+  "snapshot_dir": "docs/n8n-snapshots",
+
+  "write_tools": {
+    "create": ["mcp__n8n__create_workflow_from_code"],
+    "update": ["mcp__n8n__update_workflow"],
+    "publish": ["mcp__n8n__publish_workflow"],
+    "state": ["mcp__n8n__unpublish_workflow", "mcp__n8n__archive_workflow"],
+    "run": ["mcp__n8n__test_workflow", "mcp__n8n__execute_workflow"]
+  },
+  "details_tool": "mcp__n8n__get_workflow_details",
+  "jira_comment_tools": ["mcp__Atlassian_MCP__addOrEditJiraIssueComment"],
+
+  "non_idempotent": {
+    "why": "07.06.1 A3 / 04.6 §3.5: retryOnFail only on idempotent nodes",
+    "http_methods_ok": ["GET", "HEAD"],
+    "jira_operations_ok": ["get", "getAll", "getStatus", "changelog"],
+    "always_non_idempotent_types": ["n8n-nodes-base.slack", "n8n-nodes-base.emailSend"]
+  },
+
+  "checks": {
+    "P1": "Before any n8n write: every required_reads page and the flow's Spec and build sheet read in full (detail=full, every saved part printed) within read_max_age_min, at the latest version seen in this session.",
+    "P2": "07.06.1 D2 / 04.6 §3.6 step 2: every jsCode in the call passes node --check, and no // comment sits after code on the same line.",
+    "P3": "07.06.1 A3 / 04.6 §3.5: no retryOnFail on a non-idempotent node.",
+    "P4": "07.06.1 E5: no setNodeCredential on an httpRequest node (API attachment of predefinedCredentialType is refused; attach in the UI).",
+    "P5": "07.06.1 D5 (owner chose strict): before changing an existing workflow, (1) get_workflow_details of it after its last write, (2) that result saved byte-equal at snapshot_dir/<id>/<versionId>.json, (3) a successful Jira comment on the flow's feature ticket, after that read, containing the workflow id, the versionId and, for every setNodeParameter/updateNodeParameters op, the old value being replaced.",
+    "P6": "04.9 §一 三位一体 / 07.06 §四-5 不得先建后补: a new workflow only when the flow's registry_volume is set and that page was read in full within the window.",
+    "P7": "04.9 先登记后启用 / 04.6 §3.5 层一 / 04.6 §3.9: publish only when the workflow id is in a full read of 04.9 and of the volume after its last write, and its latest details show settings.errorWorkflow = error_workflow_id.",
+    "P8": "04.6 §3.9: a new workflow is created with folderId = the flow's folder_id (must be set).",
+    "S0": "07.06 §6.1-3: after the last successful write to a workflow, get_workflow_details of it (read-back).",
+    "S1": "07.06.1 §六-1 / 04.6 §3.4-1: after the last write, a Jira comment on the feature ticket (or a draft whose G-01 ledger passes) containing the workflow id and the read-back versionId.",
+    "S2": "04.9 §一: the workflow id in a full read of 04.9 after its creation, or a draft (G-01 ledger passes) containing the id and '04.9'.",
+    "S3": "07.06 收口三件套: the workflow id in a full read of the build sheet after the last write, or a draft (G-01 ledger passes) containing the id."
+  },
+
+  "legacy_open_items": [
+    {"workflow": "UBLsvYaSlCI3pLWs", "name": "纪律与绩效改进处置｜N04｜路由分发", "missing": ["04.9 三位一体 (now 无主 per 04.9 §1.1)", "04.6 §3.9 folder", "07.06.1 §六-1 OSD-116 task record"]},
+    {"workflow": "LJwiAZFfnuq6tmju", "name": "纪律与绩效改进处置｜N05｜重复案件与历史记录检查", "missing": ["04.9 三位一体 (now 无主 per 04.9 §1.1)", "04.6 §3.9 folder", "07.06.1 §六-1 OSD-116 task record"]},
+    {"workflow": "ToIGnEJmksSPhC85", "name": "纪律与绩效改进处置｜N20｜解雇自动开单与交接", "missing": ["04.9 三位一体 (now 无主 per 04.9 §1.1)", "04.6 §3.9 folder", "07.06.1 §六-1 OSD-116 task record", "07.06.1 D2 evidence in build sheet §八 (node --check passed 2026-09-25)"]}
+  ],
+
+  "known_limits": [
+    "G-02 checks that the steps were taken and that the evidence exists; it does not judge whether a workflow's logic is right.",
+    "The flows table must be kept current; a workflow whose name matches no flow prefix is blocked (P1 cannot tell which Spec applies).",
+    "Hooks run as the same OS user as the model: they stop shortcuts and forgetting, not a deliberate attack."
+  ]
+}

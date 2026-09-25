@@ -222,9 +222,27 @@ def end_marker(call_id, k, m, sha):
     return '<<<END %s PART %d/%d sha=%s>>>' % (call_id, k, m, sha)
 
 
-def fully_read(tr, call):
+def part_printed(result, call_id, k, m, sha, txt):
+    """True only when the Bash result shows part k in full: its BEGIN line, the part text itself,
+    and its END marker. An END marker alone (e.g. `| tail -1`) proves nothing was read
+    (2026-09-25 owner audit: yesterday's C5 was satisfied that way)."""
+    res = result or ''
+    end = end_marker(call_id, k, m, sha)
+    j = res.find(end)
+    if j < 0:
+        return False
+    i = res.rfind('<<<BEGIN %s PART %d/%d sha=%s' % (call_id, k, m, sha), 0, j)
+    if i < 0:
+        return False
+    body = res[res.find('\n', i) + 1:j]
+    part = txt[(k - 1) * CHUNK:k * CHUNK]
+    return re.sub(r'\s+', '', body) == re.sub(r'\s+', '', part)
+
+
+def fully_read(tr, call, before_seq=None):
     """(ok, detail). Inline results were delivered whole. Persisted results count as read only
-    when every part was printed by read_source.py and the output reached its end marker."""
+    when every part was printed in full by read_source.py (BEGIN line, whole part text, END marker).
+    before_seq: only count prints that happened before that call (replays of past calls)."""
     if not call.persisted:
         return True, 'inline result'
     if not os.path.exists(call.persisted):
@@ -233,13 +251,15 @@ def fully_read(tr, call):
     m, sha = parts_needed(txt), text_sha(txt)
     seen = set()
     for c in tr.after(call):
+        if before_seq is not None and c.seq >= before_seq:
+            break
         if c.name != 'Bash':
             continue
         cmd = c.input.get('command', '')
         if 'read_source.py' not in cmd or call.id not in cmd:
             continue
         for k in range(1, m + 1):
-            if end_marker(call.id, k, m, sha) in (c.result or ''):
+            if part_printed(c.result, call.id, k, m, sha, txt):
                 seen.add(k)
     missing = [k for k in range(1, m + 1) if k not in seen]
     if missing:

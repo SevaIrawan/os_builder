@@ -126,8 +126,14 @@ def main():
             append_log({'event': 'read_back', 'payload_sha': e['payload_sha'], 'target': e['target'],
                         'read_calls': [c.id for c in reads], 'missing': missing})
 
+    # 3. G-02: every n8n workflow written since G-02 took effect is read back, recorded and registered
+    import g02
+    tr = tr or transcript(inp)
+    if g02.cfg()['override_token'] not in latest_owner_text(tr):
+        problems.extend(g02.check_stop(tr, L))
+
     if problems:
-        deny('G-01 Stop check - you may not end the turn yet:\n- ' + '\n- '.join(problems))
+        deny('G-01/G-02 Stop check - you may not end the turn yet:\n- ' + '\n- '.join(problems))
     return 0
 
 

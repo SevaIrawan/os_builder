@@ -39,6 +39,15 @@ def main():
             lines.append('[G-01] No space-wide lastmodified sweep in the last 12 h (nosm-sync-check step 6).')
     except SystemExit:
         pass
+    try:
+        import g02
+        items = g02.open_items()
+        if items:
+            lines.append('[G-02] %d workflow(s) built before G-02 still have open rule items: %s. '
+                         'Close them (draft, owner order, send) before new n8n work; list in .claude/gates/G-02-n8n-build.json.'
+                         % (len(items), '; '.join('%s: %s' % (i['workflow'], ', '.join(i['missing'])) for i in items)))
+    except (OSError, ValueError, KeyError):
+        lines.append('[G-02] G-02 rules file unreadable: n8n writes will be blocked until it is fixed.')
     lines.append('[G-01] Rules: .claude/gates/G-01-outbound-write.json. Any number, absence or name you state in chat '
                  'must come from a source read in full in this session; otherwise say it is unverified.')
     print('\n'.join(lines))
