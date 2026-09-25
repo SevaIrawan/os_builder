@@ -305,14 +305,17 @@ for cmd in ['cd /x && git cat-file -e origin/main:.claude/skills/nosm-sync-check
             'wc -l scripts/hooks/*.py', 'grep -n x scripts/hooks/pre_tool.py | head -3',
             'python3 scripts/g02_selftest.py 2>&1 | tail -1', 'python3 scripts/sweep_check.py',
             'cat .claude/gates/lexicon.json > /dev/null', 'sed -n 1,5p scripts/gate_check.py',
-            'git log --oneline -3 -- scripts/hooks/', 'git show HEAD:scripts/hooks/stop.py | head']:
+            'git log --oneline -3 -- scripts/hooks/', 'git show HEAD:scripts/hooks/stop.py | head',
+            'S=/x/repo; cd "$S" && python3 scripts/g03_selftest.py | grep -v ok',
+            'NOSM_TRANSCRIPT=/t.jsonl python3 scripts/selftest.py | tail -1']:
     rc, msg = hook('pre_tool.py', {'tool_name': 'Bash', 'tool_input': {'command': cmd}}, tp)
     expect('hook: read-only command naming a gate path allowed  %s' % cmd[:50], rc == 0, msg)
 for cmd in ['cat x > scripts/hooks/a.py', 'echo x >> .claude/gates/lexicon.json', 'sed -i s/a/b/ scripts/gate_check.py',
             'cp a scripts/hooks/b.py', 'cat scripts/hooks/x.py | tee y', 'python3 -c "open(\'scripts/hooks/x\',\'w\')"',
             'git diff --output=scripts/hooks/x', 'git branch scripts/hooks/x', 'sort -o scripts/hooks/x y',
             'bash scripts/hooks/x.sh', 'echo $(rm scripts/hooks/x)', 'cd scripts/hooks && rm x.py',
-            'python3 scripts/hooks/stop.py', 'mv scripts/hooks/a scripts/hooks/b']:
+            'python3 scripts/hooks/stop.py', 'mv scripts/hooks/a scripts/hooks/b',
+            'X=1 rm scripts/hooks/a.py', 'S=scripts/hooks; rm "$S/a.py"']:
     rc, msg = hook('pre_tool.py', {'tool_name': 'Bash', 'tool_input': {'command': cmd}}, tp)
     expect('hook: writing command naming a gate path blocked  %s' % cmd[:50], rc == 2, msg)
 rc, msg = hook('pre_tool.py', {'tool_name': 'mcp__Atlassian_MCP__updateConfluenceContent', 'tool_input': dict(payload, dryRun=True)}, tp)
@@ -592,7 +595,7 @@ tt = base3(); tt.call('Bash', {'command': 'python3 scripts/sweep_check.py'},
                       'pages with a pageId: 32; checked live: 32; moved: 0\nVERDICT: every page checked live\n')
 say(tt, 'Hasilnya "pages with a pageId: 32; checked live: 32; moved: 0", vonisnya "every page checked live".')
 expect('G-03: a ; inside a verbatim quote does not split it (2026-09-25 false hold)', g03_run(tt) == [], str(g03_run(tt)))
-tt = base3(); tt.call('Bash', {'command': 'python3 count.py'}, 'n8n 17\nN20 37\n')
+tt = base3(); tt.call('Bash', {'command': 'python3 count.py'}, 'n8n in 17 comments\nN20 in 37 comments\n')
 say(tt, 'Pembandingnya ketemu: kata "n8n" ada di 17 komentar dan "N20" di 37 komentar.')
 expect('G-03: a short quote does not shift quote pairing (2026-09-25 false hold)', g03_run(tt) == [], str(g03_run(tt)))
 tt = base3(); say(tt, 'Jalankan:\n```\ngit reset --hard deadbee1\n```')

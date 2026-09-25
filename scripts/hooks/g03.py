@@ -40,7 +40,7 @@ def cfg():
 # ---------------------------------------------------------------- transcript
 
 def load_turn(path):
-    """(owner_texts, tool_results, turn_texts, all_claude_texts)
+    """(owner_texts, tool_results, turn_texts, all_claude_texts, turn_start)
     tool_results: [(tool_name, tool_input, result_text)] for every successful tool call of the session.
     turn_texts: Claude's text blocks since the owner's latest message, oldest first."""
     rows = []
@@ -51,6 +51,7 @@ def load_turn(path):
             except ValueError:
                 continue
     uses, results, owner, turn, mine = {}, [], [], [], []
+    turn_start = 0                                  # index of the first tool result of the current turn
     for d in rows:
         if d.get('isSidechain'):
             continue
@@ -71,6 +72,7 @@ def load_turn(path):
                 if text:
                     owner.append(text)
                     turn = []                       # a new owner message starts a new turn
+                    turn_start = len(results)
             if isinstance(c, list):
                 for b in c:
                     if not (isinstance(b, dict) and b.get('type') == 'tool_result') or b.get('is_error'):
@@ -90,7 +92,7 @@ def load_turn(path):
                     if 'was denied' in txt[:400] or txt.startswith('MCP error'):
                         continue
                     results.append((u['name'], u.get('input') or {}, txt))
-    return owner, results, turn, mine
+    return owner, results, turn, mine, turn_start
 
 
 # ---------------------------------------------------------------- tokens
@@ -121,8 +123,8 @@ def tokens(sentence):
 
 class Evidence:
     """What a token may be found in. results: [(tool_name, tool_input, text)]."""
-    def __init__(self, owner, results):
-        self.results = results
+    def __init__(self, owner, results, turn_start=0):
+        self.owner, self.results, self.turn_start = owner, results, turn_start
         self.texts = owner + [r[2] for r in results]
         self.norm = [N.norm(t) for t in self.texts]
         # what a real, successful call was: its tool name and the paths / commands it was given (`code` only)
@@ -134,11 +136,51 @@ class Evidence:
         # can be typed into a command.
         self.targets = [s for r in results if r[0] != 'Bash' for s in N.flatten_strings(r[1])]
 
-    def subset(self, pred):
-        return Evidence([], [r for r in self.results if pred(r)])
+    def subset(self, pred, current_turn=False):
+        pool = self.results[self.turn_start:] if current_turn else self.results
+        return Evidence([], [r for r in pool if pred(r)])
 
 
 ID_KINDS_FROM_TARGETS = ('issue_key', 'page_id', 'workflow_id')
+
+
+# ---------------------------------------------------------------- T5 quantities
+
+def quantities(sentence, C, L):
+    """[(raw, value, unit_key)] for every number (digits or an Indonesian / English number word) directly
+    followed by a counting unit from G-03 count_units."""
+    units = C['count_units']
+    alts = sorted({w for syn in units.values() for w in syn}, key=len, reverse=True)
+    unit_rx = r'(%s)(?![\w])' % '|'.join(re.escape(a) for a in alts)
+    out = []
+    for m in re.finditer(r'(?<![\w.,])(\d+)\s+' + unit_rx, sentence, re.I):
+        out.append((m.group(0), int(m.group(1)), m.group(2).lower()))
+    for raw, val, end in N._word_numbers(sentence, L):
+        m = re.match(r'\s+' + unit_rx, sentence[end:], re.I)
+        if m:
+            out.append((raw + m.group(0), val, m.group(1).lower()))
+    return [(raw, val, next(k for k, syn in units.items() if u in [x.lower() for x in syn])) for raw, val, u in out]
+
+
+def quantity_found(val, unit_key, ev, C):
+    """A quantity is backed when some source shows the same number within count_window characters of a synonym
+    of the same unit, or when the number is the output of a counting command (wc -l, grep -c, Grep count mode)."""
+    syn = [s.lower() for s in C['count_units'][unit_key]]
+    w = C['count_window']
+    num = re.compile(r'(?<![\d.])%d(?![\d])' % val)
+    for t in ev.owner + [r[2] for r in ev.results]:
+        low = t.lower()
+        for m in num.finditer(low):
+            win = low[max(0, m.start() - w):m.end() + w]
+            if any(re.search(r'(?<![a-z])' + re.escape(s) + r'(?![a-z])', win) for s in syn):
+                return True
+    for name, inp, txt in ev.results:
+        counting = (name == 'Bash' and re.search(r'\bwc\s+-l\b|\bgrep\s+(-\w*c\w*|--count)\b|\brev-list\b.*--count',
+                                                 inp.get('command') or '')) \
+            or (name == 'Grep' and inp.get('output_mode') == 'count')
+        if counting and num.search(txt):
+            return True
+    return False
 
 
 def found(kind, tok, ev):
@@ -201,10 +243,12 @@ def absence_hit(s, C):
     return None
 
 
-def problems_in(text, C, ev, earlier_mine=()):
+def problems_in(text, C, ev, earlier_mine=(), force_status=False):
     """Problems for one text block: [(check, sentence, detail, key)].
-    earlier_mine: Claude's own earlier texts. Quoting them is allowed (T1) but proves nothing (T3)."""
+    earlier_mine: Claude's own earlier texts. Quoting them is allowed (T1) but proves nothing (T3).
+    force_status: run T7 even when it is not enabled in G-03 (used to trial it before the owner decides)."""
     marker = C['unverified_marker']
+    L = N.lexicon()
     mine_norm = [N.norm(t) for t in earlier_mine]
     out = []
     for s, marked in sentences(text, marker):
@@ -220,8 +264,12 @@ def problems_in(text, C, ev, earlier_mine=()):
         for rule in C['system_rules']:
             if not re.search(rule['sentence_pattern'], s):
                 continue
-            live = ev.subset(lambda r: any(r[0].startswith(p) for p in rule['live_tools'])
-                             or (r[0] == 'Bash' and any(w in (r[1].get('command') or '') for w in rule['live_bash'])))
+
+            def is_live(r, rule=rule):
+                return any(r[0].startswith(p) for p in rule['live_tools']) or \
+                    (r[0] == 'Bash' and any(w in (r[1].get('command') or '') for w in rule['live_bash']))
+            live = ev.subset(is_live)
+            fresh = ev.subset(is_live, current_turn=True)
             for k, t in toks:
                 if k == 'code' and LINE_REF_RE.match(t):
                     continue                   # a line of a local file is not a claim about the outside system
@@ -229,6 +277,25 @@ def problems_in(text, C, ev, earlier_mine=()):
                     live_bad.append((k, t))
                     out.append(('T2', s, '%s "%s" is about %s but was not read from %s itself (%s)' % (
                         k, t, rule['system'], rule['system'], ', '.join(rule['live_tools'] + rule['live_bash'])), t))
+                elif k in rule.get('fresh_kinds', ()) and (k, t) not in bad and (k, t) not in live_bad \
+                        and (k, t) not in self_quotes and not found(k, t, fresh):
+                    live_bad.append((k, t))
+                    out.append(('T6', s, '%s "%s" states the current %s state but was read from %s in an earlier turn, '
+                                         'not in this one - read it again' % (k, t, rule['system'], rule['system']), t))
+        for raw, val, unit in quantities(s, C, L):
+            if not quantity_found(val, unit, ev, C):
+                out.append(('T5', s, 'quantity "%s" is not shown as a count of %s in any source, and no counting command '
+                                     '(wc -l, grep -c, Grep count) returned it' % (raw.strip(), unit), raw.strip()))
+        st = C.get('status_words') or {}
+        if st.get('enabled') or force_status:
+            low = QUOTE_RE.sub(' ', s).lower()      # a status word quoted from elsewhere is not this sentence's claim
+            conditional = any(re.search(r'(?<![a-z])' + re.escape(w.lower()) + r'(?![a-z])', low)
+                              for w in st.get('skip_if_any', []))
+            hit_st = None if conditional else next(
+                (w for w in st['words'] if re.search(r'(?<![a-z])' + re.escape(w.lower()) + r'(?![a-z])', low)), None)
+            if hit_st and not [x for x in toks if x not in bad and x not in live_bad and x[0] != 'number']:
+                out.append(('T7', s, 'status wording "%s" without a verified id, date, version, quote or `code` in the '
+                                     'sentence' % hit_st, hit_st))
         hit = absence_hit(s, C)
         if hit:
             good = [x for x in toks if x not in bad and x not in live_bad and x[0] != 'number']
@@ -238,10 +305,10 @@ def problems_in(text, C, ev, earlier_mine=()):
     return out
 
 
-def check_turn(transcript_path, last_message=None, C=None):
+def check_turn(transcript_path, last_message=None, C=None, force_status=False):
     C = C or cfg()
-    owner, results, turn, mine = load_turn(transcript_path)
-    ev = Evidence(owner, results)
+    owner, results, turn, mine, turn_start = load_turn(transcript_path)
+    ev = Evidence(owner, results, turn_start)
     if last_message and (not turn or turn[-1].strip() != last_message.strip()):
         turn.append(last_message)
         mine.append(last_message)
@@ -249,7 +316,7 @@ def check_turn(transcript_path, last_message=None, C=None):
     first = len(mine) - len(turn)
     for i, text in enumerate(turn):
         is_fix = text.lstrip().lower().startswith(C['correction_prefix'].lower())
-        probs = problems_in(text, C, ev, mine[:first + i])
+        probs = problems_in(text, C, ev, mine[:first + i], force_status)
         if is_fix and not probs:
             # T4: a clean correction resolves an earlier problem only when it restates its token / absence phrase
             low = text.lower()

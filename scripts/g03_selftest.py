@@ -39,12 +39,12 @@ class T:
     def say(self, text):
         self.lines.append({'type': 'assistant', 'message': {'content': [{'type': 'text', 'text': text}]}})
 
-    def run(self):
+    def run(self, force_status=False):
         p = os.path.join(TMP, 't.jsonl')
         with open(p, 'w', encoding='utf-8') as f:
             for d in self.lines:
                 f.write(json.dumps(d, ensure_ascii=False) + '\n')
-        return g03.check_turn(p)
+        return g03.check_turn(p, force_status=force_status)
 
 
 def base():
@@ -64,7 +64,7 @@ def base():
     return t
 
 
-def case(name, answers, held_token=None, setup=None):
+def case(name, answers, held_token=None, setup=None, force_status=False):
     """held_token=None: must pass. Otherwise: must be held and name held_token."""
     t = base()
     if setup:
@@ -72,9 +72,11 @@ def case(name, answers, held_token=None, setup=None):
     for a in answers:
         if isinstance(a, tuple) and a[0] == 'owner':
             t.owner(a[1])
+        elif isinstance(a, tuple) and a[0] == 'call':
+            t.call(*a[1:])
         else:
             t.say(a)
-    probs = t.run()
+    probs = t.run(force_status)
     if held_token is None:
         ok = probs == []
     else:
@@ -151,11 +153,55 @@ case('T4 correction with its own error keeps the hold', ['Commit abc1234 dibuat.
 case('T4 absence correction restating the phrase', ['Tidak ada commit lama.', 'Koreksi: tidak ada commit lama %s.' % MARK])
 case('T4 new owner message starts a new turn', ['Commit abc1234 dibuat.', ('owner', 'ok'), 'Siap.'])
 
+# ---------------- T5: quantities need a count of the same unit
+case('T5 quantity never counted', ['Ada 60 kasus.'], '60 kasus')
+case('T5 number present but not as that count', ['Ada 60 kasus.'], '60 kasus',
+     setup=lambda t: t.call('Bash', {'command': 'date'}, 'took 60 ms\n'))
+case('T5 counted by grep -c', ['Ada 60 kasus.'],
+     setup=lambda t: t.call('Bash', {'command': 'grep -c case f.py'}, '60\n'))
+case('T5 counted by Grep count mode', ['Ada 60 kasus.'],
+     setup=lambda t: t.call('Grep', {'pattern': 'case', 'output_mode': 'count'}, 'f.py:60\n'))
+case('T5 number next to a synonym of the unit', ['Ada 187 komentar.'],
+     setup=lambda t: t.call('Bash', {'command': 'python3 x.py'}, 'comments collected 187\n'))
+case('T5 number next to a different unit', ['Ada 187 komentar.'], '187 komentar',
+     setup=lambda t: t.call('Bash', {'command': 'python3 x.py'}, 'pages 187\n'))
+case('T5 number word never counted', ['Ada tiga workflow.'], 'tiga workflow')
+case('T5 number word counted', ['Ada tiga workflow.'],
+     setup=lambda t: t.call('Bash', {'command': 'python3 x.py'}, '3 workflow(s) built\n'))
+case('T5 count stated by the owner', [('owner', 'ada 12 halaman'), 'Ya, 12 halaman.'])
+case('T5 quantity marked unverified', ['Ada 60 kasus %s.' % MARK])
+case('T5 counted by git rev-list --count', ['Ada 4 commit lama.'],
+     setup=lambda t: t.call('Bash', {'command': 'git rev-list --left-right --count main...origin/main'}, '4\t50\n'))
+
+# ---------------- T6: current outside state read in this turn
+case('T6 GitHub state read in this turn', ['Di GitHub main ada di 6e217b4.'])
+case('T6 GitHub state read in an earlier turn', [('owner', 'status?'), 'Di GitHub main ada di 6e217b4.'], '6e217b4')
+case('T6 GitHub state read again in this turn', [('owner', 'status?'),
+     ('call', 'mcp__github__list_branches', {'owner': 'o', 'repo': 'r'}, '[{"name":"main","sha":"6e217b41e848"}]'),
+     'Di GitHub main ada di 6e217b4.'])
+case('T6 Confluence version read in an earlier turn', [('owner', 'status?'), 'Halaman 1234567890 di v7.'], 'v7')
+case('T6 a pageId alone is not bound to this turn', [('owner', 'status?'), 'Halaman 1234567890 dibaca.'])
+case('T6 a Jira comment id is not bound to this turn', [('owner', 'status?'), 'Komentar c50237 di Jira.'])
+case('T6 a branch name in a plan is not bound to this turn', [('owner', 'ok'), 'Saya lalu commit ke `main` dan push ke GitHub.'])
+
+# ---------------- T7: status wording (trial; off unless forced)
+case('T7 enabled in G-03 (no force needed)', ['Item itu masih terbuka.'], 'masih terbuka')
+case('T7 bare status wording held when on', ['Item itu masih terbuka.'], 'masih terbuka', force_status=True)
+case('T7 status wording inside a quote is not the claim', ['Contohnya jawaban "Item itu masih terbuka" %s.' % MARK,
+                                                           'Kalimat seperti "masih terbuka" harus menunjuk bukti.'],
+     force_status=True)
+case('T7 sama persis held when on', ['Isinya sama persis dengan versi itu.'], 'sama persis', force_status=True)
+case('T7 status wording with a verified token', ['Tes `x.py` sudah selesai.'], force_status=True)
+case('T7 status wording marked unverified', ['Item itu masih terbuka %s.' % MARK], force_status=True)
+case('T7 conditional sentence skipped', ['Kalau semua sudah selesai, saya commit.'], force_status=True)
+case('T7 words outside the narrow list are not bound', ['Semua tes lolos.'], force_status=True)
+
 # ---------------- skips and sentence splitting
 case('fenced code is skipped', ['Jalankan:\n```\ngit reset --hard deadbee1\n```'])
 case('sentence with the unverified marker is skipped', ['Commit abc1234 %s.' % MARK])
 case('; inside a verbatim quote does not split it', ['Isinya "PIP Extension 参数 共 6 个字段；n8n 17 条，N20 37 条".'])
-case('a short quote does not shift quote pairing', ['Kata "n8n" ada di 17 komentar dan "N20" di 37 komentar.'])
+case('a short quote does not shift quote pairing', ['Kata "n8n" ada di 17 komentar dan "N20" di 37 komentar.'],
+     setup=lambda t: t.call('Bash', {'command': 'python3 count.py'}, 'n8n in 17 comments\nN20 in 37 comments\n'))
 case('one bad sentence among good ones', ['Versi v7. Versi v98.'], 'v98')
 case('bad token in the second sentence of a bullet', ['- Halaman v7 dibaca. Commit abc1234 dibuat.'], 'abc1234')
 

@@ -137,6 +137,8 @@ def read_only_command(cmd):
             if t == '>&' and (i + 1 >= len(toks) or toks[i + 1] not in ('1', '2')):
                 return False
         words = [t for t in toks if t not in ('>', '>&', '/dev/null') and not re.fullmatch(r'\d', t)]
+        while words and re.match(r'^[A-Za-z_]\w*=', words[0]):   # S=/x ; VAR=1 cmd  (a shell variable, not a command)
+            words = words[1:]
         if not words:
             continue
         head = os.path.basename(words[0])
