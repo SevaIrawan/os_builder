@@ -14,7 +14,7 @@ from _common import N, read_input, transcript, deny, latest_owner_text, is_gated
 import _guard
 import gate_check
 
-SAFE_BASH = re.compile(r'^\s*(python3\s+scripts/(gate_check|order_check|read_source|sync_check|selftest|g02_selftest)\.py\b|cat\s|head\s|tail\s|grep\s|rg\s|wc\s|ls\b|git\s+(diff|log|show|status)\b|sed\s+-n\s)')
+SAFE_BASH = re.compile(r'^\s*(python3\s+scripts/(gate_check|order_check|read_source|sync_check|sweep_check|selftest|g02_selftest)\.py\b|cat\s|head\s|tail\s|grep\s|rg\s|wc\s|ls\b|git\s+(diff|log|show|status)\b|sed\s+-n\s)')
 
 # git subcommands that cannot move a working-tree or index change into history or throw it away
 GIT_READONLY = {'status', 'diff', 'log', 'show', 'fetch', 'push', 'ls-files', 'ls-tree', 'rev-parse', 'blame',
