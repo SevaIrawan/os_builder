@@ -259,26 +259,12 @@ def main(inp=None):
             why = g04.check_bash(cmd, latest_owner_text(transcript(inp)), L, git_calls)
             if why:
                 deny(why)
-        # ---- 6. G-05: a Bash command that sends data over the network (curl -X POST, wget --post-data, http PUT)
-        if re.search(r'\b(curl|wget|https?)\b', cmd):
-            import g05
-            why = g05.check_bash(cmd, lambda: transcript(inp), L, shell_segments)
-            if why:
-                deny(why)
         return 0
 
     # ---- 5. G-04: GitHub writes
     if name.startswith('mcp__github__'):
         import g04
         why = g04.check_github(name, latest_owner_text(transcript(inp)), L)
-        if why:
-            deny(why)
-        return 0
-
-    # ---- 6. G-05: every other outward tool (Gmail, Supabase, Vercel, Claude_Code_Remote, Claude_Docs, Artifact, ...)
-    import g05
-    if g05.binds(name):
-        why = g05.check(name, ti, transcript(inp), L)
         if why:
             deny(why)
         return 0
@@ -331,11 +317,15 @@ def main(inp=None):
     return 0
 
 
+# The five systems in scope (Atlassian, Jira, Slack, n8n, GitHub); nothing else is gated here.
+IN_SCOPE = ('mcp__Atlassian_MCP__', 'mcp__Atlassian_Rovo__', 'mcp__Slack__', 'mcp__n8n__', 'mcp__github__')
+
+
 def outward(inp):
-    """Calls that reach outside the repo: held when the hook itself cannot decide."""
+    """Calls to the systems in scope: held when the hook itself cannot decide."""
     name = inp.get('tool_name', '')
     cmd = (inp.get('tool_input') or {}).get('command', '') if name == 'Bash' else ''
-    return name.startswith('mcp__') or name == 'Artifact' or bool(re.search(r'\bgit\b|\bcurl\b|\bwget\b', cmd))
+    return name.startswith(IN_SCOPE) or bool(re.search(r'\bgit\b', cmd))
 
 
 if __name__ == '__main__':

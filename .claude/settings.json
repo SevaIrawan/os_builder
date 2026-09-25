@@ -16,7 +16,7 @@
     ],
     "PreToolUse": [
       {
-        "matcher": "mcp__.*|Write|Edit|MultiEdit|NotebookEdit|Bash|Artifact|ArtifactData|ArtifactComments",
+        "matcher": "mcp__.*|Write|Edit|MultiEdit|NotebookEdit|Bash",
         "hooks": [
           {"type": "command", "command": "python3 \"$CLAUDE_PROJECT_DIR/scripts/hooks/pre_tool.py\"", "timeout": 120}
         ]
