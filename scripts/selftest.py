@@ -307,7 +307,8 @@ for cmd in ['cd /x && git cat-file -e origin/main:.claude/skills/nosm-sync-check
             'cat .claude/gates/lexicon.json > /dev/null', 'sed -n 1,5p scripts/gate_check.py',
             'git log --oneline -3 -- scripts/hooks/', 'git show HEAD:scripts/hooks/stop.py | head',
             'S=/x/repo; cd "$S" && python3 scripts/g03_selftest.py | grep -v ok',
-            'NOSM_TRANSCRIPT=/t.jsonl python3 scripts/selftest.py | tail -1']:
+            'NOSM_TRANSCRIPT=/t.jsonl python3 scripts/selftest.py | tail -1',
+            'ls .claude/gates/ && git ls-remote origin main']:
     rc, msg = hook('pre_tool.py', {'tool_name': 'Bash', 'tool_input': {'command': cmd}}, tp)
     expect('hook: read-only command naming a gate path allowed  %s' % cmd[:50], rc == 0, msg)
 for cmd in ['cat x > scripts/hooks/a.py', 'echo x >> .claude/gates/lexicon.json', 'sed -i s/a/b/ scripts/gate_check.py',
@@ -315,7 +316,8 @@ for cmd in ['cat x > scripts/hooks/a.py', 'echo x >> .claude/gates/lexicon.json'
             'git diff --output=scripts/hooks/x', 'git branch scripts/hooks/x', 'sort -o scripts/hooks/x y',
             'bash scripts/hooks/x.sh', 'echo $(rm scripts/hooks/x)', 'cd scripts/hooks && rm x.py',
             'python3 scripts/hooks/stop.py', 'mv scripts/hooks/a scripts/hooks/b',
-            'X=1 rm scripts/hooks/a.py', 'S=scripts/hooks; rm "$S/a.py"']:
+            'X=1 rm scripts/hooks/a.py', 'S=scripts/hooks; rm "$S/a.py"',
+            'ls scripts/hooks/ && git ls-remote origin main > scripts/hooks/x']:
     rc, msg = hook('pre_tool.py', {'tool_name': 'Bash', 'tool_input': {'command': cmd}}, tp)
     expect('hook: writing command naming a gate path blocked  %s' % cmd[:50], rc == 2, msg)
 rc, msg = hook('pre_tool.py', {'tool_name': 'mcp__Atlassian_MCP__updateConfluenceContent', 'tool_input': dict(payload, dryRun=True)}, tp)

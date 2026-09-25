@@ -17,7 +17,7 @@ import gate_check
 
 # git subcommands that cannot move a working-tree or index change into history or throw it away
 GIT_READONLY = {'status', 'diff', 'log', 'show', 'fetch', 'push', 'ls-files', 'ls-tree', 'rev-parse', 'blame',
-                'grep', 'shortlog', 'describe', 'cat-file', 'branch', 'remote', 'help', 'version'}
+                'grep', 'shortlog', 'describe', 'cat-file', 'branch', 'remote', 'help', 'version', 'ls-remote'}
 GIT_GLOBAL_WITH_ARG = {'-C', '-c', '--git-dir', '--work-tree', '--namespace', '--exec-path', '--config-env'}
 GIT_ALL_FLAGS = {'-a', '--all', '-A', '-u', '--update', '--include', '-i', '-p', '--patch', '--interactive'}
 
@@ -116,7 +116,8 @@ def git_calls(cmd):
 # were refused although they write nothing, because the old allow-list only matched a command that STARTS with it).
 READ_ONLY_TOOLS = {'cat', 'head', 'tail', 'grep', 'rg', 'wc', 'ls', 'cd', 'pwd', 'echo', 'printf', 'cut',
                    'diff', 'stat', 'file', 'basename', 'dirname', 'true'}      # not sort / uniq: both can write a file
-READ_ONLY_GIT = {'log', 'show', 'diff', 'status', 'cat-file', 'ls-files', 'ls-tree', 'rev-parse', 'blame', 'grep'}
+READ_ONLY_GIT = {'log', 'show', 'diff', 'status', 'cat-file', 'ls-files', 'ls-tree', 'rev-parse', 'blame', 'grep',
+                 'ls-remote'}                                # ls-remote only reads the remote's refs (2026-09-25)
 READ_ONLY_SCRIPT = re.compile(r'^scripts/(gate_check|order_check|read_source|sync_check|sweep_check|selftest|g02_selftest|g03_selftest)\.py$')
 
 
