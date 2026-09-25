@@ -27,6 +27,8 @@
 > - **04.9 v114 → v115** (toolu_012AR3GUAnr3M8qiK4Q17Efd): only the Grade N2 index row; adds 「Alden c50515 准发，1a892463 已发布」
 >   and Call N3 still disabled. No S-05 row added.
 > None of the three changes touches S-05.
+> Later the same day (N04／N05 audit): **04.9 v115 → v116** (full read toolu_01PFRYsUUv3KR58mdpTMvQR5; diff read in this
+> session): only the 员工离职｜N2 index row changed (N2 third version 479f0040 published, c50513／c50528). No S-05 row added.
 
 | Halaman | pageId | Versi tercatat | Owner |
 | --- | --- | --- | --- |
@@ -54,7 +56,7 @@
 | 04.6｜n8n 使用规范 | 1690927120 | v20 | Alden |
 | 04.7｜Router SSOT | 1691254793 | **v51** | Alden |
 | 04.8｜Registry SSOT | 1690140756 | **v21** | Alden |
-| 04.9｜n8n Workflow SSOT | 1693089805 | **v115** | Alden |
+| 04.9｜n8n Workflow SSOT | 1693089805 | **v116** | Alden |
 | 04.9.1｜详情：平台 | 1764622422 | **v19** | Alden |
 | 04.10｜Jira 共享配置治理 | 1738735636 | **v20** | Kent |
 | 04.11｜Slack Channel 登记表 | 1764524046 | **v4** | Alden |
