@@ -14,9 +14,17 @@ def cfg():
         return json.load(f)
 
 
-def has_word(text, words):
+def has_word(text, words, negations=()):
+    """True when one of words is in text and not negated. A negation word (lexicon order_words.negation) within
+    25 characters before it cancels it (2026-09-25 probe: 'jangan commit push' was READONLY, not STOP, and the
+    word 'commit push' in it would have authorised a commit)."""
     low = (text or '').lower()
-    return any(re.search(r'(?<![a-z])' + re.escape(w.lower()) + r'(?![a-z])', low) for w in words)
+    for w in words:
+        for m in re.finditer(r'(?<![a-z])' + re.escape(w.lower()) + r'(?![a-z])', low):
+            window = low[max(0, m.start() - 25):m.start()]
+            if not any(re.search(r'(?<![a-z])' + re.escape(n.lower()) + r'(?![a-z])', window) for n in negations):
+                return True
+    return False
 
 
 def git_need(sub, args, C):
@@ -86,7 +94,7 @@ def verdict(needs, owner_text, L, C, what):
         if n == 'write':
             if cls != 'WRITE':
                 missing.append('a G-01 WRITE order')
-        elif not has_word(owner_text, C['words'][n]):
+        elif not has_word(owner_text, C['words'][n], L['order_words']['negation']):
             missing.append(' / '.join('"%s"' % w for w in C['words'][n]))
     if missing:
         return ('G-04: %s needs %s in the owner\'s latest message (rules: .claude/gates/G-04-repo-write.json). '

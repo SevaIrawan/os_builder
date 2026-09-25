@@ -37,6 +37,25 @@ def cfg():
         return json.load(f)
 
 
+SEG_SPLIT = re.compile(r'&&|\|\||[;|&\n]')
+
+
+def prints_only(cmd):
+    """A Bash command made only of echo / printf / true / cd: its output is what Claude typed (2026-09-25 gap:
+    `echo <id>` produced 'evidence' for any id)."""
+    segs = [s.strip() for s in SEG_SPLIT.split(cmd) if s.strip()]
+    return bool(segs) and all(re.match(r'^(echo|printf|true|cd)\b', s) for s in segs)
+
+
+def runs_git(cmd, subs):
+    """A segment of the command really runs `git <sub>` for one of subs (not a mention of the word)."""
+    for s in SEG_SPLIT.split(cmd):
+        m = re.match(r'^\s*(?:[A-Za-z_]\w*=\S*\s+)*git\s+(?:-C\s+\S+\s+|-c\s+\S+\s+)*([\w-]+)', s)
+        if m and m.group(1) in subs:
+            return True
+    return False
+
+
 # ---------------------------------------------------------------- transcript
 
 def load_turn(path):
@@ -91,6 +110,8 @@ def load_turn(path):
                             txt = pf.read()
                     if 'was denied' in txt[:400] or txt.startswith('MCP error'):
                         continue
+                    if u['name'] == 'Bash' and prints_only(u.get('input', {}).get('command') or ''):
+                        continue            # echo / printf output is text Claude typed, not a source
                     results.append((u['name'], u.get('input') or {}, txt))
     return owner, results, turn, mine, turn_start
 
@@ -267,7 +288,7 @@ def problems_in(text, C, ev, earlier_mine=(), force_status=False):
 
             def is_live(r, rule=rule):
                 return any(r[0].startswith(p) for p in rule['live_tools']) or \
-                    (r[0] == 'Bash' and any(w in (r[1].get('command') or '') for w in rule['live_bash']))
+                    (r[0] == 'Bash' and runs_git(r[1].get('command') or '', rule['live_bash']))
             live = ev.subset(is_live)
             fresh = ev.subset(is_live, current_turn=True)
             for k, t in toks:

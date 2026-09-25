@@ -26,4 +26,7 @@ print('**Enforced order of work (G-01). Rules: `.claude/gates/G-01-outbound-writ
       'system; absence claims need a verified token or the \U0001F532 marker. A held answer is corrected with a message '
       'starting "Koreksi". Its limits are listed in that file.\n'
       'Git and GitHub writes are gated by G-04 (`.claude/gates/G-04-repo-write.json`): commit / push need "commit push", '
-      'deleting branches / commits / history needs "hapus", in the owner\'s latest message.')
+      'deleting branches / commits / history needs "hapus", in the owner\'s latest message.\n'
+      'Every other outward tool (Gmail, Supabase, Vercel, Claude_Code_Remote, Claude_Docs, Artifact publish) is gated by '
+      'G-05 (`.claude/gates/G-05-other-tools.json`): a write needs a write order. The hooks fail closed on a crash. '
+      'docs/working-agreement.md, CLAUDE.md and docs/04-anchor-navigation.md are gate-protected (UNLOCK G-01).')

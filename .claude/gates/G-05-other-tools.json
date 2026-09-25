@@ -1,0 +1,27 @@
+{
+  "gate_id": "G-05",
+  "name": "Write gate for every other outward tool",
+  "version": "1.0",
+  "updated": "2026-09-25",
+  "owner_decision": "Bambang 2026-09-25: docs/working-agreement.md rule 4 (no write or execution without permission) was enforced only for Confluence / Jira / Slack (G-01), n8n (G-01 B1 + G-02) and git / GitHub (G-04). Every other tool that writes outside the repo is now held until the owner's latest message is a write order.",
+  "single_source": "This file is the ONLY place the G-05 rules are written. scripts/hooks/g05.py reads it.",
+
+  "binds": "Every mcp__ tool that no other gate covers (not mcp__Atlassian_MCP__, mcp__Atlassian_Rovo__, mcp__Slack__, mcp__n8n__, mcp__github__), and the built-in Artifact tool. Enforced by the PreToolUse hook scripts/hooks/pre_tool.py.",
+
+  "rule": "A call is allowed when its operation reads (read_verbs below, matched at the start of the operation name after mcp__<server>__) or is on read_tools. Anything else needs the owner's latest message classified WRITE (lexicon.json order_words), and not STOP.",
+
+  "read_verbs": ["get", "list", "search", "read", "query", "fetch", "discover", "guide", "check", "count", "aggregate", "validate", "status", "export", "lookup", "atlassianUserInfo"],
+  "read_tools": ["mcp__Claude_Code_Remote__read_documentation"],
+
+  "artifact": {
+    "tool": "Artifact",
+    "read_actions": ["read", "list", "quickstart", "open"],
+    "note": "publish (the default when action is omitted), delete, pin and unpin need a WRITE order."
+  },
+
+  "known_limits": [
+    "The operation name decides read or write; a tool whose name starts with a read verb but writes is not caught.",
+    "Built-in tools other than Artifact that act outside the repo must be added to the hook matcher in .claude/settings.json to be seen at all.",
+    "Hooks run as the same OS user as the model: they stop shortcuts and forgetting, not a deliberate attack."
+  ]
+}

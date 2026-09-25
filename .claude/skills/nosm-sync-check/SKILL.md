@@ -78,8 +78,9 @@ disagree, **stop and report 部署漂移 (deployment drift)**. Never work from a
      moved and what changed in them.
    - The report itself is a chat answer: the Stop hook checks it against G-03
      (`.claude/gates/G-03-chat-claims.json`).
-   - Drift found: quote the delta, copy the source text verbatim into the local file, commit,
-     push, tell the owner. Do not paraphrase.
+   - Drift found: quote the delta and tell the owner. `CLAUDE.md` and `docs/04-anchor-navigation.md` are
+     gate-protected files: copying the source text verbatim into them needs UNLOCK G-01, and committing
+     needs "commit push", both from the owner. Do not paraphrase.
    - Source unreachable: stop. Do not fall back to the local copy.
 
 ## Non-goals

@@ -212,8 +212,8 @@ def git_touches_protected(cmd, L):
     return ''
 
 
-def main():
-    inp = read_input()
+def main(inp=None):
+    inp = read_input() if inp is None else inp
     name = inp.get('tool_name', '')
     ti = inp.get('tool_input') or {}
     L = N.lexicon()
@@ -269,6 +269,14 @@ def main():
             deny(why)
         return 0
 
+    # ---- 6. G-05: every other outward tool (Gmail, Supabase, Vercel, Claude_Code_Remote, Claude_Docs, Artifact, ...)
+    import g05
+    if g05.binds(name):
+        why = g05.check(name, ti, latest_owner_text(transcript(inp)), L)
+        if why:
+            deny(why)
+        return 0
+
     if not is_gated_tool(name, L):
         return 0
     if name == 'mcp__Atlassian_MCP__updateConfluenceContent' and ti.get('dryRun') is True:
@@ -317,5 +325,32 @@ def main():
     return 0
 
 
+def outward(inp):
+    """Calls that reach outside the repo: held when the hook itself cannot decide."""
+    name = inp.get('tool_name', '')
+    cmd = (inp.get('tool_input') or {}).get('command', '') if name == 'Bash' else ''
+    return name.startswith('mcp__') or name == 'Artifact' or bool(re.search(r'\bgit\b|\bcurl\b|\bwget\b', cmd))
+
+
 if __name__ == '__main__':
-    sys.exit(main())
+    # Fail closed (2026-09-25): a hook that crashes exits 1, and Claude Code then lets the call through ("the action
+    # proceeds", code.claude.com/docs hooks). An outward call is held instead; a local edit is let through with a
+    # loud message so that a broken hook can still be repaired.
+    INP = read_input()
+    try:
+        rc = main(INP)
+    except SystemExit as e:
+        if e.code in (0, 2, None):
+            raise
+        err = str(e.code)
+        rc = None
+    except Exception as e:                      # noqa: BLE001 - any failure of the gate itself
+        err = '%s: %s' % (type(e).__name__, e)
+        rc = None
+    if rc is None:
+        if outward(INP):
+            deny('G-01: the pre-tool hook failed (%s), so this outward call is held. Fix the hook '
+                 '(owner: UNLOCK G-01) before retrying.' % err)
+        sys.stderr.write('G-01 WARNING: the pre-tool hook failed (%s); this local call was not checked.\n' % err)
+        sys.exit(1)
+    sys.exit(rc)

@@ -50,8 +50,8 @@ def load_registry():
         return {}
 
 
-def main():
-    inp = read_input()
+def main(inp=None):
+    inp = read_input() if inp is None else inp
     L = N.lexicon()
     tr = None
     problems = []
@@ -160,5 +160,38 @@ def main():
     return 0
 
 
+def owner_override(path):
+    """The owner's latest real message holds OVERRIDE G-01 / G-03. Read without nosm_lib, which may be what broke."""
+    last = ''
+    try:
+        with open(path, encoding='utf-8') as f:
+            for line in f:
+                try:
+                    d = json.loads(line)
+                except ValueError:
+                    continue
+                if d.get('type') == 'user' and (d.get('origin') or {}).get('kind') == 'human' and not d.get('isMeta'):
+                    c = (d.get('message') or {}).get('content')
+                    last = c if isinstance(c, str) else ' '.join(
+                        b.get('text', '') for b in c or [] if isinstance(b, dict) and b.get('type') == 'text')
+    except (OSError, TypeError):
+        return False
+    return 'OVERRIDE G-01' in last or 'OVERRIDE G-03' in last
+
+
 if __name__ == '__main__':
-    sys.exit(main())
+    # Fail closed (2026-09-25): a Stop hook that crashes exits 1 and the turn ends unchecked. Hold it instead,
+    # unless the owner's latest message overrides.
+    INP = read_input()
+    try:
+        sys.exit(main(INP))
+    except SystemExit as e:
+        if e.code in (0, 2, None):
+            raise
+        err = str(e.code)
+    except Exception as e:                      # noqa: BLE001 - any failure of the gate itself
+        err = '%s: %s' % (type(e).__name__, e)
+    if owner_override(INP.get('transcript_path') or ''):
+        sys.exit(0)
+    deny('G-01/G-03: the Stop hook failed (%s), so this turn cannot be checked and is held. Fix the hook '
+         '(owner: UNLOCK G-01), or the owner types OVERRIDE G-03.' % err)

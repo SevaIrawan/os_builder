@@ -125,6 +125,10 @@ case('T1 token the owner wrote', ['Branch `claude/x` dicek.'])
 case('T2 GitHub fact from a stale local ref', ['Branch main di GitHub ada di 22bdede.'], '22bdede')
 case('T2 GitHub fact from mcp__github__', ['Di GitHub main ada di 6e217b4.'])
 case('T2 GitHub fact from git ls-remote', ['Di GitHub main ada di dd14bb1.'])
+case('T1 echo output is not a source', ['Commit lokal abcd123.'], 'abcd123',
+     setup=lambda t: t.call('Bash', {'command': 'echo abcd123'}, 'abcd123\n'))
+case('T2 a command that only mentions ls-remote is not a GitHub read', ['Di GitHub main ada di 99aa88b.'], '99aa88b',
+     setup=lambda t: t.call('Bash', {'command': 'cat notes.txt # ls-remote'}, '99aa88b\n'))
 case('T2 GitHub file claim without a GitHub read', ['File `LICENSE` ada di GitHub.'], 'LICENSE',
      setup=lambda t: t.call('Bash', {'command': 'ls'}, 'LICENSE\n'))
 case('T2 Confluence version from Confluence', ['Halaman 1234567890 di v7.'])
