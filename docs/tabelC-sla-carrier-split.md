@@ -4,6 +4,9 @@
 > 部署漂移 dan tidak dihapus `nosm-sync-check`.
 >
 > **Dibuat** 2026-09-22 atas perintah Bambang (butir 3 dari rekomendasi hari itu).
+> **Dicek ulang 2026-09-25 terhadap Spec v67** (dibaca penuh): 16 baris tabel C sama ID-nya; kolom 时限数值 dan
+> 计时方式 sama persis dengan v62. Yang berubah hanya teks penanganan 缺位 di C-2／C-10／C-11 (kolom 超时升级对象) dan
+> C-16 (kolom 起算状态); file ini tidak mengutip teks itu, jadi pembelahan pembawa timer di bawah tetap berlaku.
 > **Alasannya**: angka di A-04 lama tidak berdiri, dan `docs/action-list.md` B-17 sudah mencatat pembelahan
 > 「1 baris JSM / 15 baris n8n」 harus dibangun ulang sebelum dipakai. File ini pembangunan ulangnya.
 >

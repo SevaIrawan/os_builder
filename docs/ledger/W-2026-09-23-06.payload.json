@@ -1,5 +1,0 @@
-{
- "channel_id": "C0BRSTNNY4A",
- "thread_ts": "1790160390.243079",
- "message": "Agreed.\n\nHowever, after checking, here are the issues that still need a decision, with their basis.\n\nN03 — S-05's own submission entry. HR is still allowed to submit on the supervisor's behalf if the supervisor is absent. Basis (Spec): 「提交资格＝仅可由该员工登记的Direct Supervisor提交，缺位由HR Ops & Data代为受理」 (\"eligibility = only the employee's registered Direct Supervisor may submit; if absent, HR Ops & Data receives it on their behalf\"). This was already asked to Alden in c50279.\n\nN16. N17 follows the same pattern — HR fully takes over during PIP Check-in, not just a notification. Basis (Spec, N16): 「Direct Supervisor（缺位→HR Ops & Data承接）……HR不担任本子单Owner，监督经C-10频率提醒及D表知会承担……→N17（PIP结果评估）」 (\"if the supervisor is absent, HR Ops & Data takes over ... HR does not own this sub-ticket, oversight is carried through C-10 frequency reminders and the D-table notices ... proceeds to N17, PIP result evaluation\").\n\n—— Bambang"
-}

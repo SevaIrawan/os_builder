@@ -1,8 +1,0 @@
-{
- "tool": "mcp__Atlassian_MCP__addOrEditJiraIssueComment",
- "input": {
-  "cloudId": "abf9cc08-e266-45bd-93b8-836e4a8c7aaa",
-  "issueIdOrKey": "OSD-116",
-  "commentBody": "Follow-up → @Alden, cc @Kent\n\nChecking in on the Pattern-9 request. That's comment c50279 — any update on this?\n\n—— Bambang"
- }
-}

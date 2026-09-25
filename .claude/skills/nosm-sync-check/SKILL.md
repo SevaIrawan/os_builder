@@ -22,20 +22,14 @@ disagree, **stop and report 部署漂移 (deployment drift)**. Never work from a
 
 ## Steps, in this order
 
-0. **Read the working agreement first**: `docs/working-agreement.md` — the 18
-   operating rules the user set for how we work together, grouped as: basics (ask
-   before guessing; answer only what was asked; claims must cite a page actually
-   opened; report only deviations; no writes without permission), **working order**
-   (read every determining source to the end *before* reporting — no partial
-   reports, no mid-way corrections; and never conclude "no permission / cannot
-   read" from a single account: try both Atlassian connectors and the Bot_SSC
-   credential in n8n first, and remember a zero count does not distinguish "absent"
-   from "not visible"), **write authority** (only the build-sheet page 2096463922
-   and this repo; never CLAUDE.md, the Spec, or any 04.x page; never edit an
-   already-sent comment), and **how to speak to the user** (no Chinese terms in
-   explanations without translation). It is not a Confluence copy, so it is not
-   subject to the drift rule — but it governs how the rest of this skill and all
-   BO work is carried out. Read it before the connector checks, not after.
+0. **Read the working agreement first**: `docs/working-agreement.md` — the owner's
+   working rules, the only place they are written (24 rules in six parts: understanding
+   the order; sources and truth; write authority; writing to other people; how to speak
+   to the owner; session start). Read the whole file every session. It is not a
+   Confluence copy, so it is not subject to the drift rule — but it governs how the rest
+   of this skill and all BO work is carried out. Read it before the connector checks,
+   not after. If it seems to conflict with CLAUDE.md or the gate files, stop and ask
+   the owner.
 
 1. **Connectors** (gate A1)
    - Atlassian: any successful `mcp__Atlassian_MCP__` read.

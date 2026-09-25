@@ -1,8 +1,0 @@
-{
- "tool": "mcp__Atlassian_MCP__addOrEditJiraIssueComment",
- "input": {
-  "cloudId": "abf9cc08-e266-45bd-93b8-836e4a8c7aaa",
-  "issueIdOrKey": "NSE-1137",
-  "commentBody": "Update → @Geri\n\nN20 is built: 纪律与绩效改进处置｜N20｜解雇自动开单与交接 (ToIGnEJmksSPhC85). It's a skeleton — the node that calls your entry point still has a placeholder workflowId, I'll wire it once yours exists.\n\n—— Bambang"
- }
-}

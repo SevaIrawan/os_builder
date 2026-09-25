@@ -73,7 +73,7 @@ Schema: `ledger_schema` in the gate file. Per claim:
 - Near names (e.g. `PIP 参数` / `PIP Extension 参数`) and page codes (`04.10`) are used
   exactly as the quote or the source title has them (D5).
 - If you cannot source a sentence, write it with 🔲 and say it is unverified, or leave it out.
-- Never put a person's name next to fault wording (D7, `docs/working-rules.md`).
+- Never put a person's name next to fault wording (D7, `docs/working-agreement.md` rule 18).
 
 Outbound: also save the exact tool input as `payload_file` and set `tool` and `target`.
 Draft: `kind: draft`, `target: {system: draft, path}`; the draft file is the payload.

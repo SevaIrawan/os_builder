@@ -12,14 +12,6 @@
 
 **每次开始 BO 建设相关工作前，先调用 skill `nosm-sync-check`**（见 `.claude/skills/nosm-sync-check/SKILL.md`），确认本文件与 `docs/04-anchor-navigation.md` 仍与 Confluence 来源页一致，并重新验证 Atlassian／n8n 连接器仍然存活。不一致时按该 skill 的「部署漂移」流程处理，不得凭旧副本继续执行。
 
-**Enforced order of work (G-01). Rules: `.claude/gates/G-01-outbound-write.json`, the only place they are written.**
-Step 0 is skill `nosm-sync-check`. Steps 1-6 are skill `outbound-write-gate`: order, find every related source, read every source to the end, claims ledger, `scripts/gate_check.py`, read-back.
-Hooks in `.claude/settings.json` enforce them. A Confluence / Jira / Slack write is blocked unless its exact input belongs to a ledger that passes the gate at that moment. A write through the Backend Operations account (`mcp__Atlassian_Rovo__`) is always blocked. A turn cannot end while a changed draft in `docs/` fails the gate, or while a write has not been read back.
-Evidence is taken from the session transcript (the owner's real messages and the real tool results), never from what the model types.
-The nosm-sync-check report keeps its two results apart: (a) the two controlled copies, (b) the space-wide sweep. (a) passing says nothing about (b).
-Only the owner can type `OVERRIDE G-01` (let one blocked write through) or `UNLOCK G-01` (change gate files).
-Chat answers are not checked by any script (see `known_limits` in the gate file).
-
 来源：07.06 §三「环境就绪（新开发者首次接入）」。每次在新 device/session 开始工作前，先确认以下五项：
 
 1. 已申请 Atlassian API／MCP 连接器权限。

@@ -47,7 +47,7 @@
     {"id": "D4", "name": "ABSENCE_PROVEN", "rule": "A claim with absence wording not present in its own quote needs absence{pattern, searched:[>=2 calls], control:{call, pattern}}: the pattern is absent from every searched result, the control pattern is present in the control result, same tool."},
     {"id": "D5", "name": "NAMES_EXACT", "rule": "A near-name term (lexicon near_name_groups) used in a claim must appear in the quote exactly; a page code (04.10, 04.9.1) must be a source's title code or appear in the quote."},
     {"id": "D6", "name": "BOILERPLATE_CARRIES_NO_FACT", "rule": "Boilerplate has no absence wording and no numbers except structural labels."},
-    {"id": "D7", "name": "NO_BLAME", "rule": "No sentence names a person together with fault wording (owner instruction 2026-09-21, docs/working-rules.md)."},
+    {"id": "D7", "name": "NO_BLAME", "rule": "No sentence names a person together with fault wording (owner instruction 2026-09-21, docs/working-agreement.md rule 18)."},
 
     {"id": "E1", "name": "TARGET_READ_BEFORE_WRITE", "rule": "Confluence edit: a full read of the target within the window and its latest seen version equals the edit's snapshotToken. Jira comment: the issue's comments read to isLast within the window."},
 

@@ -75,7 +75,7 @@ if len(sync_reads) < 2:
 tmp = tempfile.mkdtemp(prefix='g01-')
 STATE = tempfile.mkdtemp(prefix='g01-state-')        # sealed copy of the gate files for the throw-away repo
 os.environ['G01_STATE_DIR'] = STATE
-for item in ('scripts', '.claude', 'CLAUDE.md', 'docs/04-anchor-navigation.md', 'docs/working-rules.md'):
+for item in ('scripts', '.claude', 'CLAUDE.md', 'docs/04-anchor-navigation.md', 'docs/working-agreement.md'):
     src, dst = os.path.join(REPO, item), os.path.join(tmp, item)
     os.makedirs(os.path.dirname(dst), exist_ok=True)
     (shutil.copytree if os.path.isdir(src) else shutil.copy)(src, dst)
