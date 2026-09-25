@@ -22,6 +22,21 @@
     {"step": 6, "name": "Write, then read back", "do": "After a successful write, read the target again (Confluence full read / Jira comment listing). The Stop hook blocks until every sentence of the payload is found in the read-back. The order is marked used automatically.", "proved_by": ["R1"]}
   ],
 
+  "session_start": {
+    "why": "docs/working-agreement.md rule 23 (owner 2026-09-25): a message that opens with 'hi' is a new day and the start of a session; run every session-start rule and report before anything else. Until 2026-09-25 this was only a reminder printed by prompt.py; nothing held the turn.",
+    "trigger": "The owner's latest message starts with 'hi' (prompt.py SESSION_START).",
+    "enforced_by": "Stop hook, scripts/hooks/s0.py: the turn cannot end until every item below appears in the transcript AFTER that 'hi' message.",
+    "overrides": "OVERRIDE G-01 in the owner's latest message lets the turn end without it.",
+    "items": [
+      {"id": "S0-0", "what": "nosm-sync-check step 0: docs/working-agreement.md read (Read tool, or a Bash command naming it, with a result)"},
+      {"id": "S0-1", "what": "nosm-sync-check step 1 / CLAUDE.md §〇 items 1-4: a successful mcp__Atlassian_MCP__ call, a successful mcp__Atlassian_Rovo__ read, and a successful mcp__n8n__search_workflows"},
+      {"id": "S0-2", "what": "nosm-sync-check steps 2-3: full reads (detail=full, read to the end) of 1730347066 and 1676804100, and scripts/sync_check.py passing on them"},
+      {"id": "S0-3", "what": "nosm-sync-check step 4: a successful Confluence search whose CQL holds NOSM and lastmodified, and every pageId in docs/source-versions.md read live (scripts/sweep_check.py logic)"},
+      {"id": "S0-4", "what": "CLAUDE.md §〇 acceptance: 04.7 (1691254793) read in full, the page used to find which Project a request type belongs to"}
+    ],
+    "known_limits": ["It proves the steps ran, not that the report came before anything else or that it was correct; the report itself is checked by G-03."]
+  },
+
   "checks": [
     {"id": "A1", "name": "CONNECTORS_LIVE", "rule": "Within 12 h: one successful Atlassian call and one successful n8n search_workflows call in the transcript."},
     {"id": "A2", "name": "CONTROLLED_COPIES_IN_SYNC", "rule": "scripts/sync_check.py passes on full reads of 07.06 and 04 taken from the transcript, at most 12 h old."},

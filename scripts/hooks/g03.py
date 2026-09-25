@@ -128,12 +128,27 @@ class Evidence:
         # what a real, successful call was: its tool name and the paths / commands it was given (`code` only)
         self.used = [r[0] for r in results] + [str(v) for r in results for k, v in r[1].items()
                                                if k in ('file_path', 'path', 'pattern', 'command')]
+        # the object ids a successful non-Bash read was aimed at (OSD-116, a pageId, a workflow id): a read that
+        # succeeded proves the object exists even when its result does not repeat the id (2026-09-25 corpus:
+        # listJiraIssueComments on OSD-116 returns comments without the key). Bash inputs are excluded: any text
+        # can be typed into a command.
+        self.targets = [s for r in results if r[0] != 'Bash' for s in N.flatten_strings(r[1])]
 
     def subset(self, pred):
         return Evidence([], [r for r in self.results if pred(r)])
 
 
+ID_KINDS_FROM_TARGETS = ('issue_key', 'page_id', 'workflow_id')
+
+
 def found(kind, tok, ev):
+    if kind in ID_KINDS_FROM_TARGETS and any(t == tok for t in ev.targets):
+        return True
+    if kind == 'comment_id':
+        # Jira and Confluence return comment ids as bare digits ("id":"50237"); people write c50237
+        n = re.escape(tok[1:])
+        rx = re.compile(r'(?<![\w])c' + n + r'(?![\d])|"id"\s*:\s*"?' + n + r'(?![\d])')
+        return any(rx.search(t) for t in ev.texts)
     if kind == 'number':
         rx = re.compile(r'(?<![\d])' + re.escape(tok) + r'(?![\d])')
         return any(rx.search(t) for t in ev.texts)

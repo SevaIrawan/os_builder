@@ -14,7 +14,6 @@ from _common import N, read_input, transcript, deny, latest_owner_text, is_gated
 import _guard
 import gate_check
 
-SAFE_BASH = re.compile(r'^\s*(python3\s+scripts/(gate_check|order_check|read_source|sync_check|sweep_check|selftest|g02_selftest)\.py\b|cat\s|head\s|tail\s|grep\s|rg\s|wc\s|ls\b|git\s+(diff|log|show|status)\b|sed\s+-n\s)')
 
 # git subcommands that cannot move a working-tree or index change into history or throw it away
 GIT_READONLY = {'status', 'diff', 'log', 'show', 'fetch', 'push', 'ls-files', 'ls-tree', 'rev-parse', 'blame',
@@ -24,7 +23,13 @@ GIT_ALL_FLAGS = {'-a', '--all', '-A', '-u', '--update', '--include', '-i', '-p',
 
 
 def protected_hit(text, L):
-    return [p for p in L['protected_paths'] if p in text]
+    """Gate paths named in a command. A folder is also hit when written without its trailing slash
+    (2026-09-25 selftest: `cd scripts/hooks && rm x.py` named no gate path and was let through)."""
+    out = []
+    for p in L['protected_paths']:
+        if p in text or (p.endswith('/') and re.search(r'(?<![\w.-])' + re.escape(p.rstrip('/')) + r'(?![\w.-])', text)):
+            out.append(p)
+    return out
 
 
 def is_protected(path, L):
@@ -104,6 +109,50 @@ def git_calls(cmd):
                 rest.pop(0)
         out.append((rest[0] if rest else '', rest[1:]))
     return out
+
+
+# Commands that only read. A command naming a gate file is let through only when EVERY simple command in it
+# is one of these (2026-09-25: `cd repo && git cat-file -e origin/main:.claude/skills/...` and `wc -l scripts/hooks/*.py`
+# were refused although they write nothing, because the old allow-list only matched a command that STARTS with it).
+READ_ONLY_TOOLS = {'cat', 'head', 'tail', 'grep', 'rg', 'wc', 'ls', 'cd', 'pwd', 'echo', 'printf', 'cut',
+                   'diff', 'stat', 'file', 'basename', 'dirname', 'true'}      # not sort / uniq: both can write a file
+READ_ONLY_GIT = {'log', 'show', 'diff', 'status', 'cat-file', 'ls-files', 'ls-tree', 'rev-parse', 'blame', 'grep'}
+READ_ONLY_SCRIPT = re.compile(r'^scripts/(gate_check|order_check|read_source|sync_check|sweep_check|selftest|g02_selftest|g03_selftest)\.py$')
+
+
+def read_only_command(cmd):
+    """True only when every simple command reads and nothing is written: no redirection except 2>&1 / >/dev/null,
+    no command substitution, no tee / rm / mv / cp / sed -i, python3 only for the gate's own read scripts."""
+    if '$(' in cmd or '`' in cmd:
+        return False
+    segs = shell_segments(cmd)
+    if not segs:
+        return False
+    for seg in segs:
+        toks = list(seg)
+        for i, t in enumerate(toks):                      # redirections
+            if t in ('>', '>>', '>|', '&>', '<>'):
+                if t != '>' or i + 1 >= len(toks) or toks[i + 1] != '/dev/null':
+                    return False
+            if t == '>&' and (i + 1 >= len(toks) or toks[i + 1] not in ('1', '2')):
+                return False
+        words = [t for t in toks if t not in ('>', '>&', '/dev/null') and not re.fullmatch(r'\d', t)]
+        if not words:
+            continue
+        head = os.path.basename(words[0])
+        if head in READ_ONLY_TOOLS:
+            continue
+        if head == 'sed' and '-n' in words and not any(w.startswith('-i') or w == '--in-place' for w in words):
+            continue
+        if head == 'git':
+            sub = next((w for w in words[1:] if not w.startswith('-')), '')
+            if sub in READ_ONLY_GIT and not any(w.startswith('--output') or w == '-o' for w in words):
+                continue
+            return False
+        if head == 'python3' and len(words) >= 2 and READ_ONLY_SCRIPT.match(words[1]):
+            continue
+        return False
+    return True
 
 
 def covers(spec, path):
@@ -189,7 +238,9 @@ def main():
         if 'G01_HOOK_PROBE' in cmd:
             deny('G-01 hook is active (probe).')
         hits = protected_hit(cmd, L) + ([_guard.STATE_MARKER] if _guard.STATE_MARKER in cmd else [])
-        if hits and not (SAFE_BASH.match(cmd) and not re.search(r'>|\btee\b|-i\b|\brm\b|\bmv\b|\bcp\b|open\(|write', cmd)):
+        # read_only_command replaces the old SAFE_BASH prefix list, which let `git diff --output=<gate file>`
+        # through because it only looked at how a command started (2026-09-25 selftest)
+        if hits and not read_only_command(cmd):
             tr = transcript(inp)
             if L['order_words']['unlock_token'] not in latest_owner_text(tr):
                 deny('G-01: this command touches gate files %s. Needs "%s" in the owner\'s latest message.'

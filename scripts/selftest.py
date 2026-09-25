@@ -300,6 +300,21 @@ rc, msg = hook('pre_tool.py', {'tool_name': 'Bash', 'tool_input': {'command': "s
 expect('hook: bash edit of gate script blocked', rc == 2, msg)
 rc, msg = hook('pre_tool.py', {'tool_name': 'Bash', 'tool_input': {'command': 'python3 scripts/gate_check.py docs/ledger/W-TEST.json'}}, tp)
 expect('hook: running the gate allowed', rc == 0, msg)
+# 2026-09-25 finding 6: read-only commands that name a gate path were refused
+for cmd in ['cd /x && git cat-file -e origin/main:.claude/skills/nosm-sync-check/SKILL.md',
+            'wc -l scripts/hooks/*.py', 'grep -n x scripts/hooks/pre_tool.py | head -3',
+            'python3 scripts/g02_selftest.py 2>&1 | tail -1', 'python3 scripts/sweep_check.py',
+            'cat .claude/gates/lexicon.json > /dev/null', 'sed -n 1,5p scripts/gate_check.py',
+            'git log --oneline -3 -- scripts/hooks/', 'git show HEAD:scripts/hooks/stop.py | head']:
+    rc, msg = hook('pre_tool.py', {'tool_name': 'Bash', 'tool_input': {'command': cmd}}, tp)
+    expect('hook: read-only command naming a gate path allowed  %s' % cmd[:50], rc == 0, msg)
+for cmd in ['cat x > scripts/hooks/a.py', 'echo x >> .claude/gates/lexicon.json', 'sed -i s/a/b/ scripts/gate_check.py',
+            'cp a scripts/hooks/b.py', 'cat scripts/hooks/x.py | tee y', 'python3 -c "open(\'scripts/hooks/x\',\'w\')"',
+            'git diff --output=scripts/hooks/x', 'git branch scripts/hooks/x', 'sort -o scripts/hooks/x y',
+            'bash scripts/hooks/x.sh', 'echo $(rm scripts/hooks/x)', 'cd scripts/hooks && rm x.py',
+            'python3 scripts/hooks/stop.py', 'mv scripts/hooks/a scripts/hooks/b']:
+    rc, msg = hook('pre_tool.py', {'tool_name': 'Bash', 'tool_input': {'command': cmd}}, tp)
+    expect('hook: writing command naming a gate path blocked  %s' % cmd[:50], rc == 2, msg)
 rc, msg = hook('pre_tool.py', {'tool_name': 'mcp__Atlassian_MCP__updateConfluenceContent', 'tool_input': dict(payload, dryRun=True)}, tp)
 expect('hook: dry run allowed', rc == 0, msg)
 
@@ -591,6 +606,40 @@ expect('G-03: a new owner message starts a new turn', g03_run(tt) == [])
 tt = base3(); tt.lines.append({'type': 'attachment', 'attachment': {'content': 'UBLsvYaSlCI3pLWs'}})
 say(tt, 'Workflow UBLsvYaSlCI3pLWs masih terbuka.')
 expect('G-03 replay: id seen only in a hook message is held (T1)', any('UBLsvYaSlCI3pLWs' in x for x in g03_run(tt)))
+
+# ------------------------------------------------------------------ 7. session start on "hi" (rule 23, s0.py)
+def s0_run(tt):
+    p = tt.save(os.path.join(tmp, 'transcript-s0.jsonl'))
+    code = ('import sys, json; sys.path.insert(0, "scripts/hooks"); import _common, s0; '
+            'tr = _common.N.Transcript(sys.argv[1]); print(json.dumps(s0.check(tr, _common.N.lexicon())))')
+    r = subprocess.run([sys.executable, '-c', code, p], cwd=tmp, capture_output=True, text=True)
+    if r.returncode:
+        print(r.stderr)
+    return json.loads(r.stdout or '["crash"]')
+def s0_steps(tt, router=True):
+    tt.call('Read', {'file_path': os.path.join(tmp, 'docs/working-agreement.md')}, '     1\t# Aturan Kerja\n')
+    tt.call('mcp__Atlassian_MCP__getConfluenceContent', {'content_id': '1730347066', 'detail': 'full', 'content_format': 'markdown'}, sync_reads['1730347066'])
+    tt.call('mcp__Atlassian_MCP__getConfluenceContent', {'content_id': '1676804100', 'detail': 'full', 'content_format': 'markdown'}, sync_reads['1676804100'])
+    tt.call('mcp__Atlassian_Rovo__getConfluencePage', {'pageId': '1676804100'}, {'content': {'nodes': [{'id': '1676804100'}]}})
+    tt.call('mcp__n8n__search_workflows', {}, {'data': [{'id': 'w1'}]})
+    tt.call('mcp__Atlassian_MCP__searchConfluence', {'cql': 'space = NOSM AND type = page AND lastmodified >= "2026-09-24"'}, {'data': {'results': []}})
+    if router:
+        tt.call('mcp__Atlassian_MCP__getConfluenceContent', {'content_id': '1691254793', 'detail': 'full', 'content_format': 'markdown'},
+                page('1691254793', 51, '04.7｜路由表', '# 一\n\n| Route ID | Project |\n| --- | --- |\n| RT-X | HR |\n'))
+tt = T(); tt.owner('hi')
+p = s0_run(tt)
+expect('s0: bare "hi" turn is held on every item', all(any(i in x for x in p) for i in ('S0-0', 'S0-1', 'S0-2', 'S0-3', 'S0-4')), str(p))
+tt = T(); tt.owner('hi'); s0_steps(tt)
+p = s0_run(tt)
+expect('s0: all session-start steps after "hi" pass', p == [], str(p))
+tt = T(); s0_steps(tt); tt.owner('hi')
+p = s0_run(tt)
+expect('s0: steps run before "hi" do not count', any('S0-0' in x for x in p) and any('S0-4' in x for x in p), str(p))
+tt = T(); tt.owner('halo, cek status')
+expect('s0: a message not starting with "hi" is not a session start', s0_run(tt) == [])
+tt = T(); tt.owner('hi'); s0_steps(tt, router=False)
+p = s0_run(tt)
+expect('s0: 04.7 acceptance read missing is held (S0-4)', any('S0-4' in x for x in p) and not any('S0-2' in x for x in p), str(p))
 
 shutil.rmtree(tmp, ignore_errors=True)
 shutil.rmtree(STATE, ignore_errors=True)

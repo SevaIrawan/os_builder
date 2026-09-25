@@ -4,6 +4,7 @@
   1. a draft file (lexicon draft_path_patterns) changed since it last passed and its ledger does not pass G-01;
   2. an outbound write succeeded and no later read of the target contains every sentence that was sent;
   3. (G-02) an n8n workflow written this session lacks its read-back, task record or registration;
+  3b. (G-01 session_start) the owner opened with "hi" and a session-start step has not run since;
   4. (G-03) the answer of this turn carries a token, quote or absence claim no source shows.
 Exit 2 = keep working (stderr is shown to Claude). Exit 0 = may stop."""
 import json, os, re, sys
@@ -133,6 +134,11 @@ def main():
     tr = tr or transcript(inp)
     if g02.cfg()['override_token'] not in latest_owner_text(tr):
         problems.extend(g02.check_stop(tr, L))
+
+    # 3b. session start on "hi" (working-agreement rule 23; G-01 "session_start")
+    import s0
+    if L['order_words']['override_token'] not in latest_owner_text(tr):
+        problems.extend('G-01 session start (owner said "hi") %s' % p for p in s0.check(tr, L))
 
     # 4. G-03: every checkable token in this turn's answer comes from a source (.claude/gates/G-03-chat-claims.json)
     import g03
