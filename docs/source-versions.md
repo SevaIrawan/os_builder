@@ -122,6 +122,21 @@
 > 纪律与绩效改进处置｜建造单 is not in the 42 results: still **v43** (matches today's full read).
 > The other 36 pages are not in this ledger (F1/F2/PF-03/E02 cluster, xLoop, NXP SOP, Grade/员工离职/OS 开发流/目标与绩效
 > 建造单, 04.9.3/04.9.4/04.9.5, 员工离职｜流程 Spec, 新人90天框架 Spec, 招聘执行 Spec).
+>
+> **Sweep 2026-09-25 01:15Z (nosm-sync-check, new session)**
+> Connectors: n8n `search_workflows` ok (toolu_016KgLbmgnsQREVvLvQAzmzA, 3 S-05 workflows, all inactive); Atlassian reads ok.
+> Controlled copies: `sync_check.py` against 07.06 **v30** (toolu_01Ga17F78QkRc7aRWVxaEQE8) and
+> 04 **v25** (toolu_01AFBEu8uDeEYeVDg9mvQpZD): 19/19 bullets, preamble and 冻结要求 same; tables 4/4, 6/6, 15/15.
+> VERDICT: no deployment drift.
+> CQL `space = NOSM AND type = page AND lastmodified >= "2026-09-24"` (toolu_01EiKMCfxiWH8YbktG6VnUR5): totalSize **43**,
+> one result page. Only one hit is newer than the 2026-09-24 14:35Z sweep: 纪律与绩效改进处置｜建造单.
+> `listConfluenceContentVersions` on the ledger pages among the hits:
+> **纪律与绩效改进处置｜建造单 → v46** (was v43; toolu_017uMggLSGjjzxMdGGHawgEx) — v44/v45/v46 are this session's own writes
+> (W-2026-09-24-05/-06/-07, each read back in full); no other author.
+> Unchanged against the table: S-05 Spec v67 (toolu_01PgcDXscmK74wxDcy1qVw8z), 04.9 v114 (toolu_01N1ZqDX8vYtAn5TzeuMyBTi),
+> 04.7 v51 (toolu_01SkC7ztqfuGj5mhwwbyMuzw), HR｜盘点与切分 v40 (toolu_01WmZDridomUyzX3YnfbEGp8),
+> 04.5.3 v15 (toolu_01Cx2FpfYixYyhwrVtxyL5QZ), 04.3 v35 (toolu_01DgbZVdWLTHcrU8NX4qPyGC).
+> The other 36 hits are the same non-ledger pages listed in the previous sweep, all last modified before 14:35Z.
 
 | Halaman | pageId | Versi tercatat | Owner |
 | --- | --- | --- | --- |
@@ -158,7 +173,7 @@
 | OS 开发流｜流程 Spec | 1729200354 | v39 | Kayden／Kent |
 | HR｜盘点与切分 | 1745158181 | **v40** | Felix |
 | 纪律与绩效改进处置｜流程 Spec (S-05) | 2036858900 | **v67** (冻结基线 v61) | Felix |
-| 纪律与绩效改进处置｜建造单 | 2096463922 | **v43** | Bambang (BO) |
+| 纪律与绩效改进处置｜建造单 | 2096463922 | **v46** | Bambang (BO) |
 
 **Tebal** = bergerak pada sapuan 2026-09-21 dan sudah dibaca diff-nya (lihat
 `docs/reading-notes-2026-09-21.md` bagian VERSION SWEEP).

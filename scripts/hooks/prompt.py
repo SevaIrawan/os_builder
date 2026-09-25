@@ -2,9 +2,12 @@
 # -*- coding: utf-8 -*-
 """UserPromptSubmit hook. Prints, as context for this turn, what the owner's message
 authorises (mechanical classification) and which session prerequisites are still missing."""
-import sys
+import re, sys
 from _common import N, read_input, transcript
 import gate_check, sync_check
+
+# Owner rule (2026-09-25): a message that opens with "hi" marks a new day and the start of a session.
+SESSION_START = re.compile(r'^\s*hi\b', re.I)
 
 
 def main():
@@ -20,6 +23,10 @@ def main():
         'AMBIGUOUS': 'mixes write and check/draft words: ASK the owner before any write',
     }[cls]
     lines = ['[G-01] Owner message classified %s: %s.' % (cls, meaning)]
+    if SESSION_START.match(inp.get('prompt', '')):
+        lines.append('[G-01] Owner opened with "hi": new day, start of session. Before answering anything else, run '
+                     'every session-start rule now: skill nosm-sync-check in full (even if the last run is under 12 h old) '
+                     'and the CLAUDE.md §〇 readiness check, then report both results.')
     try:
         tr = transcript(inp)
         now = N.now_utc()
