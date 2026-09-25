@@ -85,7 +85,8 @@ def main(inp=None):
     # 2. read-back after outbound writes
     log = read_log()
     done = {e.get('payload_sha') for e in log if e.get('event') == 'read_back'}
-    pending = [e for e in log if e.get('event') == 'consumed' and e.get('payload_sha') not in done]
+    # G-05 records its used orders in the same log; those writes have no ledger payload to read back
+    pending = [e for e in log if e.get('event') == 'consumed' and e.get('gate') != 'G-05' and e.get('payload_sha') not in done]
     if pending:
         tr = tr or transcript(inp)
         override = L['order_words']['override_token'] in latest_owner_text(tr)

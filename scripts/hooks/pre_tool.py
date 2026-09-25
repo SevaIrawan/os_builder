@@ -259,6 +259,12 @@ def main(inp=None):
             why = g04.check_bash(cmd, latest_owner_text(transcript(inp)), L, git_calls)
             if why:
                 deny(why)
+        # ---- 6. G-05: a Bash command that sends data over the network (curl -X POST, wget --post-data, http PUT)
+        if re.search(r'\b(curl|wget|https?)\b', cmd):
+            import g05
+            why = g05.check_bash(cmd, lambda: transcript(inp), L, shell_segments)
+            if why:
+                deny(why)
         return 0
 
     # ---- 5. G-04: GitHub writes
@@ -272,7 +278,7 @@ def main(inp=None):
     # ---- 6. G-05: every other outward tool (Gmail, Supabase, Vercel, Claude_Code_Remote, Claude_Docs, Artifact, ...)
     import g05
     if g05.binds(name):
-        why = g05.check(name, ti, latest_owner_text(transcript(inp)), L)
+        why = g05.check(name, ti, transcript(inp), L)
         if why:
             deny(why)
         return 0

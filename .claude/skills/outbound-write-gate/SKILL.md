@@ -95,8 +95,10 @@ hook blocks until every sent sentence is found in that read-back.
 
 - Chat answers: G-03 (`.claude/gates/G-03-chat-claims.json`), checked by the Stop hook.
 - git / GitHub writes: G-04 (`.claude/gates/G-04-repo-write.json`), checked by the PreToolUse hook.
-- Every other outward tool (Gmail, Supabase, Vercel, Claude_Code_Remote, Claude_Docs, Artifact publish, ...):
-  G-05 (`.claude/gates/G-05-other-tools.json`) - a write needs a write order from the owner.
+- Every other outward tool (Gmail, Supabase, Vercel, Claude_Code_Remote, Claude_Docs, Artifact publish,
+  ArtifactData writes, ArtifactComments replies, and Bash commands that send data with curl / wget / http):
+  G-05 (`.claude/gates/G-05-other-tools.json`) - each write needs its own write order from the owner
+  (one order = one write, as G-01 B2).
 - The hooks fail closed: if the pre-tool hook crashes, an outward call is held; if the Stop hook crashes, the
   turn is held until the hook is fixed or the owner types OVERRIDE G-03.
 

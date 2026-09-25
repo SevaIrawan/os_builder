@@ -508,8 +508,9 @@ expect('defect 3: 17 h old draft order refused (B1)', rows['B1'][1] is False, ro
 
 # ------------------------------------------------------------------ 5. G-04 git / GitHub writes
 git('add', '-A'); git('commit', '-q', '-m', 'clean')      # no gate file differs from HEAD: only G-04 decides below
-def session_with(owner_text):
+def session_with(owner_text, tag=''):
     tt = T(); tt.owner('Kau cek dulu'); tt.owner(owner_text)
+    tt.lines[-1]['uuid'] = 'u-%s-%s' % (N.text_sha(owner_text), tag)     # a distinct order id per test session
     return tt.save(os.path.join(tmp, 'transcript-g04-%s.jsonl' % N.text_sha(owner_text)))
 def gh_hook(tool, tpath):
     return hook('pre_tool.py', {'tool_name': tool, 'tool_input': {}}, tpath)
@@ -573,8 +574,32 @@ for tool, ti in [('mcp__Gmail__search_threads', {}), ('mcp__Supabase__list_table
                  ('mcp__Claude_Docs__read', {}), ('Artifact', {'action': 'read'}), ('mcp__Atlassian_MCP__getConfluenceContent', {'content_id': '1'})]:
     rc, msg = tool_hook(tool, ti, tro)
     expect('G-05: read %s %s allowed' % (tool, ti.get('action', '')), rc == 0, msg)
-rc, msg = tool_hook('mcp__Gmail__create_draft', {}, session_with('kirim email itu ke Felix'))
+trw = session_with('kirim email itu ke Felix', 'once')
+rc, msg = tool_hook('mcp__Gmail__create_draft', {}, trw)
 expect('G-05: a write order lets a write tool through', rc == 0, msg)
+rc, msg = tool_hook('mcp__Vercel__create_deployment', {}, trw)
+expect('G-05: the same order cannot be used for a second write (one order = one write)', rc == 2 and 'already used' in msg, msg)
+for tool, ti in [('ArtifactData', {'action': 'set'}), ('ArtifactData', {'action': 'batch'}), ('ArtifactData', {'action': 'str_replace'}),
+                 ('ArtifactComments', {'action': 'reply'}), ('ArtifactComments', {'action': 'resolve'})]:
+    rc, msg = tool_hook(tool, ti, tro)
+    expect('G-05: %s %s blocked without a write order' % (tool, ti['action']), rc == 2 and 'G-05' in msg, msg)
+for tool, ti in [('ArtifactData', {'action': 'get'}), ('ArtifactData', {'action': 'query'}), ('ArtifactComments', {'action': 'read'})]:
+    rc, msg = tool_hook(tool, ti, tro)
+    expect('G-05: %s %s allowed' % (tool, ti['action']), rc == 0, msg)
+for cmd in ['curl -X POST https://api.example.com/x -d a=1', 'curl --request=PUT https://x/y', 'curl -XDELETE https://x/y',
+            'curl https://x/y --data-binary @f.json', 'curl -F file=@a https://x', 'wget --post-data=a=1 https://x',
+            'wget --method=PATCH https://x', 'http POST https://x a=1', 'cd /tmp && curl -d x https://x | head']:
+    rc, msg = bash_hook(cmd, tro)
+    expect('G-05: network write blocked  %s' % cmd[:45], rc == 2 and 'G-05' in msg, msg)
+for cmd in ['curl -sS https://x/y', 'curl -X GET https://x/y', 'wget -q https://x/y -O -', 'http GET https://x',
+            'curl -sS "$HTTPS_PROXY/__agentproxy/status"']:
+    rc, msg = bash_hook(cmd, tro)
+    expect('G-05: network read allowed  %s' % cmd[:45], rc == 0, msg)
+trw2 = session_with('kirim data itu ke API', 'bash')
+rc, msg = bash_hook('curl -X POST https://x -d a=1', trw2)
+expect('G-05: a write order lets one network write through', rc == 0, msg)
+rc, msg = bash_hook('curl -X POST https://x -d a=2', trw2)
+expect('G-05: a second network write needs a new order', rc == 2 and 'already used' in msg, msg)
 
 # ------------------------------------------------------------------ 5c. fail closed (gap 3), rule files (gap 4), prompt (gap 6)
 rc, msg = tool_hook('mcp__Gmail__create_draft', {}, os.path.join(tmp, 'no-such-transcript.jsonl'))
