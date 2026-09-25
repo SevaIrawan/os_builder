@@ -25,7 +25,10 @@ TOKEN_RES = [
 ]
 CODE_RE = re.compile(r'`([^`\s]{2,120})`')
 NUMBER_RE = re.compile(r'(?<![\w.])\d+(?:[.,]\d+)?(?![\w])')
-QUOTE_RE = re.compile(r'"([^"\n]{4,300})"|“([^”\n]{4,300})”|「([^」\n]{2,120})」')
+# Every pair of quote marks is matched, however short, so pairing never shifts; quotes shorter than 4
+# characters are then skipped as tokens (2026-09-25: a skipped "n8n" left its closing mark to pair with
+# the next opening mark, and the text between two quotes was held as a false quote).
+QUOTE_RE = re.compile(r'"([^"\n]{1,300})"|“([^”\n]{1,300})”|「([^」\n]{1,120})」')
 LINE_REF_RE = re.compile(r'^(?P<path>[\w./-]+\.[A-Za-z0-9]+):(?P<a>\d+)(?:-(?P<b>\d+))?$')
 
 
@@ -101,7 +104,8 @@ def tokens(sentence):
     for m in QUOTE_RE.finditer(sentence):
         q = next(g for g in m.groups() if g is not None)
         if len(N.norm(q)) >= 4:
-            out.append(('quote', q)); taken.append((m.start(), m.end()))
+            out.append(('quote', q))
+        taken.append((m.start(), m.end()))
     for m in CODE_RE.finditer(sentence):
         if free(m.start(), m.end()):
             out.append(('code', m.group(1))); taken.append((m.start(), m.end()))
