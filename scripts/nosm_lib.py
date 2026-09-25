@@ -190,6 +190,37 @@ def flatten_strings(obj, skip=()):
     return out
 
 
+def body_text(b):
+    """A comment body as text. Jira and most reads give a string; Confluence comment listings give
+    {'format': ..., 'value': '...'}; Jira ADF gives {'type': 'doc', 'content': [...]}.
+    2026-09-25: a dict body used to reach strip_markup() and crash readable() (TypeError)."""
+    if b is None or isinstance(b, str):
+        return b or ''
+    if isinstance(b, dict) and isinstance(b.get('value'), str):
+        return b['value']
+    if isinstance(b, dict) and b.get('type') == 'doc':
+        blocks = []
+
+        def walk(n, out):
+            if isinstance(n, dict):
+                if n.get('type') == 'text' and isinstance(n.get('text'), str):
+                    out.append(n['text'])
+                elif n.get('type') in ('mention', 'emoji') and isinstance((n.get('attrs') or {}).get('text'), str):
+                    out.append(n['attrs']['text'])
+                elif n.get('type') == 'inlineCard' and isinstance((n.get('attrs') or {}).get('url'), str):
+                    out.append(n['attrs']['url'])
+                elif n.get('type') == 'hardBreak':
+                    out.append('\n')
+                for ch in n.get('content') or []:
+                    walk(ch, out)
+        for blk in b.get('content') or []:
+            out = []
+            walk(blk, out)
+            blocks.append(''.join(out))
+        return '\n'.join(blocks)
+    return '\n'.join(flatten_strings(b))
+
+
 def readable(call):
     """Human-readable form of a tool result: what read_source.py prints and what quotes are matched against."""
     j = call.json()
@@ -204,8 +235,9 @@ def readable(call):
         parts = []
         for c in data['comments']:
             parts.append('c%s | %s | %s | parent=%s\n%s' % (
-                c.get('id'), (c.get('author') or {}).get('displayName'), c.get('created'),
-                c.get('parentId'), strip_markup(c.get('body') or '')))
+                c.get('id'), (c.get('author') or {}).get('displayName') or c.get('authorAccountId'),
+                c.get('created') or c.get('createdAt'),
+                c.get('parentId'), strip_markup(body_text(c.get('body')))))
         return '\n\n'.join(parts)
     return json.dumps(j, ensure_ascii=False, indent=1)
 
