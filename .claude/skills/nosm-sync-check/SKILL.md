@@ -23,7 +23,7 @@ disagree, **stop and report 部署漂移 (deployment drift)**. Never work from a
 ## Steps, in this order
 
 0. **Read the working agreement first**: `docs/working-agreement.md` — the owner's
-   working rules, the only place they are written (24 rules in six parts: understanding
+   working rules, the only place they are written (25 rules in six parts: understanding
    the order; sources and truth; write authority; writing to other people; how to speak
    to the owner; session start). Read the whole file every session. It is not a
    Confluence copy, so it is not subject to the drift rule — but it governs how the rest
@@ -67,8 +67,10 @@ disagree, **stop and report 部署漂移 (deployment drift)**. Never work from a
      NOT CHECKED. Gate A3 fails while any page is NOT CHECKED.
    - For each MOVED page run `listConfluenceContentVersions` and `diffConfluenceContentVersions`. The
      version message is a hint, not the change.
-   - Update `docs/source-versions.md` with what changed (only with the owner's permission to write the
-     repo), citing the call you read it from.
+   - **Mandatory, not an offer** (`docs/working-agreement.md` rule 25): when a page moved, update every repo
+     doc that records it at once — the `docs/source-versions.md` table and sweep log, and any repo note that
+     cites the old version — citing the call you read it from. Then report it. Commit / push still wait for
+     "commit push"; gate-protected files still wait for "UNLOCK G-01".
    - A page that moved is not "known" because its number is recorded. Any claim that uses
      it needs a fresh full read, and gate C4 enforces that from the transcript.
 

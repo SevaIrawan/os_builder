@@ -14,7 +14,7 @@
 
 - Spec S-05: **v67**, status di halaman 「已冻结」 (baseline audit v58, beku v61). Build sheet: **v46**.
 - n8n: N04 `UBLsvYaSlCI3pLWs`, N05 `LJwiAZFfnuq6tmju`, N20 `ToIGnEJmksSPhC85` — ketiganya inactive, belum
-  terdaftar di 04.9 (v114 tidak punya baris maupun 分册 S-05), tidak di folder alur. N04 dan N05 **tidak
+  terdaftar di 04.9 (v114 tidak punya baris maupun 分册 S-05; v115 per diff 2026-09-25 hanya mengubah baris Grade N2), tidak di folder alur. N04 dan N05 **tidak
   berfungsi sesuai Spec** (C-17).
 
 ---

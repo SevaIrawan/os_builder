@@ -97,3 +97,8 @@
     lalu laporkan hasilnya sebelum hal lain. *(instruksi Bambang 2026-09-25)*
 24. **Patuhi semua aturan yang berlaku** — preferensi Bambang, perintah tugas, skill di `.claude/skills/`,
     `CLAUDE.md`, dan file ini. Tidak ada yang opsional; sudah terbiasa bukan alasan melompati langkah. *(09-20)*
+25. **Kalau cek NOSM menemukan halaman sumber bergeser, semua doc/source di repo wajib diperbarui ikut versi
+    terbaru** — tabel `docs/source-versions.md`, log sapuan, dan setiap catatan repo yang mengutip versi lama.
+    Ini langkah wajib, bukan tawaran; dikerjakan langsung setelah diff dibaca, lalu dilaporkan. Commit dan push
+    tetap menunggu "commit push" (aturan 17); file yang dilindungi gate tetap menunggu "UNLOCK G-01".
+    *(instruksi Bambang, ditegaskan 2026-09-25)*
