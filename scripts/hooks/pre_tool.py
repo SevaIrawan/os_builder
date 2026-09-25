@@ -5,7 +5,9 @@
   2. any write through the Backend Operations account (mcp__Atlassian_Rovo__*);
   3. n8n writes without a standing WRITE order;
   4. edits to the gate's own files (lexicon.json protected_paths) unless the owner's latest message says UNLOCK G-01,
-     including git commands that stage, commit, restore or discard them without naming them (git commit -a, git add .).
+     including git commands that stage, commit, restore or discard them without naming them (git commit -a, git add .);
+  5. G-04: git commit / push and GitHub writes without "commit push", and deleting branches, commits or history
+     without "hapus", in the owner's latest message (.claude/gates/G-04-repo-write.json).
 Exit 0 = allow. Exit 2 = block (stderr is shown to Claude)."""
 import json, os, re, shlex, subprocess, sys
 from _common import N, read_input, transcript, deny, latest_owner_text, is_gated_tool, ledgers
@@ -198,6 +200,20 @@ def main():
             if L['order_words']['unlock_token'] not in latest_owner_text(tr):
                 deny('G-01: %s. Gate files are committed, restored or discarded only with "%s" in the owner\'s latest message. '
                      'Stage your own files by exact path instead.' % (why, L['order_words']['unlock_token']))
+        # ---- 5. G-04: git commit / push / delete need the owner's word in the latest message
+        if re.search(r'\bgit\b', cmd):
+            import g04
+            why = g04.check_bash(cmd, latest_owner_text(transcript(inp)), L, git_calls)
+            if why:
+                deny(why)
+        return 0
+
+    # ---- 5. G-04: GitHub writes
+    if name.startswith('mcp__github__'):
+        import g04
+        why = g04.check_github(name, latest_owner_text(transcript(inp)), L)
+        if why:
+            deny(why)
         return 0
 
     if not is_gated_tool(name, L):

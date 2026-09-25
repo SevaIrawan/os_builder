@@ -19,6 +19,7 @@ import argparse, json, os, re, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import nosm_lib as N
 import sync_check
+import sweep_check
 
 CONSUMED = os.path.join(N.ROOT, 'docs', 'orders', 'consumed.jsonl')
 PAYLOAD_SKIP_KEYS = {'cloudId', 'contentId', 'content_id', 'snapshotToken', 'localId', 'name', 'issueIdOrKey',
@@ -218,7 +219,9 @@ def evaluate(ledger, tr, now=None, tool_name=None, tool_input=None, L=None):
     R.add('A2', ok, lines[-1] if lines else '')
     sweep = [c for c in tr.ordered() if c.name in L['tools']['confluence_search'] and not c.is_error
              and 'lastmodified' in query_text(c).lower() and 'NOSM' in query_text(c) and age_min(c.ts, now) <= 720]
-    R.add('A3', sweep, 'space-wide lastmodified sweep within 12 h: %s' % (sweep[-1].id if sweep else 'NONE'))
+    live_ok, live_lines = sweep_check.run(tr, L, now)
+    R.add('A3', sweep and live_ok, 'space-wide lastmodified sweep within 12 h: %s; live versions of the source-versions '
+          'table: %s' % (sweep[-1].id if sweep else 'NONE', live_lines[-2] if len(live_lines) > 1 else live_lines[-1]))
 
     # ---------------- B: authorization
     order, why = find_order(tr, kind, L, now)

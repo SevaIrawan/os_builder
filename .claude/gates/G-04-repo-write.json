@@ -1,0 +1,52 @@
+{
+  "gate_id": "G-04",
+  "name": "Git and GitHub write gate",
+  "version": "1.0",
+  "updated": "2026-09-25",
+  "owner_decision": "Bambang 2026-09-25: commit and push only after the owner writes 'commit push' (docs/working-agreement.md rule 17); deleting a branch, a commit or history only after the owner writes 'hapus'. Enforced by the PreToolUse hook, not left to memory.",
+  "single_source": "This file is the ONLY place the G-04 rules are written. scripts/hooks/g04.py reads it.",
+
+  "rule": "The word must be in the owner's LATEST message, and that message must not be classified STOP (e.g. 'jangan hapus'). One message authorises the calls made while it is the latest; the next owner message replaces it.",
+
+  "words": {
+    "commit_push": ["commit push"],
+    "delete": ["hapus", "hapuskan", "delete"],
+    "write": "G-01 order class WRITE (lexicon.json order_words.write)"
+  },
+
+  "git": {
+    "commit_push": ["commit", "push", "merge", "rebase", "cherry-pick", "revert", "am", "pull", "tag", "notes", "commit-tree"],
+    "delete_always": ["clean", "gc", "prune", "filter-branch", "filter-repo", "rm", "reflog", "update-ref"],
+    "delete_when": {
+      "branch": ["-d", "-D", "--delete", "-m", "-M", "--move", "-f", "--force", "-c", "-C"],
+      "push": ["-d", "--delete", "-f", "--force", "--force-with-lease", "--force-if-includes", "--mirror", "--prune", "refspec starting with ':' or '+'"],
+      "tag": ["-d", "--delete", "-f", "--force"],
+      "reset": ["--hard", "--keep", "--merge", "--soft", "any commit argument"],
+      "checkout": ["-B", "-f", "--force", "--discard-changes", "--", "."],
+      "switch": ["-C", "--force-create", "-f", "--force", "--discard-changes"],
+      "restore": ["anything except --staged / -S only"],
+      "stash": ["drop", "clear"],
+      "worktree": ["remove", "prune"],
+      "remote": ["remove", "rm", "prune", "set-url"]
+    },
+    "reflog_read_only": ["show", "list"]
+  },
+
+  "github_tools": {
+    "read_prefixes": ["mcp__github__get_", "mcp__github__list_", "mcp__github__search_", "mcp__github__pull_request_read",
+                      "mcp__github__issue_read", "mcp__github__actions_get", "mcp__github__actions_list",
+                      "mcp__github__subscribe_pr_activity", "mcp__github__unsubscribe_pr_activity"],
+    "delete": ["mcp__github__delete_file"],
+    "commit_push": ["mcp__github__create_or_update_file", "mcp__github__push_files", "mcp__github__create_branch",
+                    "mcp__github__create_pull_request", "mcp__github__update_pull_request", "mcp__github__merge_pull_request",
+                    "mcp__github__update_pull_request_branch", "mcp__github__enable_pr_auto_merge", "mcp__github__disable_pr_auto_merge",
+                    "mcp__github__create_repository", "mcp__github__fork_repository", "mcp__github__actions_run_trigger"],
+    "write": "every other mcp__github__ tool (comments, issues, reviews): needs a G-01 WRITE order"
+  },
+
+  "known_limits": [
+    "A git command hidden inside a script or alias (not visible in the command text) is not seen before it runs.",
+    "Committing changed gate files also needs 'UNLOCK G-01' in the same owner message (G-01 gate-file lock).",
+    "Hooks run as the same OS user as the model: they stop shortcuts and forgetting, not a deliberate attack."
+  ]
+}

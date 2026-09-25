@@ -21,4 +21,9 @@ print('**Enforced order of work (G-01). Rules: `.claude/gates/G-01-outbound-writ
       'The nosm-sync-check report keeps its two results apart: (a) the two controlled copies, (b) the space-wide sweep. '
       '(a) passing says nothing about (b).\n'
       'Only the owner can type `OVERRIDE G-01` (let one blocked write through) or `UNLOCK G-01` (change gate files).\n'
-      'Chat answers are not checked by any script (see `known_limits` in the gate file).')
+      'Chat answers are checked by the Stop hook against G-03 (`.claude/gates/G-03-chat-claims.json`): ids, versions, dates, '
+      'numbers, `code` and quotes must come from a tool result of this session; outside-system facts from a live read of that '
+      'system; absence claims need a verified token or the \U0001F532 marker. A held answer is corrected with a message '
+      'starting "Koreksi". Its limits are listed in that file.\n'
+      'Git and GitHub writes are gated by G-04 (`.claude/gates/G-04-repo-write.json`): commit / push need "commit push", '
+      'deleting branches / commits / history needs "hapus", in the owner\'s latest message.')

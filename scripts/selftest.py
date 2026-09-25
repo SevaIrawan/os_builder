@@ -75,12 +75,17 @@ if len(sync_reads) < 2:
 tmp = tempfile.mkdtemp(prefix='g01-')
 STATE = tempfile.mkdtemp(prefix='g01-state-')        # sealed copy of the gate files for the throw-away repo
 os.environ['G01_STATE_DIR'] = STATE
-for item in ('scripts', '.claude', 'CLAUDE.md', 'docs/04-anchor-navigation.md', 'docs/working-agreement.md'):
+for item in ('scripts', '.claude', 'CLAUDE.md', 'docs/04-anchor-navigation.md', 'docs/working-agreement.md', '.gitignore'):
     src, dst = os.path.join(REPO, item), os.path.join(tmp, item)
     os.makedirs(os.path.dirname(dst), exist_ok=True)
     (shutil.copytree if os.path.isdir(src) else shutil.copy)(src, dst)
 for d in ('docs/ledger', 'docs/orders', 'docs/drafts'):
     os.makedirs(os.path.join(tmp, d), exist_ok=True)
+# A3 needs every page of the source-versions table checked live: the synthetic session reads 07.06 in full
+V0706 = json.loads(sync_reads['1730347066'])['data']['metadata']['version']['number']
+with open(os.path.join(tmp, 'docs', 'source-versions.md'), 'w', encoding='utf-8') as f:
+    f.write('| Halaman | pageId | Versi tercatat | Owner |\n| --- | --- | --- | --- |\n'
+            '| 07.06 | 1730347066 | v%d | Alden |\n| 07.05 | — | v5 | Kayden |\n' % V0706)
 
 NOW = datetime.datetime.now(datetime.timezone.utc)
 
@@ -331,19 +336,52 @@ with open(os.path.join(tmp, 'docs/ledger/D-TEST.json'), 'w', encoding='utf-8') a
 rc, msg = hook('stop.py', {}, tp)
 expect('stop: draft with passing ledger accepted', rc == 0, msg)
 
+# G-03 wired into the Stop hook: an answer with an unsourced token is held; a clean correction releases it
+t.lines.append({'type': 'assistant', 'timestamp': t.tick(), 'message': {'content': [
+    {'type': 'text', 'text': 'Halaman 5550001 sekarang di v99.'}]}})
+t.save(tp)
+rc, msg = hook('stop.py', {}, tp)
+expect('G-03 stop: unsourced version held', rc == 2 and 'G-03' in msg and 'v99' in msg, msg)
+t.lines.append({'type': 'assistant', 'timestamp': t.tick(), 'message': {'content': [
+    {'type': 'text', 'text': 'Koreksi: halaman 5550001 terbaca di v12, bukan v99 \U0001F532.'}]}})
+t.save(tp)
+rc, msg = hook('stop.py', {}, tp)
+expect('G-03 stop: clean correction restating the token releases the turn', rc == 0, msg)
+t.lines = t.lines[:-2]; t.save(tp)
+
+# A3: a page of the source-versions table never read live fails the gate
+svp = os.path.join(tmp, 'docs', 'source-versions.md')
+with open(svp, encoding='utf-8') as f:
+    sv_orig = f.read()
+with open(svp, 'a', encoding='utf-8') as f:
+    f.write('| 04.99 | 1999999999 | v3 | Alden |\n')
+ok, rows, out = run_gate(t, lg, payload)
+expect('A3: table page not checked live fails', rows.get('A3') is False, str(out['rows']))
+t.call('mcp__Atlassian_MCP__getConfluenceContent', {'content_id': '1999999999', 'detail': 'summary'},
+       {'data': {'id': '1999999999', 'snapshotToken': 'v:4', 'metadata': {'version': {'number': 4}}}})
+ok, rows, out = run_gate(t, lg, payload)
+expect('A3: passes once every table page is read live (moved v3 -> v4 is listed, not a failure)', rows.get('A3') is True, str(out['rows']))
+r = subprocess.run([sys.executable, 'scripts/sweep_check.py', '--transcript', tp], cwd=tmp, capture_output=True, text=True)
+expect('sweep_check: moved page reported', r.returncode == 0 and 'MOVED' in r.stdout and 'live v4' in r.stdout, r.stdout)
+with open(svp, 'w', encoding='utf-8') as f:
+    f.write(sv_orig)
+t.lines = t.lines[:-2]; t.save(tp)
+
 # gap found 2026-09-23: git commit -a committed a gate file without naming it
 def git(*a):
     subprocess.run(['git', '-c', 'user.email=t@t', '-c', 'user.name=t'] + list(a), cwd=tmp, capture_output=True, check=True)
 git('init', '-q'); git('add', '-A'); git('commit', '-q', '-m', 'base')
 def bash_hook(cmd, tpath=tp):
     return hook('pre_tool.py', {'tool_name': 'Bash', 'tool_input': {'command': cmd}}, tpath)
-rc, msg = bash_hook('git commit -a -m x')
+t.owner('commit push'); tcp = t.save(os.path.join(tmp, 'transcript-commit-push.jsonl'))     # G-04 word
+t.lines.pop(); t.save(tp)
+rc, msg = bash_hook('git commit -a -m x', tcp)
 expect('git gap: commit -a allowed while no gate file is changed', rc == 0, msg)
-for cmd in ['git commit -q -m "Record live test (foreground and background writes put back)"',
-            'git commit -m "unbalanced quote']:
-    rc, msg = bash_hook(cmd)
-    expect('too strict: allowed while no gate file is changed  %s' % cmd[:40], rc == 0, msg)
-t.owner('UNLOCK G-01 commit the registry'); tpu = t.save(os.path.join(tmp, 'transcript-unlock.jsonl'))
+rc, msg = bash_hook('git commit -q -m "Record live test (foreground and background writes put back)"', tcp)
+expect('too strict: allowed while no gate file is changed  git commit -q -m "Record live test', rc == 0, msg)
+rc, msg = bash_hook('git commit -m "unbalanced quote', tcp)
+expect('G-01 not too strict, G-04 fails closed on an unparseable git command', rc == 2 and 'G-04' in msg and 'G-01' not in msg, msg)
+t.owner('UNLOCK G-01 commit push the registry'); tpu = t.save(os.path.join(tmp, 'transcript-unlock.jsonl'))
 t.lines.pop(); t.save(tp)
 with open(os.path.join(tmp, 'docs/ledger/_draft-registry.json'), 'a', encoding='utf-8') as f:
     f.write('\n')
@@ -367,7 +405,7 @@ for cmd in ['git add docs/drafts/x-draft.md && git commit -F msg.txt',
             'git stash list', 'git stash show', 'git status --short; git stash list | wc -l',
             'git status --short', 'git diff',
             'git log --oneline -3', 'git push -u origin b']:
-    rc, msg = bash_hook(cmd)
+    rc, msg = bash_hook(cmd, tcp)
     expect('git gap: allowed  %s' % cmd, rc == 0, msg)
 git('add', 'docs/ledger/_draft-registry.json')
 rc, msg = bash_hook('git commit -m x')
@@ -449,6 +487,103 @@ r = subprocess.run([sys.executable, 'scripts/gate_check.py', 'docs/ledger/D-OLD.
                    cwd=tmp, capture_output=True, text=True)
 rows = {row[0]: row for row in json.loads(r.stdout)['rows']}
 expect('defect 3: 17 h old draft order refused (B1)', rows['B1'][1] is False, rows['B1'][2])
+
+# ------------------------------------------------------------------ 5. G-04 git / GitHub writes
+git('add', '-A'); git('commit', '-q', '-m', 'clean')      # no gate file differs from HEAD: only G-04 decides below
+def session_with(owner_text):
+    tt = T(); tt.owner('Kau cek dulu'); tt.owner(owner_text)
+    return tt.save(os.path.join(tmp, 'transcript-g04-%s.jsonl' % N.text_sha(owner_text)))
+def gh_hook(tool, tpath):
+    return hook('pre_tool.py', {'tool_name': tool, 'tool_input': {}}, tpath)
+tro = session_with('Kau check isi repo')
+for cmd in ['git commit -m x', 'git push -u origin main', 'git branch -D old', 'git push origin --delete old',
+            'git reset --hard HEAD~1', 'git reflog expire --expire=now --all', 'git gc --prune=now', 'git checkout -B main origin/main',
+            'cd . && git commit -m x', 'git merge other', 'git tag -d v1', 'git clean -fd', 'git restore docs/x.md']:
+    rc, msg = bash_hook(cmd, tro)
+    expect('G-04: blocked without the owner word  %s' % cmd, rc == 2 and 'G-04' in msg, msg)
+for cmd in ['git status', 'git log --oneline -3', 'git fetch origin main', 'git branch -a', 'git checkout main',
+            'git add docs/drafts/x-draft.md', 'git reflog', 'git diff', 'git ls-remote origin', 'git restore --staged docs/x.md']:
+    rc, msg = bash_hook(cmd, tro)
+    expect('G-04: read / local-safe allowed  %s' % cmd, rc == 0, msg)
+trc = session_with('commit push')
+for cmd in ['git commit -m x', 'git push -u origin main', 'git add a && git commit -m "x (y)" && git push']:
+    rc, msg = bash_hook(cmd, trc)
+    expect('G-04: allowed with "commit push"  %s' % cmd, rc == 0, msg)
+for cmd in ['git branch -D old', 'git push origin --delete old', 'git push --force origin main', 'git reset --hard HEAD~1']:
+    rc, msg = bash_hook(cmd, trc)
+    expect('G-04: delete still needs "hapus" after "commit push"  %s' % cmd, rc == 2 and 'hapus' in msg, msg)
+trh = session_with('ya hapus branch lokal dan reflognya')
+for cmd in ['git branch -D old', 'git reflog expire --expire=now --all', 'git gc --prune=now', 'git push origin --delete old']:
+    rc, msg = bash_hook(cmd, trh)
+    expect('G-04: allowed with "hapus"  %s' % cmd, rc == 0, msg)
+rc, msg = bash_hook('git commit -m x', trh)
+expect('G-04: "hapus" does not authorise a commit', rc == 2, msg)
+trn = session_with('jangan hapus branch itu')
+rc, msg = bash_hook('git branch -D old', trn)
+expect('G-04: "jangan hapus" blocks', rc == 2, msg)
+rc, msg = gh_hook('mcp__github__list_branches', tro)
+expect('G-04: GitHub read allowed', rc == 0, msg)
+rc, msg = gh_hook('mcp__github__push_files', tro)
+expect('G-04: GitHub push_files blocked without "commit push"', rc == 2 and 'G-04' in msg, msg)
+rc, msg = gh_hook('mcp__github__push_files', trc)
+expect('G-04: GitHub push_files allowed with "commit push"', rc == 0, msg)
+rc, msg = gh_hook('mcp__github__delete_file', trc)
+expect('G-04: GitHub delete_file needs "hapus"', rc == 2, msg)
+rc, msg = gh_hook('mcp__github__delete_file', trh)
+expect('G-04: GitHub delete_file allowed with "hapus"', rc == 0, msg)
+rc, msg = gh_hook('mcp__github__add_issue_comment', trc)
+expect('G-04: GitHub comment needs a G-01 WRITE order', rc == 2, msg)
+expect('order: "hapus" is a write word', N.classify('ya hapus juga yang di GitHub', N.lexicon())[0] == 'WRITE')
+
+# ------------------------------------------------------------------ 6. G-03 chat answers (2026-09-25 session replays)
+def g03_run(tt, override=None):
+    p = tt.save(os.path.join(tmp, 'transcript-g03.jsonl'))
+    code = ('import sys, json; sys.path.insert(0, "scripts/hooks"); import g03; '
+            'print(json.dumps(g03.check_turn(sys.argv[1])))')
+    r = subprocess.run([sys.executable, '-c', code, p], cwd=tmp, capture_output=True, text=True)
+    if r.returncode:
+        print(r.stderr)
+    return json.loads(r.stdout or '["crash"]')
+def say(tt, text):
+    tt.lines.append({'type': 'assistant', 'timestamp': tt.tick(), 'message': {'content': [{'type': 'text', 'text': text}]}})
+def base3(owner='cek branch'):
+    tt = T(); tt.owner(owner)
+    tt.call('Bash', {'command': 'git log -1 --format=%h origin/claude/x'}, '22bdede\n')
+    return tt
+tt = base3(); say(tt, 'Branch `claude/x` di GitHub isinya sama dengan main (22bdede).')
+p = g03_run(tt)
+expect('G-03 replay: GitHub fact from a stale local ref is held (T2)', any('T2' in x and '22bdede' in x for x in p), str(p))
+tt = base3(); tt.call('mcp__github__list_branches', {'owner': 'o', 'repo': 'r'}, '[{"name":"claude/x","sha":"22bdede9f4b3"}]')
+say(tt, 'Branch `claude/x` di GitHub isinya sama dengan main (22bdede).')
+expect('G-03: same sentence passes after a live GitHub read', g03_run(tt) == [], str(g03_run(tt)))
+tt = base3(); say(tt, 'Tidak ada commit lama di situ.')
+expect('G-03 replay: bare absence claim held (T3)', any('T3' in x for x in g03_run(tt)))
+tt = base3(); say(tt, 'Tidak ada commit lama di situ \U0001F532 (belum dicek).')
+expect('G-03: absence marked unverified passes', g03_run(tt) == [])
+tt = base3(); say(tt, 'Halaman 1234567890 ada di v7.')
+expect('G-03: invented pageId held (T1)', any('1234567890' in x for x in g03_run(tt)))
+tt = base3(); tt.call('mcp__Atlassian_MCP__getConfluenceContent', {'content_id': '1234567890', 'detail': 'summary'},
+                      {'data': {'id': '1234567890', 'snapshotToken': 'v:7'}})
+say(tt, 'Halaman 1234567890 ada di v7.')
+expect('G-03: pageId and v:7 read from Confluence pass', g03_run(tt) == [], str(g03_run(tt)))
+tt = base3(); tt.call('Read', {'file_path': '/r/scripts/x.py'}, '     1\timport os\n     2\tprint(1)\n')
+say(tt, 'Lihat `x.py:2` dan kutipan "import os".')
+expect('G-03: line ref shown by Read and verbatim quote pass', g03_run(tt) == [], str(g03_run(tt)))
+say(tt, 'Lihat `x.py:9`.')
+expect('G-03: line never shown by Read held', any('x.py:9' in x for x in g03_run(tt)))
+tt = base3(); say(tt, 'Aturannya "commit hanya setelah izin".')
+expect('G-03: paraphrase in quote marks held', any('quote' in x for x in g03_run(tt)))
+tt = base3(); say(tt, 'Jalankan:\n```\ngit reset --hard deadbee1\n```')
+expect('G-03: fenced code is skipped', g03_run(tt) == [])
+tt = base3(); say(tt, 'Commit lama ada di ecdbc91.'); say(tt, 'Koreksi: saya belum membaca ecdbc91 \U0001F532.')
+expect('G-03 T4: correction restating the token releases', g03_run(tt) == [], str(g03_run(tt)))
+tt = base3(); say(tt, 'Commit lama ada di ecdbc91.'); say(tt, 'Koreksi: maaf.')
+expect('G-03 T4: correction that does not restate the token keeps the hold', any('ecdbc91' in x for x in g03_run(tt)))
+tt = base3(); say(tt, 'Commit lama ada di ecdbc91.'); tt.owner('ok lanjut'); say(tt, 'Siap.')
+expect('G-03: a new owner message starts a new turn', g03_run(tt) == [])
+tt = base3(); tt.lines.append({'type': 'attachment', 'attachment': {'content': 'UBLsvYaSlCI3pLWs'}})
+say(tt, 'Workflow UBLsvYaSlCI3pLWs masih terbuka.')
+expect('G-03 replay: id seen only in a hook message is held (T1)', any('UBLsvYaSlCI3pLWs' in x for x in g03_run(tt)))
 
 shutil.rmtree(tmp, ignore_errors=True)
 shutil.rmtree(STATE, ignore_errors=True)

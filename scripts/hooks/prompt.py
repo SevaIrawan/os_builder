@@ -36,20 +36,33 @@ def main():
         sweep = [c for c in tr.ordered() if c.name in L['tools']['confluence_search'] and not c.is_error
                  and 'lastmodified' in gate_check.query_text(c).lower() and gate_check.age_min(c.ts, now) <= 720]
         if not sweep:
-            lines.append('[G-01] No space-wide lastmodified sweep in the last 12 h (nosm-sync-check step 6).')
-    except SystemExit:
+            lines.append('[G-01] No space-wide lastmodified sweep in the last 12 h (nosm-sync-check step 4).')
+        import sweep_check
+        live_ok, live_lines = sweep_check.run(tr, L, now)
+        if not live_ok:
+            lines.append('[G-01] Live versions of docs/source-versions.md not all checked in the last 12 h: %s '
+                         '(nosm-sync-check step 4, scripts/sweep_check.py).' % live_lines[-2 if len(live_lines) > 1 else -1])
+    except (SystemExit, OSError):
         pass
     try:
         import g02
         items = g02.open_items()
         if items:
-            lines.append('[G-02] %d workflow(s) built before G-02 still have open rule items: %s. '
-                         'Close them (draft, owner order, send) before new n8n work; list in .claude/gates/G-02-n8n-build.json.'
+            lines.append('[G-02] From the file .claude/gates/G-02-n8n-build.json (legacy_open_items), NOT checked live against '
+                         '04.9 / n8n / Jira in this session - read those sources before stating any of it as fact: '
+                         '%d workflow(s) built before G-02 are listed with open rule items: %s. '
+                         'Close them (draft, owner order, send) before new n8n work.'
                          % (len(items), '; '.join('%s: %s' % (i['workflow'], ', '.join(i['missing'])) for i in items)))
     except (OSError, ValueError, KeyError):
         lines.append('[G-02] G-02 rules file unreadable: n8n writes will be blocked until it is fixed.')
     lines.append('[G-01] Rules: .claude/gates/G-01-outbound-write.json. Any number, absence or name you state in chat '
                  'must come from a source read in full in this session; otherwise say it is unverified.')
+    lines.append('[G-03] The Stop hook checks this turn\'s answer (.claude/gates/G-03-chat-claims.json): every id, version, '
+                 'date, number, `code` and "quote" must appear in a tool result of this session or in the owner\'s messages; '
+                 'GitHub / Confluence / Jira / n8n facts must come from a live read of that system; absence claims need a '
+                 'verified token. Otherwise mark the sentence \U0001F532. A held answer is fixed with a message starting "Koreksi".')
+    lines.append('[G-04] git commit / push and GitHub writes need "commit push", deleting branches / commits / history '
+                 'needs "hapus", in the owner\'s latest message (.claude/gates/G-04-repo-write.json).')
     print('\n'.join(lines))
     return 0
 

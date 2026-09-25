@@ -55,17 +55,29 @@ disagree, **stop and report 部署漂移 (deployment drift)**. Never work from a
 4. **Sweep the whole space** (gate A3)
    - Run `mcp__Atlassian_MCP__searchConfluence` with
      `cql = space = NOSM AND type = page AND lastmodified >= "<previous sweep date>" order by lastmodified desc`.
-     Fetch every page of results.
-   - For each hit that `docs/source-versions.md` lists, run `listConfluenceContentVersions`,
-     and where it moved, `diffConfluenceContentVersions`. The version message is a hint, not
-     the change.
-   - Update `docs/source-versions.md` with what changed, citing the call you read it from.
+     Fetch every page of results. Zero results proves nothing on its own: run the same query with an
+     earlier date as a control (07.06.1 E16).
+   - `docs/source-versions.md` is a repo note, not a source. Read **every** page in its table live:
+     `mcp__Atlassian_MCP__getConfluenceContent` with `detail=summary` (it carries the version) on each
+     pageId, then run
+     ```
+     python3 scripts/sweep_check.py
+     ```
+     The script takes the live versions from the transcript and lists each page as same / MOVED /
+     NOT CHECKED. Gate A3 fails while any page is NOT CHECKED.
+   - For each MOVED page run `listConfluenceContentVersions` and `diffConfluenceContentVersions`. The
+     version message is a hint, not the change.
+   - Update `docs/source-versions.md` with what changed (only with the owner's permission to write the
+     repo), citing the call you read it from.
    - A page that moved is not "known" because its number is recorded. Any claim that uses
      it needs a fresh full read, and gate C4 enforces that from the transcript.
 
 5. **Report two results, never merged into one "all in sync"**
    - (a) controlled copies: script exit code, and the page versions it compared;
-   - (b) sweep: how many pages moved, which ones the ledger lists, what changed in them.
+   - (b) sweep: the CQL result and its control, the `sweep_check.py` exit code and output, which pages
+     moved and what changed in them.
+   - The report itself is a chat answer: the Stop hook checks it against G-03
+     (`.claude/gates/G-03-chat-claims.json`).
    - Drift found: quote the delta, copy the source text verbatim into the local file, commit,
      push, tell the owner. Do not paraphrase.
    - Source unreachable: stop. Do not fall back to the local copy.

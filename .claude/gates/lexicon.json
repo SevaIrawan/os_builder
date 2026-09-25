@@ -2,7 +2,7 @@
   "_about": "Single word list used by every gate script. Scripts never carry their own copies. Changing this file is a gate change: it is write-protected by scripts/hooks/pre_tool.py and needs 'UNLOCK G-01' in the owner's latest message.",
 
   "order_words": {
-    "write": ["tulis", "tuliskan", "kirim", "kirimkan", "publish", "terbitkan", "update halaman", "balas", "submit", "masukkan ke", "naikkan versi", "simpan ke confluence", "写入", "发送", "提交", "回帖", "登记到"],
+    "write": ["tulis", "tuliskan", "kirim", "kirimkan", "publish", "terbitkan", "update halaman", "balas", "submit", "masukkan ke", "naikkan versi", "simpan ke confluence", "hapus", "hapuskan", "delete", "写入", "发送", "提交", "回帖", "登记到", "删除"],
     "draft_noun": ["draft", "draf", "草稿"],
     "question": ["?", "？", "apa", "apakah", "bagaimana", "gimana", "kenapa", "mengapa", "dimana", "di mana", "kapan", "siapa", "berapa", "mana", "吗", "什么", "为什么", "哪"],
     "conditional": ["kalau", "jika", "apabila", "seandainya", "andai", "if", "如果"],
@@ -72,7 +72,7 @@
     "backend_ops_account_prefix": "mcp__Atlassian_Rovo__"
   },
 
-  "protected_paths": [".claude/settings.json", ".claude/gates/", ".claude/skills/", "scripts/hooks/", "scripts/nosm_lib.py", "scripts/gate_check.py", "scripts/order_check.py", "scripts/read_source.py", "scripts/sync_check.py", "scripts/g02_selftest.py", "docs/orders/consumed.jsonl", "docs/ledger/_draft-registry.json"],
+  "protected_paths": [".claude/settings.json", ".claude/gates/", ".claude/skills/", "scripts/hooks/", "scripts/nosm_lib.py", "scripts/gate_check.py", "scripts/order_check.py", "scripts/read_source.py", "scripts/sync_check.py", "scripts/sweep_check.py", "scripts/g02_selftest.py", "docs/orders/consumed.jsonl", "docs/ledger/_draft-registry.json"],
   "draft_path_patterns": ["^docs/drafts/", "^docs/(?!ledger/|orders/).*draft[^/]*$", "^docs/(?!ledger/|orders/).*draf[^/]*$", "^docs/outbound/"],
 
   "windows_minutes": {"outbound_source_age": 60, "draft_source_age": 720, "draft_order_age": 720}

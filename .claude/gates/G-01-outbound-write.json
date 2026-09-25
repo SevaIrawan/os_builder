@@ -1,19 +1,19 @@
 {
   "gate_id": "G-01",
   "name": "Evidence gate for drafts and outbound writes",
-  "version": "3.0",
-  "updated": "2026-09-23",
+  "version": "3.1",
+  "updated": "2026-09-25",
   "single_source": "This file is the ONLY place the rules are written. SKILL.md files point here and do not restate them. Word lists live in lexicon.json next to this file.",
 
   "binds": {
     "outbound": "Every tool call that writes to Confluence, Jira or Slack (any mcp__Atlassian_MCP__ / mcp__Atlassian_Rovo__ / mcp__Slack__ tool that is not on the read-only list in lexicon.json). Enforced by the PreToolUse hook scripts/hooks/pre_tool.py.",
     "draft": "Every file matching lexicon.json draft_path_patterns (docs/drafts/, docs/**/*draft*, docs/outbound/) that changed since it last passed. Enforced by the Stop hook scripts/hooks/stop.py: the turn cannot end while a changed draft fails.",
     "n8n": "n8n write tools need a standing WRITE order (checks B1, B4) but no claims ledger.",
-    "not_bound": "Chat answers and research notes. No script can check them; see 'known_limits'."
+    "not_bound": "Chat answers are checked by G-03 (.claude/gates/G-03-chat-claims.json), git / GitHub writes by G-04 (.claude/gates/G-04-repo-write.json). Research notes in the repo are not checked."
   },
 
   "pipeline": [
-    {"step": 0, "name": "Session start", "do": "Run skill nosm-sync-check: connectors, controlled copies (scripts/sync_check.py), space-wide sweep.", "proved_by": ["A1", "A2", "A3"]},
+    {"step": 0, "name": "Session start", "do": "Run skill nosm-sync-check: connectors, controlled copies (scripts/sync_check.py), space-wide sweep and live versions of the source-versions table (scripts/sweep_check.py).", "proved_by": ["A1", "A2", "A3"]},
     {"step": 1, "name": "Order", "do": "Nothing to do: the owner's messages are classified from the transcript by scripts/order_check.py rules. READONLY / AMBIGUOUS / STOP means ask, do not write.", "proved_by": ["B1", "B2", "B3", "B4"]},
     {"step": 2, "name": "Find every related source", "do": "Search the whole NOSM space (and the Jira issue's comments) for each topic term. Every hit is either read in full or excluded with a reason.", "proved_by": ["C1", "C2", "C3"]},
     {"step": 3, "name": "Read every source to the end, live", "do": "Confluence: getConfluenceContent detail=full. Jira: listJiraIssueComments until isLast, without dropping comments.body. A result saved to a file is read with scripts/read_source.py, every part.", "proved_by": ["C4", "C5"]},
@@ -25,7 +25,7 @@
   "checks": [
     {"id": "A1", "name": "CONNECTORS_LIVE", "rule": "Within 12 h: one successful Atlassian call and one successful n8n search_workflows call in the transcript."},
     {"id": "A2", "name": "CONTROLLED_COPIES_IN_SYNC", "rule": "scripts/sync_check.py passes on full reads of 07.06 and 04 taken from the transcript, at most 12 h old."},
-    {"id": "A3", "name": "SPACE_SWEEP_RUN", "rule": "Within 12 h: a successful Confluence search whose CQL contains NOSM and lastmodified."},
+    {"id": "A3", "name": "SPACE_SWEEP_RUN", "rule": "Within 12 h: a successful Confluence search whose CQL contains NOSM and lastmodified, AND every page with a pageId in docs/source-versions.md read live (getConfluenceContent, any detail, or listConfluenceContentVersions) - scripts/sweep_check.py. The recorded version is only compared, never trusted (owner decision 2026-09-25)."},
 
     {"id": "B1", "name": "ORDER_STANDING", "rule": "The latest owner message classified WRITE (outbound) or WRITE/DRAFT (draft) exists. Outbound: every later owner message is a plain CONFIRM. Draft: no later STOP, and the order is at most windows_minutes.draft_order_age old (an order for earlier work does not authorise a new draft)."},
     {"id": "B2", "name": "ORDER_UNUSED", "rule": "Outbound: the order is not recorded as used in docs/orders/consumed.jsonl (one order = one write). The PostToolUse hook records it."},
@@ -85,7 +85,7 @@
   },
 
   "known_limits": [
-    "Chat answers are not checked by any script.",
+    "Chat answers are checked by G-03 only as far as its own known_limits allow (tokens, quotes and absence wording; not the meaning of a sentence).",
     "A quote proves the words exist in the source, not that the claim reads them correctly.",
     "Order classification is a word list: a real order may be refused (safe), and an insult containing 'tulis' was classified WRITE in the session replay (unsafe, but it still needs the full evidence gate and is used up after one write).",
     "Hooks are loaded by Claude Code from .claude/settings.json; if the harness does not load them, nothing is enforced and the gate depends on being run by hand.",

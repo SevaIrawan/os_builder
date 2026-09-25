@@ -91,8 +91,13 @@ exact input. Fix the cause, never the gate.
 Read the target again: full page read for Confluence, comment listing for Jira. The Stop
 hook blocks until every sent sentence is found in that read-back.
 
+## Related gates
+
+- Chat answers: G-03 (`.claude/gates/G-03-chat-claims.json`), checked by the Stop hook.
+- git / GitHub writes: G-04 (`.claude/gates/G-04-repo-write.json`), checked by the PreToolUse hook.
+
 ## What this still does not cover
 
-The `known_limits` list in the gate file: chat answers, a quote read wrongly, and word-list
-misclassification. If the hooks are not loaded, the gate only runs when I run it by hand.
-Say so when it matters. Do not describe the gate as stronger than it is.
+The `known_limits` lists in the gate files: a quote read wrongly, the meaning of a chat sentence,
+and word-list misclassification. If the hooks are not loaded, the gates only run when I run them by
+hand. Say so when it matters. Do not describe the gate as stronger than it is.

@@ -1,0 +1,68 @@
+{
+  "gate_id": "G-03",
+  "name": "Evidence gate for chat answers",
+  "version": "1.0",
+  "updated": "2026-09-25",
+  "owner_decision": "Bambang 2026-09-25: chat answers go through a hook; an answer that fails is held and must be corrected (not only warned).",
+  "single_source": "This file is the ONLY place the G-03 rules are written. scripts/hooks/g03.py reads it; SKILL.md files point here.",
+
+  "binds": "Every text Claude writes to the owner in the current turn (from the owner's latest message to the end of the turn). Enforced by the Stop hook scripts/hooks/stop.py: the turn cannot end while a check fails.",
+
+  "evidence": "A token counts as verified only when it appears in a real tool result of this session (the transcript) or in the owner's own messages. A `code` token may also match the name of a tool that was called successfully, or a path / command such a call was given. Hook messages and Claude's own text are never evidence.",
+
+  "checks": [
+    {"id": "T1", "name": "TOKENS_FROM_A_SOURCE", "rule": "Every checkable token in the answer (token_kinds below) appears in some tool result of this session or in an owner message, unless its sentence carries the unverified marker."},
+    {"id": "T2", "name": "OUTSIDE_SYSTEMS_READ_LIVE", "rule": "A sentence that names an outside system (system_rules) and carries a token of the listed kinds: every such token appears in the result of a tool that reads that system directly (not a local copy), unless the sentence carries the unverified marker. 2026-09-25: a GitHub branch was reported as existing at 22bdede from a stale local git ref."},
+    {"id": "T3", "name": "ABSENCE_NEEDS_A_SOURCE", "rule": "A sentence with absence wording (absence_phrases) carries the unverified marker, or holds at least one token that passes T1 (and T2 where it applies)."},
+    {"id": "T4", "name": "CORRECTION_AFTER_A_HOLD", "rule": "A text that fails T1-T3 is not unsaid. Each of its problems is resolved only by a later text in the same turn that starts with correction_prefix, itself passes T1-T3, and restates the failing token (T1/T2) or absence phrase (T3), verified or with the unverified marker."}
+  ],
+
+  "override_token": "OVERRIDE G-03",
+  "override": "Only the owner can type it. When the owner's latest message contains it, the Stop hook lets that turn's answer through unchecked. If g03.py itself fails, the answer is held (fail closed) until it is fixed or the owner overrides.",
+
+  "unverified_marker": "🔲",
+  "correction_prefix": "Koreksi",
+
+  "token_kinds": {
+    "commit": "git commit id: 7-40 hex characters holding both a digit and a letter a-f",
+    "tool_use_id": "toolu_...",
+    "page_id": "9-11 digit number (Confluence pageId)",
+    "issue_key": "Jira key like OSD-116",
+    "comment_id": "c + 5-6 digits (Jira / Confluence comment id)",
+    "workflow_id": "16 characters, letters and digits, mixed case (n8n workflow id)",
+    "version": "v + number (v30)",
+    "date": "ISO date 2026-09-25",
+    "number": "any other number written with digits",
+    "code": "inline `code` without spaces (a path, branch, file or field name); `file.py:120` must be a Read of that file that showed line 120",
+    "quote": "text between \"...\", “...” or 「...」: found verbatim (whitespace and markup ignored) in a source"
+  },
+
+  "skip": [
+    "fenced code blocks (``` ... ```): commands and examples, not claims",
+    "sentences that carry the unverified marker"
+  ],
+
+  "system_rules": [
+    {"system": "github", "sentence_pattern": "(?i)\\bgithub\\b|\\borigin/|\\bremote\\b",
+     "token_kinds": ["commit", "code"], "live_tools": ["mcp__github__"], "live_bash": ["ls-remote", "fetch", "push"]},
+    {"system": "confluence", "sentence_pattern": "(?i)confluence|halaman|\\bpage\\b|pageid",
+     "token_kinds": ["version", "page_id", "comment_id"], "live_tools": ["mcp__Atlassian_MCP__", "mcp__Atlassian_Rovo__"], "live_bash": []},
+    {"system": "jira", "sentence_pattern": "(?i)\\bjira\\b|komentar|\\bcomment\\b",
+     "token_kinds": ["issue_key", "comment_id"], "live_tools": ["mcp__Atlassian_MCP__", "mcp__Atlassian_Rovo__"], "live_bash": []},
+    {"system": "n8n", "sentence_pattern": "(?i)\\bn8n\\b|\\bworkflow\\b",
+     "token_kinds": ["workflow_id"], "live_tools": ["mcp__n8n__"], "live_bash": []}
+  ],
+
+  "absence_phrases": ["tidak ada", "tak ada", "belum ada", "sudah tidak ada", "tidak ditemukan", "tak ditemukan",
+                      "tidak pernah", "tidak tercantum", "tidak terdaftar", "sudah hilang", "sudah terhapus", "kosong",
+                      "not found", "does not exist", "no longer exists", "不存在", "查不到", "没有"],
+
+  "known_limits": [
+    "A token found in a source proves the token exists there, not that the sentence reads it correctly.",
+    "Sentences without a checkable token (plain wording, no id, number, date or code) cannot be checked, except for absence wording (T3).",
+    "Small numbers are found in almost any tool result, so T1 is weak for them.",
+    "System detection (T2) is a word list per sentence; a sentence about GitHub that never says GitHub / origin/ / remote is not bound by T2.",
+    "Fenced code blocks are skipped.",
+    "Hooks run as the same OS user as the model: they stop shortcuts and forgetting, not a deliberate attack."
+  ]
+}

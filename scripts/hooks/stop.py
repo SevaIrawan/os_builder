@@ -2,7 +2,9 @@
 # -*- coding: utf-8 -*-
 """Stop hook. The turn cannot end while:
   1. a draft file (lexicon draft_path_patterns) changed since it last passed and its ledger does not pass G-01;
-  2. an outbound write succeeded and no later read of the target contains every sentence that was sent.
+  2. an outbound write succeeded and no later read of the target contains every sentence that was sent;
+  3. (G-02) an n8n workflow written this session lacks its read-back, task record or registration;
+  4. (G-03) the answer of this turn carries a token, quote or absence claim no source shows.
 Exit 2 = keep working (stderr is shown to Claude). Exit 0 = may stop."""
 import json, os, re, sys
 from _common import N, read_input, transcript, deny, append_log, read_log, ledgers, REGISTRY, latest_owner_text
@@ -132,8 +134,23 @@ def main():
     if g02.cfg()['override_token'] not in latest_owner_text(tr):
         problems.extend(g02.check_stop(tr, L))
 
+    # 4. G-03: every checkable token in this turn's answer comes from a source (.claude/gates/G-03-chat-claims.json)
+    import g03
+    C3 = g03.cfg()
+    try:
+        held = g03.check_turn(tr.path, inp.get('last_assistant_message'), C3)
+    except Exception as e:                       # fail closed: an unchecked answer is not let through
+        held = ['G-03 could not run (%s: %s). Fix it, or the owner types %s' % (type(e).__name__, e, C3['override_token'])]
+    if held and C3['override_token'] in latest_owner_text(tr):
+        held = []
+    if held:
+        problems.extend(held)
+        problems.append('G-03: the answer above is held. Write a new message that starts with "%s", restates each '
+                        'held token or absence phrase either verified (read the source now) or marked %s, then stop again.'
+                        % (C3['correction_prefix'], C3['unverified_marker']))
+
     if problems:
-        deny('G-01/G-02 Stop check - you may not end the turn yet:\n- ' + '\n- '.join(problems))
+        deny('G-01/G-02/G-03 Stop check - you may not end the turn yet:\n- ' + '\n- '.join(problems))
     return 0
 
 
