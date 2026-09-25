@@ -64,7 +64,8 @@ disagree, **stop and report 部署漂移 (deployment drift)**. Never work from a
      python3 scripts/sweep_check.py
      ```
      The script takes the live versions from the transcript and lists each page as same / MOVED /
-     NOT CHECKED. Gate A3 fails while any page is NOT CHECKED.
+     NOT CHECKED. Gate A3 fails while any page is NOT CHECKED or MOVED, and the Stop hook holds the turn while
+     the table is behind a live read (rule 25): MOVED clears only when the table records the live version.
    - For each MOVED page run `listConfluenceContentVersions` and `diffConfluenceContentVersions`. The
      version message is a hint, not the change.
    - **Mandatory, not an offer** (`docs/working-agreement.md` rule 25): when a page moved, update every repo

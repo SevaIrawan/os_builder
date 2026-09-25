@@ -140,6 +140,19 @@ def main(inp=None):
     if L['order_words']['override_token'] not in latest_owner_text(tr):
         problems.extend('G-01 session start (owner said "hi") %s' % p for p in s0.check(tr, L))
 
+    # 3c. rule 25 (docs/working-agreement.md): a source read live at a newer version than docs/source-versions.md
+    #     records means the repo docs are updated before the turn ends
+    import sweep_check
+    if L['order_words']['override_token'] not in latest_owner_text(tr):
+        try:
+            rows = sweep_check.stale(tr, L)
+        except OSError:
+            rows = []
+        for pid, name, rec, live in rows:
+            problems.append('rule 25: %s %s was read live at v%s but docs/source-versions.md still records v%s. Read the diff, '
+                            'update the table, sweep log and every repo note citing the old version (commit waits for '
+                            '"commit push")' % (pid, name, live, rec))
+
     # 4. G-03: every checkable token in this turn's answer comes from a source (.claude/gates/G-03-chat-claims.json)
     import g03
     C3 = g03.cfg()

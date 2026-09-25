@@ -8,8 +8,9 @@ getConfluenceContent call on the page (any detail - summary carries the version)
 call, at most MAX_AGE_HOURS old. The model does not type any version.
 
 Usage:  python3 scripts/sweep_check.py [--transcript <path>]
-Exit 0 = every page with a pageId was checked live (moved pages are listed, not a failure).
-Exit 1 = a page was not checked live in the window, or the table could not be read."""
+Exit 0 = every page with a pageId was checked live and the table records its live version.
+Exit 1 = a page was not checked live in the window, a page moved and the table still records the old version
+         (docs/working-agreement.md rule 25: update the repo docs first), or the table could not be read."""
 import argparse, os, re, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import nosm_lib as N
@@ -56,8 +57,26 @@ def run(tr, L=None, now=None):
     if missing:
         out.append('VERDICT: NOT DONE - read each NOT CHECKED page live (getConfluenceContent detail=summary) and run again')
         return False, out
-    out.append('VERDICT: every page checked live' + (' - MOVED pages need their diff read and a fresh full read before use' if moved else ''))
+    if moved:
+        # 2026-09-25 owner rule 25: a moved source means the repo docs are updated, not only reported
+        out.append('VERDICT: NOT DONE - %d page(s) moved: read each diff, update docs/source-versions.md (table and sweep '
+                   'log) and every repo note citing the old version, then run again (docs/working-agreement.md rule 25)'
+                   % len(moved))
+        return False, out
+    out.append('VERDICT: every page checked live')
     return True, out
+
+
+def stale(tr, L=None):
+    """Table rows that a live read in this session shows at a NEWER version than recorded: [(pid, name, rec, live)].
+    Used by the Stop hook (rule 25), with no age window: any newer live read in the session counts."""
+    L = L or N.lexicon()
+    out = []
+    for name, pid, rec in ledger_rows():
+        seen = N.page_versions_seen(tr, pid, L)
+        if seen and rec is not None and seen[-1][1] is not None and seen[-1][1] > rec:
+            out.append((pid, name, rec, seen[-1][1]))
+    return out
 
 
 def main():

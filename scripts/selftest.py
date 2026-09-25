@@ -380,9 +380,19 @@ expect('A3: table page not checked live fails', rows.get('A3') is False, str(out
 t.call('mcp__Atlassian_MCP__getConfluenceContent', {'content_id': '1999999999', 'detail': 'summary'},
        {'data': {'id': '1999999999', 'snapshotToken': 'v:4', 'metadata': {'version': {'number': 4}}}})
 ok, rows, out = run_gate(t, lg, payload)
-expect('A3: passes once every table page is read live (moved v3 -> v4 is listed, not a failure)', rows.get('A3') is True, str(out['rows']))
+expect('A3: moved page (v3 -> v4) fails until the table is updated (rule 25)', rows.get('A3') is False, str(out['rows']))
 r = subprocess.run([sys.executable, 'scripts/sweep_check.py', '--transcript', tp], cwd=tmp, capture_output=True, text=True)
-expect('sweep_check: moved page reported', r.returncode == 0 and 'MOVED' in r.stdout and 'live v4' in r.stdout, r.stdout)
+expect('sweep_check: moved page reported and fails (rule 25)', r.returncode == 1 and 'MOVED' in r.stdout and 'live v4' in r.stdout and 'rule 25' in r.stdout, r.stdout)
+rc, msg = hook('stop.py', {}, tp)
+expect('stop: table behind a live read holds the turn (rule 25)', rc == 2 and 'rule 25' in msg and '1999999999' in msg, msg)
+with open(svp, 'w', encoding='utf-8') as f:
+    f.write(sv_orig + '| 04.99 | 1999999999 | v4 | Alden |\n')
+ok, rows, out = run_gate(t, lg, payload)
+expect('A3: passes once the table records the live version', rows.get('A3') is True, str(out['rows']))
+r = subprocess.run([sys.executable, 'scripts/sweep_check.py', '--transcript', tp], cwd=tmp, capture_output=True, text=True)
+expect('sweep_check: passes once the table is updated', r.returncode == 0 and 'MOVED' not in r.stdout, r.stdout)
+rc, msg = hook('stop.py', {}, tp)
+expect('stop: updated table releases the turn (rule 25)', 'rule 25' not in msg, msg)
 with open(svp, 'w', encoding='utf-8') as f:
     f.write(sv_orig)
 t.lines = t.lines[:-2]; t.save(tp)
