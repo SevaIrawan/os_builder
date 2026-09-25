@@ -157,10 +157,19 @@ def found(kind, tok, ev):
     return any(tok in t for t in ev.texts)
 
 
+SPAN_RE = re.compile('"[^"\\n]*"|\u201c[^\u201d\\n]*\u201d|\u300c[^\u300d\\n]*\u300d|`[^`\\n]*`')
+SEP_CHARS = '.!?\u3002\uff1b;'
+SEP_MASK = dict(zip(SEP_CHARS, '\ue000\ue001\ue002\ue003\ue004\ue005'))
+SEP_UNMASK = {v: k for k, v in SEP_MASK.items()}
+
+
 def sentences(text, marker):
+    """Sentences of a text. A separator inside "quotes", 「quotes」 or `code` does not end a sentence
+    (2026-09-25: a ';' inside a quoted tool output split the quote and made a false T1 hold)."""
     body = FENCE_RE.sub(' ', text)
+    body = SPAN_RE.sub(lambda m: ''.join(SEP_MASK.get(ch, ch) for ch in m.group(0)), body)
     for raw in SENT_SPLIT_RE.split(body):
-        s = raw.strip()
+        s = ''.join(SEP_UNMASK.get(ch, ch) for ch in raw).strip()
         if s and re.search(r'[\w㐀-鿿]', s):
             yield s, (marker in s)
 
