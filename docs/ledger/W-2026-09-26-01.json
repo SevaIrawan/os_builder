@@ -1,0 +1,104 @@
+{
+ "write_id": "W-2026-09-26-01",
+ "kind": "outbound",
+ "target": {
+  "system": "confluence",
+  "content_id": "2096463922"
+ },
+ "tool": "mcp__Atlassian_MCP__updateConfluenceContent",
+ "payload_file": "docs/ledger/W-2026-09-26-01.payload.json",
+ "discovery": {
+  "topic_terms": [
+   "node --check",
+   "纪律与绩效改进处置"
+  ],
+  "calls": [
+   "toolu_01FLEnshKAN1cNFMjhGHuDbW",
+   "toolu_01MeqoaEwyxLLjf68bZW937N"
+  ],
+  "excluded": {
+   "confluence:2075394050": "S-02 新人90天框架 Spec；与 N20 语法自检无关，不含 D2 规则本体",
+   "confluence:2063400992": "S-01 招聘执行 Spec；他流程，本草稿不引用其内容",
+   "confluence:2047148201": "S-19 目标与绩效闭环管理 Spec；他流程，本草稿不引用其内容",
+   "confluence:1765015681": "04.9.5 Grade 分册；他流程详情分册，04.9 §一 读取指引不得扫描无关分册",
+   "confluence:1765015618": "04.9.3 员工离职分册；他流程详情分册，04.9 §一 读取指引不得扫描无关分册",
+   "confluence:1742766267": "Grade 建造单；他流程建造单，本草稿只登记 S-05 N20 的自检",
+   "confluence:1740439566": "OS 开发流建造单；他流程建造单，本草稿只登记 S-05 N20 的自检",
+   "confluence:1729888419": "04.4.1 模式九；审批卡回调规则，与 Code 节点语法自检无关",
+   "confluence:1693089805": "04.9 登记表；本草稿不涉及登记，只登记 D2 语法自检证据",
+   "confluence:1690927120": "04.6 n8n 使用规范；本草稿只引 07.06.1 D2 原文，不引 04.6",
+   "confluence:1676640265": "04.0 词汇表；本草稿未使用其定义的术语",
+   "confluence:2036858900": "S-05 Spec；本草稿不涉及 Spec 语义，只登记工程自检证据"
+  }
+ },
+ "sources": [
+  {
+   "source_id": "S1",
+   "system": "confluence",
+   "content_id": "1712226375",
+   "read_call": "toolu_01Py6nSroBX1tLw4J4cKMuAs"
+  },
+  {
+   "source_id": "S2",
+   "system": "n8n_workflow",
+   "workflow_id": "ToIGnEJmksSPhC85",
+   "read_call": "toolu_01EmqZTcaRvSHtbGtWtMWFSv"
+  },
+  {
+   "source_id": "S3",
+   "system": "confluence",
+   "content_id": "2096463922",
+   "read_call": "toolu_01NNuhqwi8a9qrWBgCary276"
+  }
+ ],
+ "claims": [
+  {
+   "id": "T0",
+   "text": "规则出处：D2｜n8n Code 节点改完必须做本地语法检查。",
+   "source_id": "S1",
+   "quote": "### D2｜n8n Code 节点改完必须做本地语法检查"
+  },
+  {
+   "id": "T1b",
+   "text": "规避方式原文：「Code 节点改完，把代码落到本地跑一次 `node --check`；注释单独占一行，不写在代码行尾。」",
+   "source_id": "S1",
+   "quote": "Code 节点改完，把代码落到本地跑一次 `node --check`；注释单独占一行，不写在代码行尾。"
+  },
+  {
+   "id": "T2",
+   "text": "验收原文：「贴出 `node --check` 通过的输出。」",
+   "source_id": "S1",
+   "quote": "贴出 `node --check` 通过的输出。"
+  },
+  {
+   "id": "T3",
+   "text": "检查对象：纪律与绩效改进处置｜N20｜解雇自动开单与交接（`ToIGnEJmksSPhC85`），versionId `e713b9cf-93f5-441f-8ce1-63cbb2b4aed0`。",
+   "source_id": "S2",
+   "quote": "\"id\":\"ToIGnEJmksSPhC85\",\"name\":\"纪律与绩效改进处置｜N20｜解雇自动开单与交接\",\"active\":false,\"isArchived\":false,\"versionId\":\"e713b9cf-93f5-441f-8ce1-63cbb2b4aed0\""
+  },
+  {
+   "id": "T4",
+   "text": "件内 Code 节点共三个：Check Already Triggered、Map Judgment To Dismissal Category、Check Entry Result。",
+   "source_id": "S2",
+   "quote": "\"name\":\"Check Entry Result\",\"type\":\"n8n-nodes-base.code\"",
+   "counts": [
+    {
+     "value": 3,
+     "source_id": "S2",
+     "regex": "n8n-nodes-base\\.code"
+    }
+   ]
+  },
+  {
+   "id": "T5",
+   "text": "🔲 三个节点的 jsCode 以 `async function` 包裹后分别执行 `node --check`（Node.js v22.22.2），三者输出均为 `exit 0`（依据为建造侧本地命令输出，G-01 无法核验）。"
+  },
+  {
+   "id": "T6",
+   "text": "🔲 以 `grep -n '//'` 检索三份代码，仅 Check Entry Result 第 2、3、4 行命中，三行均以 `//` 起首、独占一行（依据同上）。"
+  }
+ ],
+ "boilerplate": [
+  "【补｜Code 节点语法自检】"
+ ]
+}
