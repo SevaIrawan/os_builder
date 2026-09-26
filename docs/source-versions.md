@@ -26,6 +26,10 @@
 > - **建造单 2096463922 v46 → v47** (2026-09-26T04:09:50Z): our own write W-2026-09-26-01 (updateConfluenceContent, order
 >   "tulis ke build sheet §八 sekarang"): 8 paragraphs 【补｜Code 节点语法自检】 inserted in §八 after the 测试记录 table,
 >   before 「尚未测试」. Read back full v47 (toolu_01HUMTFpWA1tiAJUyBp99oqN): all 8 sentences present (parts 7–8 printed).
+> - **建造单 v47 → v48** (2026-09-26T04:32:06Z): our own write W-2026-09-26-02 (order "Kau hapus file yang salah kau
+>   tulis ulang yang valid"): replaceNode on the last 🔲 paragraph — line numbers 第 2、3、4 行 (counted in the
+>   async-function-wrapped file) replaced by 第 1、2、3 行 (counted in the jsCode as stored in n8n). Read back v48: new
+>   text present, old text gone.
 >
 > **Sweep sebelumnya:**
 >
@@ -84,7 +88,7 @@
 | OS 开发流｜流程 Spec | 1729200354 | v39 | Kayden／Kent |
 | HR｜盘点与切分 | 1745158181 | **v40** | Felix |
 | 纪律与绩效改进处置｜流程 Spec (S-05) | 2036858900 | **v67** (冻结基线 v61) | Felix |
-| 纪律与绩效改进处置｜建造单 | 2096463922 | **v47** | Bambang (BO) |
+| 纪律与绩效改进处置｜建造单 | 2096463922 | **v48** | Bambang (BO) |
 
 Baris ber-`—` pada kolom pageId: id belum dicatat; skill harus mencarinya lewat CQL judul sebelum
 menyimpulkan halaman itu tidak berubah.

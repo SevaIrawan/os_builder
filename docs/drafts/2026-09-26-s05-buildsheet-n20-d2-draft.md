@@ -14,4 +14,4 @@
 
 🔲 三个节点的 jsCode 以 `async function` 包裹后分别执行 `node --check`（Node.js v22.22.2），三者输出均为 `exit 0`（依据为建造侧本地命令输出，G-01 无法核验）。
 
-🔲 以 `grep -n '//'` 检索三份代码，仅 Check Entry Result 第 2、3、4 行命中，三行均以 `//` 起首、独占一行（依据同上）。
+🔲 检索三份 jsCode 原文中的 `//`，仅 Check Entry Result 第 1、2、3 行命中，三行均以 `//` 起首、独占一行（依据同上）。

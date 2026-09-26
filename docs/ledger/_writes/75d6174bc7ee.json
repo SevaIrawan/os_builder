@@ -1,0 +1,16 @@
+{
+ "tool": "mcp__Atlassian_MCP__updateConfluenceContent",
+ "input": {
+  "cloudId": "abf9cc08-e266-45bd-93b8-836e4a8c7aaa",
+  "contentId": "2096463922",
+  "snapshotToken": "v:47",
+  "edits": [
+   {
+    "name": "replaceNode",
+    "localId": "96ad70d2ef7a",
+    "value": "<p>🔲 检索三份 jsCode 原文中的 <code>//</code>，仅 Check Entry Result 第 1、2、3 行命中，三行均以 <code>//</code> 起首、独占一行（依据同上）。</p>"
+   }
+  ],
+  "versionMessage": "【补｜Code 节点语法自检】"
+ }
+}
