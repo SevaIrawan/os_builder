@@ -118,7 +118,7 @@ READ_ONLY_TOOLS = {'cat', 'head', 'tail', 'grep', 'rg', 'wc', 'ls', 'cd', 'pwd',
                    'diff', 'stat', 'file', 'basename', 'dirname', 'true'}      # not sort / uniq: both can write a file
 READ_ONLY_GIT = {'log', 'show', 'diff', 'status', 'cat-file', 'ls-files', 'ls-tree', 'rev-parse', 'blame', 'grep',
                  'ls-remote'}                                # ls-remote only reads the remote's refs (2026-09-25)
-READ_ONLY_SCRIPT = re.compile(r'^scripts/(gate_check|order_check|read_source|sync_check|sweep_check|selftest|g02_selftest|g03_selftest)\.py$')
+READ_ONLY_SCRIPT = re.compile(r'^scripts/(gate_check|order_check|read_source|sync_check|sweep_check|selftest|g02_selftest)\.py$')
 
 
 def read_only_command(cmd):

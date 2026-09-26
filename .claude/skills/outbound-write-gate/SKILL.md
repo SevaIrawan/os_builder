@@ -93,11 +93,10 @@ hook blocks until every sent sentence is found in that read-back.
 
 ## Related gates
 
-- Chat answers: G-03 (`.claude/gates/G-03-chat-claims.json`), checked by the Stop hook.
 - git / GitHub writes: G-04 (`.claude/gates/G-04-repo-write.json`), checked by the PreToolUse hook.
 - Scope: Atlassian (Confluence / Jira), Slack, n8n and GitHub only.
 - The hooks fail closed: if the pre-tool hook crashes, a call to one of these systems is held; if the Stop hook crashes, the
-  turn is held until the hook is fixed or the owner types OVERRIDE G-03.
+  turn is held until the hook is fixed or the owner types OVERRIDE G-01.
 
 ## What this still does not cover
 

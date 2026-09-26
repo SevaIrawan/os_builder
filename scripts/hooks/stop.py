@@ -4,8 +4,7 @@
   1. a draft file (lexicon draft_path_patterns) changed since it last passed and its ledger does not pass G-01;
   2. an outbound write succeeded and no later read of the target contains every sentence that was sent;
   3. (G-02) an n8n workflow written this session lacks its read-back, task record or registration;
-  3b. (G-01 session_start) the owner opened with "hi" and a session-start step has not run since;
-  4. (G-03) the answer of this turn carries a token, quote or absence claim no source shows.
+  3b. (G-01 session_start) the owner opened with "hi" and a session-start step has not run since.
 Exit 2 = keep working (stderr is shown to Claude). Exit 0 = may stop."""
 import json, os, re, sys
 from _common import N, read_input, transcript, deny, append_log, read_log, ledgers, REGISTRY, latest_owner_text
@@ -153,15 +152,13 @@ def main(inp=None):
                             'update the table, sweep log and every repo note citing the old version (commit waits for '
                             '"commit push")' % (pid, name, live, rec))
 
-    # 4. G-03 (chat-answer check) removed from the Stop hook: owner order 2026-09-26 "UNLOCK G-01 hapus G-03".
-
     if problems:
         deny('G-01/G-02 Stop check - you may not end the turn yet:\n- ' + '\n- '.join(problems))
     return 0
 
 
 def owner_override(path):
-    """The owner's latest real message holds OVERRIDE G-01 / G-03. Read without nosm_lib, which may be what broke."""
+    """The owner's latest real message holds OVERRIDE G-01. Read without nosm_lib, which may be what broke."""
     last = ''
     try:
         with open(path, encoding='utf-8') as f:
@@ -176,7 +173,7 @@ def owner_override(path):
                         b.get('text', '') for b in c or [] if isinstance(b, dict) and b.get('type') == 'text')
     except (OSError, TypeError):
         return False
-    return 'OVERRIDE G-01' in last or 'OVERRIDE G-03' in last
+    return 'OVERRIDE G-01' in last
 
 
 if __name__ == '__main__':
@@ -193,5 +190,5 @@ if __name__ == '__main__':
         err = '%s: %s' % (type(e).__name__, e)
     if owner_override(INP.get('transcript_path') or ''):
         sys.exit(0)
-    deny('G-01/G-03: the Stop hook failed (%s), so this turn cannot be checked and is held. Fix the hook '
-         '(owner: UNLOCK G-01), or the owner types OVERRIDE G-03.' % err)
+    deny('G-01: the Stop hook failed (%s), so this turn cannot be checked and is held. Fix the hook '
+         '(owner: UNLOCK G-01), or the owner types OVERRIDE G-01.' % err)
