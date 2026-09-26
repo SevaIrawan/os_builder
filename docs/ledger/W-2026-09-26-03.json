@@ -1,0 +1,58 @@
+{
+ "write_id": "W-2026-09-26-03",
+ "kind": "outbound",
+ "target": {
+  "system": "confluence",
+  "content_id": "2096463922"
+ },
+ "tool": "mcp__Atlassian_MCP__updateConfluenceContent",
+ "payload_file": "docs/ledger/W-2026-09-26-03.payload.json",
+ "discovery": {
+  "topic_terms": [
+   "node --check",
+   "纪律与绩效改进处置"
+  ],
+  "calls": [
+   "toolu_01FLEnshKAN1cNFMjhGHuDbW",
+   "toolu_01MeqoaEwyxLLjf68bZW937N"
+  ],
+  "excluded": {
+   "confluence:2075394050": "S-02 新人90天框架 Spec；与 N20 语法自检无关，不含 D2 规则本体",
+   "confluence:2063400992": "S-01 招聘执行 Spec；他流程，本草稿不引用其内容",
+   "confluence:2047148201": "S-19 目标与绩效闭环管理 Spec；他流程，本草稿不引用其内容",
+   "confluence:1765015681": "04.9.5 Grade 分册；他流程详情分册，04.9 §一 读取指引不得扫描无关分册",
+   "confluence:1765015618": "04.9.3 员工离职分册；他流程详情分册，04.9 §一 读取指引不得扫描无关分册",
+   "confluence:1742766267": "Grade 建造单；他流程建造单，本草稿只登记 S-05 N20 的自检",
+   "confluence:1740439566": "OS 开发流建造单；他流程建造单，本草稿只登记 S-05 N20 的自检",
+   "confluence:1729888419": "04.4.1 模式九；审批卡回调规则，与 Code 节点语法自检无关",
+   "confluence:1693089805": "04.9 登记表；本草稿不涉及登记，只登记 D2 语法自检证据",
+   "confluence:1690927120": "04.6 n8n 使用规范；本草稿只引 07.06.1 D2 原文，不引 04.6",
+   "confluence:1676640265": "04.0 词汇表；本草稿未使用其定义的术语",
+   "confluence:2036858900": "S-05 Spec；本草稿不涉及 Spec 语义，只登记工程自检证据"
+  }
+ },
+ "sources": [
+  {
+   "source_id": "S1",
+   "system": "confluence",
+   "content_id": "1712226375",
+   "read_call": "toolu_01Xkx6opoHdkcLrSdjvvtKK4"
+  },
+  {
+   "source_id": "S2",
+   "system": "n8n_workflow",
+   "workflow_id": "ToIGnEJmksSPhC85",
+   "read_call": "toolu_01K2LvkStdwV9NX5LN2Qgqzi"
+  },
+  {
+   "source_id": "S3",
+   "system": "confluence",
+   "content_id": "2096463922",
+   "read_call": "toolu_014SJDwXRr5HGrPv2MRBnkXL"
+  }
+ ],
+ "claims": [],
+ "boilerplate": [
+  "【补｜Code 节点语法自检】"
+ ]
+}

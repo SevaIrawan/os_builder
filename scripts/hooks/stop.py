@@ -153,23 +153,10 @@ def main(inp=None):
                             'update the table, sweep log and every repo note citing the old version (commit waits for '
                             '"commit push")' % (pid, name, live, rec))
 
-    # 4. G-03: every checkable token in this turn's answer comes from a source (.claude/gates/G-03-chat-claims.json)
-    import g03
-    C3 = g03.cfg()
-    try:
-        held = g03.check_turn(tr.path, inp.get('last_assistant_message'), C3)
-    except Exception as e:                       # fail closed: an unchecked answer is not let through
-        held = ['G-03 could not run (%s: %s). Fix it, or the owner types %s' % (type(e).__name__, e, C3['override_token'])]
-    if held and C3['override_token'] in latest_owner_text(tr):
-        held = []
-    if held:
-        problems.extend(held)
-        problems.append('G-03: the answer above is held. Write a new message that starts with "%s", restates each '
-                        'held token or absence phrase either verified (read the source now) or marked %s, then stop again.'
-                        % (C3['correction_prefix'], C3['unverified_marker']))
+    # 4. G-03 (chat-answer check) removed from the Stop hook: owner order 2026-09-26 "UNLOCK G-01 hapus G-03".
 
     if problems:
-        deny('G-01/G-02/G-03 Stop check - you may not end the turn yet:\n- ' + '\n- '.join(problems))
+        deny('G-01/G-02 Stop check - you may not end the turn yet:\n- ' + '\n- '.join(problems))
     return 0
 
 

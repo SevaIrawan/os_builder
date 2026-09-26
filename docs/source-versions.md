@@ -30,6 +30,9 @@
 >   tulis ulang yang valid"): replaceNode on the last 🔲 paragraph — line numbers 第 2、3、4 行 (counted in the
 >   async-function-wrapped file) replaced by 第 1、2、3 行 (counted in the jsCode as stored in n8n). Read back v48: new
 >   text present, old text gone.
+> - **建造单 v48 → v49** (2026-09-26T04:44:31Z): our own write W-2026-09-26-03 (owner order "Kau hapus semua yang tulis
+>   tadi"): deleteNode on all 8 paragraphs of 【补｜Code 节点语法自检】 in §八. Read back v49: paragraphs gone; the
+>   phrase only remains in the version message.
 >
 > **Sweep sebelumnya:**
 >
@@ -88,7 +91,7 @@
 | OS 开发流｜流程 Spec | 1729200354 | v39 | Kayden／Kent |
 | HR｜盘点与切分 | 1745158181 | **v40** | Felix |
 | 纪律与绩效改进处置｜流程 Spec (S-05) | 2036858900 | **v67** (冻结基线 v61) | Felix |
-| 纪律与绩效改进处置｜建造单 | 2096463922 | **v48** | Bambang (BO) |
+| 纪律与绩效改进处置｜建造单 | 2096463922 | **v49** | Bambang (BO) |
 
 Baris ber-`—` pada kolom pageId: id belum dicatat; skill harus mencarinya lewat CQL judul sebelum
 menyimpulkan halaman itu tidak berubah.

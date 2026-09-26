@@ -64,10 +64,6 @@ def main():
         lines.append('[G-02] G-02 rules file unreadable: n8n writes will be blocked until it is fixed.')
     lines.append('[G-01] Rules: .claude/gates/G-01-outbound-write.json. Any number, absence or name you state in chat '
                  'must come from a source read in full in this session; otherwise say it is unverified.')
-    lines.append('[G-03] The Stop hook checks this turn\'s answer (.claude/gates/G-03-chat-claims.json): every id, version, '
-                 'date, number, `code` and "quote" must appear in a tool result of this session or in the owner\'s messages; '
-                 'GitHub / Confluence / Jira / n8n facts must come from a live read of that system; absence claims need a '
-                 'verified token. Otherwise mark the sentence \U0001F532. A held answer is fixed with a message starting "Koreksi".')
     lines.append('[G-04] git commit / push and GitHub writes need "commit push", deleting branches / commits / history '
                  'needs "hapus", in the owner\'s latest message (.claude/gates/G-04-repo-write.json).')
     print('\n'.join(lines))
